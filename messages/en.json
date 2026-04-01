@@ -1,0 +1,102 @@
+{
+  "Navigation": {
+    "brand": "Lounge Brew",
+    "eyebrow": "Coffee lounge · live sessions",
+    "home": "Home",
+    "menu": "Menu",
+    "events": "Events",
+    "journal": "Journal",
+    "admin": "Admin",
+    "language": "Language"
+  },
+  "LandingPage": {
+    "eyebrow": "A bilingual lounge shaped around slower browsing",
+    "title": "Choose the room you want to step into first.",
+    "description": "The menu now lives on its own route, while events, journal, and admin are split into focused pages under the same cookie-backed language state.",
+    "primaryCta": "Open menu",
+    "secondaryCta": "Read journal",
+    "menuEyebrow": "Rollout now",
+    "menuDescription": "The full tactile flipbook menu experience now lives on `/menu`.",
+    "eventsEyebrow": "Live calendar",
+    "eventsDescription": "See upcoming sessions in a quieter, dedicated events surface.",
+    "journalEyebrow": "Reading room",
+    "journalDescription": "Browse long-form writing away from the menu canvas.",
+    "adminEyebrow": "Control room",
+    "adminDescription": "Manage bilingual content in the protected dashboard."
+  },
+  "HomePage": {
+    "eyebrow": "Coffee lounge · live sessions · bilingual menu",
+    "title": "A tactile digital menu made to feel like a real book.",
+    "subtitle": "Server-rendered translations and localized Supabase content arrive fully synchronized before the first paint.",
+    "mockDataNotice": "Showing mock content until Supabase is connected.",
+    "eventsEyebrow": "Live calendar",
+    "menuCoverTitle": "Lounge Brew",
+    "menuCoverSubtitle": "Coffee, tea, signatures, and late-night listening.",
+    "menuVolumeLabel": "Volume 01",
+    "menuCoverFooter": "Coffee · Tea · Live Listening",
+    "backCoverQuote": "Turn the page slowly. The room sounds better that way.",
+    "backCoverCaption": "Crafted for bilingual browsing, calm reading, and slower decisions.",
+    "upcomingEvents": "Upcoming sessions",
+    "featuredArticles": "From the journal",
+    "openJournal": "Read journal",
+    "openAdmin": "Open admin",
+    "exploreMenu": "Explore the menu",
+    "soldOut": "Sold out",
+    "fallbackNotice": "Fallback from Vietnamese",
+    "fromVietnamese": "VI fallback",
+    "emptyEvents": "New sessions will be announced soon.",
+    "emptyArticles": "Fresh stories are brewing.",
+    "nextPage": "Next",
+    "previousPage": "Previous",
+    "frontCover": "Front cover",
+    "backCover": "Back cover"
+  },
+  "EventsPage": {
+    "eyebrow": "Dedicated events route",
+    "title": "Upcoming sessions in a quieter frame.",
+    "description": "This page separates live programming from the menu so each format can have its own rhythm."
+  },
+  "JournalIndexPage": {
+    "eyebrow": "Dedicated journal route",
+    "title": "Stories, notes, and room atmosphere.",
+    "description": "Long-form reading belongs away from the menu. This route keeps the journal distraction-free while preserving bilingual fallback behavior.",
+    "cardEyebrow": "Journal entry"
+  },
+  "Journal": {
+    "sectionLabel": "Journal",
+    "backToMenu": "Back to journal",
+    "fallbackNotice": "This article is currently using its Vietnamese copy as a fallback.",
+    "notFound": "Article not found"
+  },
+  "Admin": {
+    "title": "Admin dashboard",
+    "description": "Phase 1 scaffold for bilingual content operations.",
+    "controlRoom": "Control room",
+    "previewMode": "Preview mode: Supabase credentials are missing, so the dashboard is running as a local scaffold.",
+    "authRequired": "Sign in with Supabase Auth to access the admin dashboard.",
+    "backToSite": "Back to site",
+    "categories": "Categories",
+    "menuItems": "Menu items",
+    "events": "Events",
+    "articles": "Articles",
+    "sorting": "Sorting surface",
+    "saveDraft": "Save draft",
+    "publish": "Publish",
+    "soldOut": "Sold out",
+    "dragHint": "Drag handles and instant toggles belong here in Phase 2.",
+    "tabs": "Tabs",
+    "tabColor": "Tab color",
+    "sortOrder": "Sort order",
+    "descriptions": "Descriptions",
+    "price": "Price",
+    "performer": "Performer",
+    "date": "Date",
+    "content": "Content",
+    "vietnamese": "Vietnamese",
+    "english": "English"
+  },
+  "Common": {
+    "notFound": "Page not found",
+    "backHome": "Back home"
+  }
+}

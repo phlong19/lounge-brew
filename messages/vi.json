@@ -1,0 +1,102 @@
+{
+  "Navigation": {
+    "brand": "Lounge Brew",
+    "eyebrow": "Coffee lounge · live sessions",
+    "home": "Trang chủ",
+    "menu": "Thực đơn",
+    "events": "Sự kiện",
+    "journal": "Tạp chí",
+    "admin": "Quản trị",
+    "language": "Ngôn ngữ"
+  },
+  "LandingPage": {
+    "eyebrow": "Một lounge song ngữ được tách thành những không gian riêng",
+    "title": "Chọn căn phòng bạn muốn bước vào trước.",
+    "description": "Thực đơn giờ nằm ở route riêng, còn sự kiện, tạp chí và quản trị được tách thành từng trang tập trung nhưng vẫn dùng chung trạng thái ngôn ngữ dựa trên cookie.",
+    "primaryCta": "Mở thực đơn",
+    "secondaryCta": "Đọc tạp chí",
+    "menuEyebrow": "Đã rollout",
+    "menuDescription": "Toàn bộ trải nghiệm flipbook tactile hiện nằm ở `/menu`.",
+    "eventsEyebrow": "Lịch diễn",
+    "eventsDescription": "Xem các buổi diễn sắp tới trong một trang sự kiện riêng, ít xao nhãng hơn.",
+    "journalEyebrow": "Phòng đọc",
+    "journalDescription": "Đọc bài dài trong một không gian tách khỏi canvas thực đơn.",
+    "adminEyebrow": "Phòng điều khiển",
+    "adminDescription": "Quản lý nội dung song ngữ trong dashboard được bảo vệ."
+  },
+  "HomePage": {
+    "eyebrow": "Coffee lounge · live sessions · menu song ngữ",
+    "title": "Một thực đơn số có cảm giác như đang lật một cuốn sách thật.",
+    "subtitle": "Bản dịch tĩnh và dữ liệu Supabase được đồng bộ sẵn từ server trước khi giao diện xuất hiện.",
+    "mockDataNotice": "Đang hiển thị dữ liệu mẫu cho tới khi kết nối Supabase.",
+    "eventsEyebrow": "Lịch diễn",
+    "menuCoverTitle": "Lounge Brew",
+    "menuCoverSubtitle": "Cà phê, trà, signature và những đêm nhạc nhỏ.",
+    "menuVolumeLabel": "Tập 01",
+    "menuCoverFooter": "Cà phê · Trà · Những buổi nghe nhạc",
+    "backCoverQuote": "Lật chậm một chút. Căn phòng sẽ nghe hay hơn.",
+    "backCoverCaption": "Được tạo ra cho trải nghiệm song ngữ, nhịp đọc chậm và những lựa chọn thong thả.",
+    "upcomingEvents": "Lịch diễn sắp tới",
+    "featuredArticles": "Từ tạp chí",
+    "openJournal": "Đọc tạp chí",
+    "openAdmin": "Vào quản trị",
+    "exploreMenu": "Khám phá thực đơn",
+    "soldOut": "Hết món",
+    "fallbackNotice": "Đang dùng nội dung tiếng Việt thay thế",
+    "fromVietnamese": "Fallback VI",
+    "emptyEvents": "Lịch diễn mới sẽ sớm được cập nhật.",
+    "emptyArticles": "Những câu chuyện mới đang được pha.",
+    "nextPage": "Trang sau",
+    "previousPage": "Trang trước",
+    "frontCover": "Bìa trước",
+    "backCover": "Bìa sau"
+  },
+  "EventsPage": {
+    "eyebrow": "Trang sự kiện riêng",
+    "title": "Lịch diễn sắp tới trong một khung nhìn yên hơn.",
+    "description": "Trang này tách chương trình live khỏi thực đơn để mỗi định dạng có nhịp riêng của nó."
+  },
+  "JournalIndexPage": {
+    "eyebrow": "Trang tạp chí riêng",
+    "title": "Những bài viết, ghi chú và không khí của căn phòng.",
+    "description": "Nội dung dài nên nằm ngoài thực đơn. Route này giữ trải nghiệm đọc tập trung nhưng vẫn bảo toàn fallback song ngữ.",
+    "cardEyebrow": "Bài viết"
+  },
+  "Journal": {
+    "sectionLabel": "Tạp chí",
+    "backToMenu": "Quay lại tạp chí",
+    "fallbackNotice": "Bài viết này hiện đang dùng nội dung tiếng Việt làm phương án dự phòng.",
+    "notFound": "Không tìm thấy bài viết"
+  },
+  "Admin": {
+    "title": "Bảng quản trị",
+    "description": "Bộ khung giai đoạn 1 cho vận hành nội dung song ngữ.",
+    "controlRoom": "Phòng điều khiển",
+    "previewMode": "Chế độ xem trước: chưa có thông tin Supabase nên dashboard đang chạy như bộ khung cục bộ.",
+    "authRequired": "Đăng nhập bằng Supabase Auth để truy cập khu vực quản trị.",
+    "backToSite": "Quay lại trang chính",
+    "categories": "Danh mục",
+    "menuItems": "Món",
+    "events": "Sự kiện",
+    "articles": "Bài viết",
+    "sorting": "Khu vực sắp xếp",
+    "saveDraft": "Lưu nháp",
+    "publish": "Xuất bản",
+    "soldOut": "Hết món",
+    "dragHint": "Tay nắm kéo thả và nút bật tắt nhanh sẽ nằm ở đây trong Giai đoạn 2.",
+    "tabs": "Tab",
+    "tabColor": "Màu tab",
+    "sortOrder": "Thứ tự",
+    "descriptions": "Mô tả",
+    "price": "Giá",
+    "performer": "Nghệ sĩ",
+    "date": "Ngày giờ",
+    "content": "Nội dung",
+    "vietnamese": "Tiếng Việt",
+    "english": "Tiếng Anh"
+  },
+  "Common": {
+    "notFound": "Không tìm thấy trang",
+    "backHome": "Về trang chủ"
+  }
+}
