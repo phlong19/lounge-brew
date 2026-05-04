@@ -73,22 +73,91 @@ button {
   color: white;
 }
 
-.menu-page-sheet__tab {
+.menu-flipbook-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  overflow: visible;
+}
+
+.menu-book-tab-stack {
   position: absolute;
-  top: 3.5rem;
-  z-index: 10;
+  inset: 0;
+  z-index: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.menu-flipbook {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+.menu-flipbook .stf__wrapper {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.menu-flipbook .stf__block {
+  overflow: visible;
+}
+
+.menu-book-tab {
+  position: absolute;
+  top: var(--menu-tab-offset);
+  z-index: 1;
   max-width: 9rem;
+  border: 0;
+  padding: 0.75rem 1rem;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  opacity: 0.86;
+  pointer-events: auto;
+  transition:
+    opacity 180ms ease,
+    filter 180ms ease;
 }
 
-.stf__item.--right .menu-page-sheet__tab {
-  right: 0;
-  transform: translateX(72%);
-  border-radius: 1rem 1rem 1rem 0.5rem;
+.menu-book-tab:hover,
+.menu-book-tab--active {
+  opacity: 1;
+  filter: brightness(1.08);
 }
 
-.stf__item.--left .menu-page-sheet__tab {
+.menu-book-tab--left {
   left: 0;
   transform: translateX(-72%);
   border-radius: 1rem 1rem 0.5rem 1rem;
 }
 
+.menu-book-tab--right {
+  right: 0;
+  transform: translateX(72%);
+  border-radius: 1rem 1rem 1rem 0.5rem;
+}
+
+@media (max-width: 767px) {
+  .menu-book-tab {
+    max-width: 7.25rem;
+    padding: 0.65rem 0.8rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.24em;
+  }
+
+  .menu-book-tab--left {
+    transform: translateX(-58%);
+  }
+
+  .menu-book-tab--right {
+    transform: translateX(58%);
+  }
+}

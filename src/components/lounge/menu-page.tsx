@@ -21,7 +21,7 @@ export const MenuPageSheet = forwardRef<HTMLDivElement, Props>(
   function MenuPageSheet({ page, locale, totalBookPages, labels }, ref) {
     if (page.kind === "cover") {
       return (
-        <div ref={ref} className="h-full w-full">
+        <div ref={ref} className="h-full w-full" data-density="hard">
           <div className="flex h-full flex-col justify-between rounded-[28px] border border-white/15 bg-[radial-gradient(circle_at_top,_rgba(194,139,93,0.32),_transparent_35%),linear-gradient(135deg,#2a201b_0%,#18110d_100%)] p-8 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:p-10">
             <div className="space-y-4">
               <p className="text-xs uppercase tracking-[0.45em] text-white/70">
@@ -47,7 +47,7 @@ export const MenuPageSheet = forwardRef<HTMLDivElement, Props>(
 
     if (page.kind === "back") {
       return (
-        <div ref={ref} className="h-full w-full">
+        <div ref={ref} className="h-full w-full" data-density="hard">
           <div className="flex h-full flex-col justify-between rounded-[28px] border border-black/5 bg-page p-8 text-page-foreground shadow-[inset_0_0_0_1px_rgba(43,32,23,0.06)] sm:p-10">
             <div className="space-y-4">
               <p className="text-xs uppercase tracking-[0.45em] text-page-foreground/50">
@@ -68,17 +68,6 @@ export const MenuPageSheet = forwardRef<HTMLDivElement, Props>(
     return (
       <div ref={ref} className="h-full w-full overflow-visible">
         <div className="relative flex h-full flex-col rounded-[28px] border border-black/5 bg-page p-6 text-page-foreground shadow-[inset_0_0_0_1px_rgba(43,32,23,0.06)] sm:p-8">
-          {page.showTab ? (
-            <div
-              className="menu-page-sheet__tab px-4 py-3 text-xs font-semibold uppercase tracking-[0.35em] text-white shadow-[0_12px_28px_rgba(0,0,0,0.2)]"
-              style={{
-                backgroundColor: page.category.tabColor
-              }}
-            >
-              {page.category.tabLabel}
-            </div>
-          ) : null}
-
           <div className="mb-6 flex items-end justify-between gap-4 border-b border-page-foreground/10 pb-4">
             <div>
               <p className="text-xs uppercase tracking-[0.4em] text-page-foreground/45">

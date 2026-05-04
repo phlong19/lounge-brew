@@ -30,7 +30,7 @@ export function EventPolaroids({events, locale, title, eyebrow, emptyLabel, fall
           {emptyLabel}
         </div>
       ) : (
-        <div className="flex snap-x gap-4 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible">
+        <div className="flex snap-x gap-6 overflow-x-auto pb-8 md:grid md:snap-none md:grid-cols-2 lg:grid-cols-4 lg:overflow-visible items-start">
           {events.slice(0, 4).map((event, index) => {
             const coverStyle = event.coverImageUrl
               ? {
