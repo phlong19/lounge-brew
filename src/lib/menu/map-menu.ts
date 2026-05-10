@@ -1,14 +1,9 @@
 import type {AppLocale} from '@/i18n/config';
 import type {
   ArticleRow,
-  CategoryRow,
   EventRow,
   LocalizedArticle,
-  LocalizedCategory,
   LocalizedEvent,
-  LocalizedMenuItem,
-  MenuItemRow,
-  MenuSection
 } from '@/types/domain';
 
 type LocalizedString = {
@@ -33,38 +28,6 @@ function localizeText(locale: AppLocale, vietnamese?: string | null, english?: s
   }
 
   return {value: englishValue, fallbackFromVietnamese: false};
-}
-
-export function localizeCategory(locale: AppLocale, category: CategoryRow): LocalizedCategory {
-  const localizedName = localizeText(locale, category.name_vi, category.name_en);
-  const localizedTabLabel = localizeText(locale, category.tab_label_vi, category.tab_label_en);
-
-  return {
-    id: category.id,
-    name: localizedName.value,
-    tabLabel: localizedTabLabel.value,
-    tabColor: category.tab_color ?? '#8c6142',
-    sortOrder: category.sort_order,
-    fallbackFromVietnamese:
-      localizedName.fallbackFromVietnamese || localizedTabLabel.fallbackFromVietnamese
-  };
-}
-
-export function localizeMenuItem(locale: AppLocale, item: MenuItemRow): LocalizedMenuItem {
-  const localizedName = localizeText(locale, item.name_vi, item.name_en);
-  const localizedDescription = localizeText(locale, item.description_vi, item.description_en);
-
-  return {
-    id: item.id,
-    categoryId: item.category_id,
-    name: localizedName.value,
-    description: localizedDescription.value || null,
-    price: item.price,
-    isSoldOut: item.is_sold_out,
-    sortOrder: item.sort_order,
-    fallbackFromVietnamese:
-      localizedName.fallbackFromVietnamese || localizedDescription.fallbackFromVietnamese
-  };
 }
 
 export function localizeEvent(locale: AppLocale, event: EventRow): LocalizedEvent {
@@ -99,31 +62,6 @@ export function localizeArticle(locale: AppLocale, article: ArticleRow): Localiz
   };
 }
 
-export function buildMenuSections(
-  locale: AppLocale,
-  categories: CategoryRow[],
-  menuItems: MenuItemRow[]
-): MenuSection[] {
-  return [...categories]
-    .sort((left, right) => left.sort_order - right.sort_order)
-    .map((category) => {
-      const items = menuItems
-        .filter((item) => item.category_id === category.id)
-        .sort((left, right) => left.sort_order - right.sort_order)
-        .map((item) => localizeMenuItem(locale, item));
-
-      if (items.length === 0) {
-        return null;
-      }
-
-      return {
-        category: localizeCategory(locale, category),
-        items
-      };
-    })
-    .filter((section): section is MenuSection => Boolean(section));
-}
-
 export function localizeEvents(locale: AppLocale, events: EventRow[]) {
   return [...events]
     .filter((event) => event.is_active)
@@ -140,3 +78,4 @@ export function localizeArticles(locale: AppLocale, articles: ArticleRow[]) {
     )
     .map((article) => localizeArticle(locale, article));
 }
+

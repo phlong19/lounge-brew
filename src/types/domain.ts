@@ -54,26 +54,6 @@ export type HomePageData = {
   articles: ArticleRow[];
 };
 
-export type LocalizedCategory = {
-  id: string;
-  name: string;
-  tabLabel: string;
-  tabColor: string;
-  sortOrder: number;
-  fallbackFromVietnamese: boolean;
-};
-
-export type LocalizedMenuItem = {
-  id: string;
-  categoryId: string;
-  name: string;
-  description: string | null;
-  price: number;
-  isSoldOut: boolean;
-  sortOrder: number;
-  fallbackFromVietnamese: boolean;
-};
-
 export type LocalizedEvent = {
   id: string;
   title: string;
@@ -94,35 +74,11 @@ export type LocalizedArticle = {
   fallbackFromVietnamese: boolean;
 };
 
-export type MenuSection = {
-  category: LocalizedCategory;
-  items: LocalizedMenuItem[];
+export type MenuPage = {
+  id: string;
+  /** Physical index in the flipbook (0-based, each index = one face of a leaf) */
+  physicalIndex: number;
+  kind: 'cover' | 'content' | 'back';
+  /** Single image displayed on this page face */
+  image: string;
 };
-
-export type MenuPage =
-  | {
-      id: string;
-      physicalIndex: number;
-      bookPageNumber: null;
-      kind: 'cover';
-      title: string;
-      subtitle: string;
-    }
-  | {
-      id: string;
-      physicalIndex: number;
-      bookPageNumber: number;
-      kind: 'category';
-      category: LocalizedCategory;
-      items: LocalizedMenuItem[];
-      showTab: boolean;
-      sectionPageIndex: number;
-      sectionPageCount: number;
-    }
-  | {
-      id: string;
-      physicalIndex: number;
-      bookPageNumber: null;
-      kind: 'back';
-      quote: string;
-    };

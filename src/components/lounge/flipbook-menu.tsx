@@ -1,13 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { type CSSProperties, useRef, useState } from "react";
+import Image from "next/image";
+import { forwardRef, useRef, useState } from "react";
 
-import type { AppLocale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 import type { MenuPage } from "@/types/domain";
-
-import { MenuPageSheet } from "./menu-page";
 
 const HTMLFlipBook = dynamic(() => import("react-pageflip"), {
   ssr: false,
@@ -28,64 +26,61 @@ type FlipBookRef = {
   pageFlip: () => PageFlipApi | undefined;
 };
 
-type MenuCategoryPage = Extract<MenuPage, { kind: "category" }>;
-type MenuBookTabSide = "left" | "right";
-
-function getTabSide(
-  targetPageIndex: number,
-  currentPage: number,
-  orientation: PageFlipOrientation,
-): MenuBookTabSide {
-  if (orientation === "portrait") {
-    return targetPageIndex < currentPage ? "left" : "right";
-  }
-
-  return targetPageIndex <= currentPage ? "left" : "right";
-}
-
 type Props = {
   pages: MenuPage[];
-  locale: AppLocale;
   labels: {
     previousPage: string;
     nextPage: string;
-    soldOut: string;
-    fromVietnamese: string;
-    volumeLabel: string;
-    coverFooter: string;
-    backCaption: string;
     frontCover: string;
     backCover: string;
   };
 };
 
-export function FlipbookMenu({ pages, locale, labels }: Props) {
+type MenuImagePageProps = {
+  page: MenuPage;
+};
+
+const MenuImagePage = forwardRef<HTMLDivElement, MenuImagePageProps>(
+  function MenuImagePage({ page }, ref) {
+    const isCover = page.kind === "cover" || page.kind === "back";
+
+    return (
+      <div
+        ref={ref}
+        className="h-full w-full"
+        data-density={isCover ? "hard" : undefined}
+      >
+        <div
+          className={cn(
+            "relative h-full w-full overflow-hidden rounded-[28px] border",
+            isCover
+              ? "border-white/15 bg-[#18110d] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+              : "border-black/5 bg-page shadow-[inset_0_0_0_1px_rgba(43,32,23,0.06)]",
+          )}
+        >
+          <Image
+            src={page.image}
+            alt={`Menu ${page.id}`}
+            fill
+            sizes="(max-width: 768px) 90vw, 560px"
+            className="object-cover object-center"
+            priority={page.physicalIndex <= 1}
+          />
+        </div>
+      </div>
+    );
+  },
+);
+
+export function FlipbookMenu({ pages, labels }: Props) {
   const bookRef = useRef<FlipBookRef | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [orientation, setOrientation] =
-    useState<PageFlipOrientation>("landscape");
-  const totalBookPages = pages.filter(
-    (page) => page.bookPageNumber !== null,
-  ).length;
 
   const canGoBack = currentPage > 0;
   const canGoNext = currentPage < pages.length - 1;
+
+  const totalContentPages = pages.filter((p) => p.kind === "content").length;
   const activePage = pages[currentPage] ?? pages[0];
-  const activeCategoryId =
-    activePage.kind === "category" ? activePage.category.id : null;
-  const categoryTabs = pages
-    .filter(
-      (page): page is MenuCategoryPage =>
-        page.kind === "category" && page.showTab,
-    )
-    .map((page) => ({
-      id: page.category.id,
-      label: page.category.tabLabel,
-      color: page.category.tabColor,
-      sortOrder: page.category.sortOrder,
-      targetPageIndex: page.physicalIndex,
-    }))
-    .sort((firstTab, secondTab) => firstTab.sortOrder - secondTab.sortOrder);
 
   function getProgressLabel(page: MenuPage) {
     if (page.kind === "cover") {
@@ -96,68 +91,18 @@ export function FlipbookMenu({ pages, locale, labels }: Props) {
       return labels.backCover;
     }
 
-    return `${page.bookPageNumber} / ${totalBookPages}`;
-  }
+    // Find 1-based content page number
+    const contentPages = pages.filter((p) => p.kind === "content");
+    const contentIndex = contentPages.indexOf(page);
 
-  function jumpToPage(targetPageIndex: number) {
-    if (targetPageIndex === currentPage) {
-      return;
-    }
-
-    const pageFlip = bookRef.current?.pageFlip();
-
-    if (!pageFlip) {
-      return;
-    }
-
-    try {
-      pageFlip.flip(targetPageIndex, "bottom");
-    } catch {
-      pageFlip.turnToPage(targetPageIndex);
-      setCurrentPage(targetPageIndex);
-    }
+    return `${contentIndex + 1} / ${totalContentPages}`;
   }
 
   return (
     <section className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 py-4">
-      <div className="w-full rounded-[38px] border border-white/10 bg-white/5 p-3 shadow-[0_34px_100px_rgba(0,0,0,0.45)] backdrop-blur md:p-4">
+      <div className="w-full">
         <div className="overflow-visible rounded-[30px] bg-black/10 p-1 md:p-2">
           <div className="menu-flipbook-stage">
-            <div className="menu-book-tab-stack">
-              {categoryTabs.map((tab, index) => {
-                const tabSide = getTabSide(
-                  tab.targetPageIndex,
-                  currentPage,
-                  orientation,
-                );
-                const isActive = tab.id === activeCategoryId;
-
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    aria-current={isActive ? "page" : undefined}
-                    onClick={() => jumpToPage(tab.targetPageIndex)}
-                    className={cn(
-                      "menu-book-tab",
-                      tabSide === "left"
-                        ? "menu-book-tab--left"
-                        : "menu-book-tab--right",
-                      isActive && "menu-book-tab--active",
-                    )}
-                    style={
-                      {
-                        "--menu-tab-offset": `${3.5 + index * 3.75}rem`,
-                        backgroundColor: tab.color,
-                      } as CSSProperties
-                    }
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-
             <HTMLFlipBook
               ref={bookRef}
               startPage={0}
@@ -186,24 +131,9 @@ export function FlipbookMenu({ pages, locale, labels }: Props) {
               onFlip={(event: { data: number }) =>
                 setCurrentPage(event.data ?? 0)
               }
-              onChangeOrientation={(event: { data: PageFlipOrientation }) =>
-                setOrientation(event.data)
-              }
             >
               {pages.map((page) => (
-                <MenuPageSheet
-                  key={page.id}
-                  page={page}
-                  locale={locale}
-                  totalBookPages={totalBookPages}
-                  labels={{
-                    soldOut: labels.soldOut,
-                    fromVietnamese: labels.fromVietnamese,
-                    volumeLabel: labels.volumeLabel,
-                    coverFooter: labels.coverFooter,
-                    backCaption: labels.backCaption,
-                  }}
-                />
+                <MenuImagePage key={page.id} page={page} />
               ))}
             </HTMLFlipBook>
           </div>

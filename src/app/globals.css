@@ -39,7 +39,7 @@ html {
 
 body {
   min-height: 100dvh;
-  overflow-x: hidden;
+  overflow-x: clip;
   background:
     radial-gradient(circle at top, rgba(194, 139, 93, 0.18), transparent 35%),
     radial-gradient(circle at bottom right, rgba(140, 97, 66, 0.18), transparent 25%),
@@ -81,14 +81,6 @@ button {
   overflow: visible;
 }
 
-.menu-book-tab-stack {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: visible;
-  pointer-events: none;
-}
-
 .menu-flipbook {
   position: relative;
   z-index: 1;
@@ -106,58 +98,3 @@ button {
   overflow: visible;
 }
 
-.menu-book-tab {
-  position: absolute;
-  top: var(--menu-tab-offset);
-  z-index: 1;
-  max-width: 9rem;
-  border: 0;
-  padding: 0.75rem 1rem;
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.35em;
-  line-height: 1;
-  text-transform: uppercase;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-  opacity: 0.86;
-  pointer-events: auto;
-  transition:
-    opacity 180ms ease,
-    filter 180ms ease;
-}
-
-.menu-book-tab:hover,
-.menu-book-tab--active {
-  opacity: 1;
-  filter: brightness(1.08);
-}
-
-.menu-book-tab--left {
-  left: 0;
-  transform: translateX(-72%);
-  border-radius: 1rem 1rem 0.5rem 1rem;
-}
-
-.menu-book-tab--right {
-  right: 0;
-  transform: translateX(72%);
-  border-radius: 1rem 1rem 1rem 0.5rem;
-}
-
-@media (max-width: 767px) {
-  .menu-book-tab {
-    max-width: 7.25rem;
-    padding: 0.65rem 0.8rem;
-    font-size: 0.625rem;
-    letter-spacing: 0.24em;
-  }
-
-  .menu-book-tab--left {
-    transform: translateX(-58%);
-  }
-
-  .menu-book-tab--right {
-    transform: translateX(58%);
-  }
-}
