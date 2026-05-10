@@ -10,23 +10,23 @@ export default async function AdminPage() {
     <div className="space-y-6">
       <SiteHeader active="admin" />
 
-      <header className="flex flex-col gap-4 rounded-[36px] border border-white/10 bg-white/5 p-6 backdrop-blur md:flex-row md:items-end md:justify-between">
+      <header className="flex flex-col gap-4 rounded-[36px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 backdrop-blur md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.45em] text-white/45">{t('controlRoom')}</p>
-          <h1 className="mt-4 font-display text-5xl text-white/95">{t('title')}</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/70">{t('description')}</p>
+          <p className="text-xs uppercase tracking-[0.45em] text-[#a8c4b8]/45">{t('controlRoom')}</p>
+          <h1 className="mt-4 font-display text-5xl text-[#f5f0e3]/95">{t('title')}</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-[#a8c4b8]/70">{t('description')}</p>
         </div>
 
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
-            className="rounded-full border border-white/10 px-5 py-3 text-sm font-medium text-white/80"
+            className="rounded-full border border-[#f5f0e3]/10 px-5 py-3 text-sm font-medium text-[#f5f0e3]/80"
           >
             {t('saveDraft')}
           </button>
           <button
             type="button"
-            className="rounded-full bg-accent px-5 py-3 text-sm font-medium text-white shadow-[0_14px_32px_rgba(194,139,93,0.3)]"
+            className="rounded-full bg-accent px-5 py-3 text-sm font-medium text-[#f5f0e3] shadow-[0_14px_32px_rgba(15,123,95,0.3)]"
           >
             {t('publish')}
           </button>
@@ -34,7 +34,7 @@ export default async function AdminPage() {
       </header>
 
       <section className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur">
+        <div className="rounded-[32px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 backdrop-blur">
           <h2 className="font-display text-4xl">{t('categories')}</h2>
           <div className="mt-6 space-y-6">
             <BilingualFieldPair
@@ -56,25 +56,25 @@ export default async function AdminPage() {
               englishPlaceholder="Tab label"
             />
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm text-white/70">
+              <label className="grid gap-2 text-sm text-[#a8c4b8]/70">
                 <span>{t('tabColor')}</span>
                 <input
                   defaultValue="#9a6b43"
-                  className="w-full rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none"
+                  className="w-full rounded-2xl border border-[#f5f0e3]/10 bg-[#0c1a17]/40 px-4 py-3 text-sm text-[#f5f0e3] outline-none"
                 />
               </label>
-              <label className="grid gap-2 text-sm text-white/70">
+              <label className="grid gap-2 text-sm text-[#a8c4b8]/70">
                 <span>{t('sortOrder')}</span>
                 <input
                   defaultValue="1"
-                  className="w-full rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none"
+                  className="w-full rounded-2xl border border-[#f5f0e3]/10 bg-[#0c1a17]/40 px-4 py-3 text-sm text-[#f5f0e3] outline-none"
                 />
               </label>
             </div>
           </div>
         </div>
 
-        <div className="rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur">
+        <div className="rounded-[32px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 backdrop-blur">
           <h2 className="font-display text-4xl">{t('menuItems')}</h2>
           <div className="mt-6 space-y-6">
             <BilingualFieldPair
@@ -95,14 +95,14 @@ export default async function AdminPage() {
               textarea
             />
             <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
-              <label className="grid gap-2 text-sm text-white/70">
+              <label className="grid gap-2 text-sm text-[#a8c4b8]/70">
                 <span>{t('price')}</span>
                 <input
                   defaultValue="85000"
-                  className="w-full rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none"
+                  className="w-full rounded-2xl border border-[#f5f0e3]/10 bg-[#0c1a17]/40 px-4 py-3 text-sm text-[#f5f0e3] outline-none"
                 />
               </label>
-              <label className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white/80">
+              <label className="inline-flex items-center gap-3 rounded-2xl border border-[#f5f0e3]/10 bg-[#0c1a17]/40 px-4 py-3 text-sm text-[#f5f0e3]/80">
                 <input type="checkbox" className="size-4 accent-[var(--accent)]" />
                 {t('soldOut')}
               </label>
@@ -110,7 +110,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        <div className="rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur">
+        <div className="rounded-[32px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 backdrop-blur">
           <h2 className="font-display text-4xl">{t('events')}</h2>
           <div className="mt-6 space-y-6">
             <BilingualFieldPair
@@ -129,25 +129,25 @@ export default async function AdminPage() {
               textarea
             />
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm text-white/70">
+              <label className="grid gap-2 text-sm text-[#a8c4b8]/70">
                 <span>{t('performer')}</span>
                 <input
                   defaultValue="An Tran Quartet"
-                  className="w-full rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none"
+                  className="w-full rounded-2xl border border-[#f5f0e3]/10 bg-[#0c1a17]/40 px-4 py-3 text-sm text-[#f5f0e3] outline-none"
                 />
               </label>
-              <label className="grid gap-2 text-sm text-white/70">
+              <label className="grid gap-2 text-sm text-[#a8c4b8]/70">
                 <span>{t('date')}</span>
                 <input
                   defaultValue="2026-04-15 19:30"
-                  className="w-full rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none"
+                  className="w-full rounded-2xl border border-[#f5f0e3]/10 bg-[#0c1a17]/40 px-4 py-3 text-sm text-[#f5f0e3] outline-none"
                 />
               </label>
             </div>
           </div>
         </div>
 
-        <div className="rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur">
+        <div className="rounded-[32px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 backdrop-blur">
           <h2 className="font-display text-4xl">{t('articles')}</h2>
           <div className="mt-6 space-y-6">
             <BilingualFieldPair
@@ -169,11 +169,11 @@ export default async function AdminPage() {
         </div>
       </section>
 
-      <section className="rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur">
+      <section className="rounded-[32px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 backdrop-blur">
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div>
             <h2 className="font-display text-4xl">{t('sorting')}</h2>
-            <p className="mt-2 text-sm leading-7 text-white/70">{t('dragHint')}</p>
+            <p className="mt-2 text-sm leading-7 text-[#a8c4b8]/70">{t('dragHint')}</p>
           </div>
         </div>
 
@@ -181,14 +181,14 @@ export default async function AdminPage() {
           {['Espresso Tonic', 'Sea Salt Latte', 'Cold Brew Đêm'].map((item, index) => (
             <div
               key={item}
-              className="flex items-center justify-between rounded-[24px] border border-white/10 bg-black/10 px-4 py-4"
+              className="flex items-center justify-between rounded-[24px] border border-[#f5f0e3]/10 bg-[#0c1a17]/40 px-4 py-4"
               draggable
             >
               <div className="space-y-1">
-                <p className="text-xs uppercase tracking-[0.28em] text-white/40">#{index + 1}</p>
-                <p className="font-medium text-white/85">{item}</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-[#a8c4b8]/40">#{index + 1}</p>
+                <p className="font-medium text-[#f5f0e3]/85">{item}</p>
               </div>
-              <span className="text-white/35">⋮⋮</span>
+              <span className="text-[#a8c4b8]/35">⋮⋮</span>
             </div>
           ))}
         </div>

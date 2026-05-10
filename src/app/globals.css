@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #120f0d;
-  --foreground: #f8f3eb;
-  --muted: #cbbba6;
-  --surface: #1a1512;
-  --surface-strong: #261d18;
-  --accent: #c28b5d;
-  --accent-soft: #8c6142;
-  --border: rgba(255, 255, 255, 0.1);
-  --page: #f2e7d7;
-  --page-foreground: #2b2017;
+  --background: #0c1a17;
+  --foreground: #f5f0e3;
+  --muted: #a8c4b8;
+  --surface: #122a23;
+  --surface-strong: #1a3a30;
+  --accent: #0f7b5f;
+  --accent-soft: #0a6048;
+  --border: rgba(245, 240, 227, 0.12);
+  --page: #f5f0e3;
+  --page-foreground: #1a3a30;
 }
 
 @theme inline {
@@ -41,8 +41,8 @@ body {
   min-height: 100dvh;
   overflow-x: clip;
   background:
-    radial-gradient(circle at top, rgba(194, 139, 93, 0.18), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(140, 97, 66, 0.18), transparent 25%),
+    radial-gradient(circle at top, rgba(15, 123, 95, 0.18), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(10, 96, 72, 0.14), transparent 25%),
     var(--background);
   color: var(--foreground);
 }
@@ -53,10 +53,20 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(circle at center, black, transparent 85%);
+    /* Horizontal lines */
+    linear-gradient(0deg, rgba(15, 123, 95, 0.04) 1px, transparent 1px),
+    /* Vertical lines */
+    linear-gradient(90deg, rgba(15, 123, 95, 0.04) 1px, transparent 1px),
+    /* Diagonal fill on even squares */
+    repeating-linear-gradient(
+      45deg,
+      rgba(15, 123, 95, 0.015),
+      rgba(15, 123, 95, 0.015) 1px,
+      transparent 1px,
+      transparent 5px
+    );
+  background-size: 40px 40px, 40px 40px, 10px 10px;
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
 }
 
 a {
@@ -69,7 +79,7 @@ button {
 }
 
 ::selection {
-  background: rgba(194, 139, 93, 0.45);
+  background: rgba(15, 123, 95, 0.4);
   color: white;
 }
 
@@ -97,4 +107,3 @@ button {
 .menu-flipbook .stf__block {
   overflow: visible;
 }
-

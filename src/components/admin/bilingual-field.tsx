@@ -10,7 +10,7 @@ type Props = {
 };
 
 const fieldClassName =
-  'w-full rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 focus:border-accent/70';
+  'w-full rounded-2xl border border-[#f5f0e3]/10 bg-[#0c1a17]/40 px-4 py-3 text-sm text-[#f5f0e3] outline-none transition placeholder:text-[#a8c4b8]/30 focus:border-accent/70';
 
 export function BilingualFieldPair({
   legend,
@@ -29,9 +29,9 @@ export function BilingualFieldPair({
 
   return (
     <fieldset className="space-y-3">
-      <legend className="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">{legend}</legend>
+      <legend className="text-xs font-semibold uppercase tracking-[0.35em] text-[#a8c4b8]/45">{legend}</legend>
       <div className="grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-white/70">
+        <label className="grid gap-2 text-sm text-[#a8c4b8]/70">
           <span>{vietnameseLabel}</span>
           {textarea ? (
             <textarea
@@ -48,7 +48,7 @@ export function BilingualFieldPair({
           )}
         </label>
 
-        <label className="grid gap-2 text-sm text-white/70">
+        <label className="grid gap-2 text-sm text-[#a8c4b8]/70">
           <span>{englishLabel}</span>
           {textarea ? (
             <textarea

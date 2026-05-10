@@ -26,14 +26,14 @@ export default async function JournalIndexPage() {
       <div className="mx-auto flex max-w-[1400px] flex-col gap-6">
         <SiteHeader active="journal" />
 
-        <section className="rounded-[36px] border border-white/10 bg-white/5 p-6 backdrop-blur sm:p-8">
-          <p className="text-xs uppercase tracking-[0.45em] text-white/45">{journalT('eyebrow')}</p>
-          <h1 className="mt-4 font-display text-5xl leading-none text-white/95">{journalT('title')}</h1>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-white/72">{journalT('description')}</p>
+        <section className="rounded-[36px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 backdrop-blur sm:p-8">
+          <p className="text-xs uppercase tracking-[0.45em] text-[#a8c4b8]/45">{journalT('eyebrow')}</p>
+          <h1 className="mt-4 font-display text-5xl leading-none text-[#f5f0e3]/95">{journalT('title')}</h1>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-[#a8c4b8]/72">{journalT('description')}</p>
         </section>
 
         {articles.length === 0 ? (
-          <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 text-sm leading-7 text-white/70 backdrop-blur">
+          <div className="rounded-[28px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 text-sm leading-7 text-[#f5f0e3]/70 backdrop-blur">
             {menuT('emptyArticles')}
           </div>
         ) : (
@@ -42,13 +42,13 @@ export default async function JournalIndexPage() {
               <Link
                 key={article.id}
                 href={`/journal/${article.slug}`}
-                className="rounded-[32px] border border-white/10 bg-white/5 p-6 transition hover:border-white/20 hover:bg-white/7"
+                className="rounded-[32px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 transition hover:border-[#f5f0e3]/20 hover:bg-[#0f7b5f]/12"
               >
-                <p className="text-xs uppercase tracking-[0.38em] text-white/40">{journalT('cardEyebrow')}</p>
-                <h2 className="mt-4 font-display text-4xl leading-none text-white/95">{article.title}</h2>
-                <p className="mt-4 text-sm leading-7 text-white/70">{toExcerpt(article.content)}</p>
+                <p className="text-xs uppercase tracking-[0.38em] text-[#a8c4b8]/40">{journalT('cardEyebrow')}</p>
+                <h2 className="mt-4 font-display text-4xl leading-none text-[#f5f0e3]/95">{article.title}</h2>
+                <p className="mt-4 text-sm leading-7 text-[#a8c4b8]/72">{toExcerpt(article.content)}</p>
                 {article.fallbackFromVietnamese && locale === 'en' ? (
-                  <span className="mt-4 inline-flex rounded-full bg-accent/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-accent">
+                  <span className="mt-4 inline-flex rounded-full bg-[#f5f0e3]/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#f5f0e3]/60">
                     {menuT('fromVietnamese')}
                   </span>
                 ) : null}

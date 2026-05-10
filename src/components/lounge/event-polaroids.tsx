@@ -21,12 +21,12 @@ export function EventPolaroids({events, locale, title, eyebrow, emptyLabel, fall
   return (
     <section id="events" className="space-y-4">
       <div>
-        <p className="text-xs uppercase tracking-[0.45em] text-white/50">{eyebrow}</p>
+        <p className="text-xs uppercase tracking-[0.45em] text-[#a8c4b8]/50">{eyebrow}</p>
         <h2 className="mt-2 font-display text-4xl">{title}</h2>
       </div>
 
       {events.length === 0 ? (
-        <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 text-sm leading-7 text-white/70 backdrop-blur">
+        <div className="rounded-[28px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 text-sm leading-7 text-[#f5f0e3]/70 backdrop-blur">
           {emptyLabel}
         </div>
       ) : (
@@ -53,7 +53,7 @@ export function EventPolaroids({events, locale, title, eyebrow, emptyLabel, fall
                 )}
               >
                 <div
-                  className="flex aspect-[4/3] items-end rounded-[18px] bg-[radial-gradient(circle_at_top,_rgba(194,139,93,0.45),_transparent_45%),linear-gradient(135deg,#30251e_0%,#17110d_100%)] p-4 text-white"
+                  className="flex aspect-[4/3] items-end rounded-[18px] bg-[radial-gradient(circle_at_top,_rgba(15,123,95,0.4),_transparent_45%),linear-gradient(135deg,#1a3a30_0%,#0c1a17_100%)] p-4 text-[#f5f0e3]"
                   style={coverStyle}
                 >
                   <p className="font-display text-3xl leading-none">{event.performerName}</p>

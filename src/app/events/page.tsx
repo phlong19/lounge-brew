@@ -20,10 +20,10 @@ export default async function EventsPage() {
       <div className="mx-auto flex max-w-[1400px] flex-col gap-6">
         <SiteHeader active="events" />
 
-        <section className="rounded-[36px] border border-white/10 bg-white/5 p-6 backdrop-blur sm:p-8">
-          <p className="text-xs uppercase tracking-[0.45em] text-white/45">{eventsT('eyebrow')}</p>
-          <h1 className="mt-4 font-display text-5xl leading-none text-white/95">{eventsT('title')}</h1>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-white/72">{eventsT('description')}</p>
+        <section className="rounded-[36px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-6 backdrop-blur sm:p-8">
+          <p className="text-xs uppercase tracking-[0.45em] text-[#a8c4b8]/45">{eventsT('eyebrow')}</p>
+          <h1 className="mt-4 font-display text-5xl leading-none text-[#f5f0e3]/95">{eventsT('title')}</h1>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-[#a8c4b8]/72">{eventsT('description')}</p>
         </section>
 
         <EventPolaroids

@@ -54,8 +54,8 @@ const MenuImagePage = forwardRef<HTMLDivElement, MenuImagePageProps>(
           className={cn(
             "relative h-full w-full overflow-hidden rounded-[28px] border",
             isCover
-              ? "border-white/15 bg-[#18110d] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-              : "border-black/5 bg-page shadow-[inset_0_0_0_1px_rgba(43,32,23,0.06)]",
+              ? "border-[#f5f0e3]/12 bg-[#0c1a17] shadow-[inset_0_1px_0_rgba(245,240,227,0.06)]"
+              : "border-[#1a3a30]/10 bg-page shadow-[inset_0_0_0_1px_rgba(26,58,48,0.06)]",
           )}
         >
           <Image
@@ -101,7 +101,7 @@ export function FlipbookMenu({ pages, labels }: Props) {
   return (
     <section className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 py-4">
       <div className="w-full">
-        <div className="overflow-visible rounded-[30px] bg-black/10 p-1 md:p-2">
+        <div className="overflow-visible rounded-[30px] bg-[#0f7b5f]/8 p-1 md:p-2">
           <div className="menu-flipbook-stage">
             <HTMLFlipBook
               ref={bookRef}
@@ -140,7 +140,7 @@ export function FlipbookMenu({ pages, labels }: Props) {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm backdrop-blur">
+      <div className="flex items-center gap-3 rounded-full border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 px-3 py-2 text-sm backdrop-blur">
         <button
           type="button"
           onClick={() => bookRef.current?.pageFlip()?.flipPrev("bottom")}
@@ -148,13 +148,13 @@ export function FlipbookMenu({ pages, labels }: Props) {
           className={cn(
             "rounded-full px-4 py-2 transition",
             canGoBack
-              ? "bg-white/10 text-white hover:bg-white/15"
-              : "cursor-not-allowed bg-white/5 text-white/35",
+              ? "bg-[#0f7b5f]/20 text-[#f5f0e3] hover:bg-[#0f7b5f]/30"
+              : "cursor-not-allowed bg-[#0f7b5f]/5 text-[#f5f0e3]/35",
           )}
         >
           ← {labels.previousPage}
         </button>
-        <span className="min-w-20 text-center font-medium text-white/75">
+        <span className="min-w-20 text-center font-medium text-[#f5f0e3]/75">
           {getProgressLabel(activePage)}
         </span>
         <button
@@ -164,8 +164,8 @@ export function FlipbookMenu({ pages, labels }: Props) {
           className={cn(
             "rounded-full px-4 py-2 transition",
             canGoNext
-              ? "bg-accent text-white hover:brightness-110"
-              : "cursor-not-allowed bg-white/5 text-white/35",
+              ? "bg-accent text-[#f5f0e3] hover:brightness-110"
+              : "cursor-not-allowed bg-[#0f7b5f]/5 text-[#f5f0e3]/35",
           )}
         >
           {labels.nextPage} →

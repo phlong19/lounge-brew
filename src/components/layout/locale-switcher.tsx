@@ -32,8 +32,8 @@ export function LocaleSwitcher() {
   }
 
   return (
-    <div className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1 text-xs backdrop-blur">
-      <span className="px-2 text-white/60">{t('language')}</span>
+    <div className="inline-flex items-center gap-1 rounded-full border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-1 text-xs backdrop-blur">
+      <span className="px-2 text-[#a8c4b8]/60">{t('language')}</span>
       {locales.map((locale) => {
         const isActive = locale === currentLocale;
 
@@ -46,8 +46,8 @@ export function LocaleSwitcher() {
             className={cn(
               'rounded-full px-3 py-1.5 font-medium uppercase tracking-[0.25em] transition',
               isActive
-                ? 'bg-accent text-white shadow-[0_8px_24px_rgba(194,139,93,0.35)]'
-                : 'text-white/70 hover:text-white',
+                ? 'bg-accent text-[#f5f0e3] shadow-[0_8px_24px_rgba(15,123,95,0.35)]'
+                : 'text-[#f5f0e3]/70 hover:text-[#f5f0e3]',
               isPending && 'opacity-60'
             )}
             aria-pressed={isActive}

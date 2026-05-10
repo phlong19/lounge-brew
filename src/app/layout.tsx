@@ -1,17 +1,17 @@
 import type {Metadata} from 'next';
-import {Cormorant_Garamond, Inter} from 'next/font/google';
+import {DM_Sans, Playfair_Display} from 'next/font/google';
 import {NextIntlClientProvider} from 'next-intl';
 import {getLocale, getMessages} from 'next-intl/server';
 
 import './globals.css';
 
-const sans = Inter({
+const sans = DM_Sans({
   subsets: ['latin', 'vietnamese'],
   variable: '--font-sans'
 });
 
-const display = Cormorant_Garamond({
-  subsets: ['latin', 'vietnamese'],
+const display = Playfair_Display({
+  subsets: ['latin', 'latin-ext'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-display'
 });
