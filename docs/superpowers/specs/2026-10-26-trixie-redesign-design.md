@@ -1,5 +1,7 @@
 # Trixie: modern website with the flipbook at its centre
 
+> Homepage composition superseded by the current preservation-first user clarification. See [the corrective plan](../plans/2026-10-26-trixie-preservation-modernization.md). Preserve original sections and order; modernize their presentation in place. Earlier implementation status below is historical.
+
 Date: 26 October 2026, Asia/Saigon. Status: user-approved direction, implemented and verified. See [the implementation report](../../reports/2026-10-26-trixie-implementation.md).
 
 ## Confirmed direction

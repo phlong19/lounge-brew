@@ -1,5 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { ReservationForm } from "@/components/lounge/reservation-form";
+import { venueNow } from "@/lib/reservations/validation";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import {
@@ -52,8 +54,7 @@ export async function VisitSection() {
                 <Icon name="arrowUpRight" />
               </AppLink>
             </Inline>
-          </Stack>
-          <Stack gap="xl" className="lg:pt-3">
+          <Stack gap="xl" className="pt-4">
             <Grid className="gap-8 sm:grid-cols-2">
               <Stack gap="sm">
                 <Typography variant="caption">{t("address")}</Typography>
@@ -89,6 +90,8 @@ export async function VisitSection() {
               </AppLink>
             </Stack>
           </Stack>
+          </Stack>
+          <ReservationForm today={venueNow().date} />
         </Grid>
       </Container>
     </Section>

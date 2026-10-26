@@ -135,9 +135,6 @@ export default async function ShowPage({ params }: Props) {
                       {t("bookingNote")}
                     </Typography>
                   ) : null}
-                  <Typography variant="small" tone="muted">
-                    {t("sourceNote")}
-                  </Typography>
                 </Stack>
                 {event.sourceUrl ? (
                   <AppLink

@@ -15,10 +15,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import type { NavigationItem } from "@/types/navigation";
 import { venue } from "@/data/trixie-content";
 
 type Props = {
-  items: { href: string; key: string; label: string }[];
+  items: NavigationItem[];
   active?: string;
   title: string;
   openLabel: string;
@@ -42,12 +43,12 @@ export function MobileNavigation({
           variant="ghost"
           size="icon"
           aria-label={openLabel}
-          className="lg:hidden"
+          className="xl:hidden"
         >
           <Icon name="menu" />
         </Button>
       </SheetTrigger>
-      <SheetContent closeLabel={closeLabel}>
+      <SheetContent closeLabel={closeLabel} className="overflow-y-auto">
         <SheetHeader>
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{venue.address}</SheetDescription>
@@ -57,8 +58,7 @@ export function MobileNavigation({
           className="flex-col items-stretch gap-1 py-5"
         >
           {items.map((item) => (
-            <AppLink
-              key={item.key}
+            <Stack key={item.key} gap="xs"><AppLink
               href={item.href}
               aria-current={active === item.key ? "page" : undefined}
               onClick={() => setOpen(false)}
@@ -67,13 +67,15 @@ export function MobileNavigation({
               {item.label}
               <Icon name="arrowUpRight" />
             </AppLink>
+            {item.children?.map(child => <AppLink key={child.key} href={child.href} onClick={() => setOpen(false)} className="min-h-11 py-2 pl-5 text-base hover:underline">{child.label}</AppLink>)}
+            </Stack>
           ))}
         </Navigation>
         <Stack className="mt-auto pb-[env(safe-area-inset-bottom)]">
           <LocaleSwitcher />
           <Button asChild size="lg">
-            <AppLink href={venue.phoneHref}>
-              <Icon name="phone" />
+            <AppLink href="/#reservation" onClick={() => setOpen(false)}>
+              <Icon name="calendar" />
               {bookingLabel}
             </AppLink>
           </Button>

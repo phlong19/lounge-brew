@@ -38,15 +38,12 @@ export default async function EventsPage() {
                 </Typography>
               </Stack>
               <EventGrid events={events} locale={locale as AppLocale} />
-              <Typography variant="small" tone="muted">
-                {t("sourceNote")}
-              </Typography>
             </Stack>
           </Container>
         </Section>
         <VisitSection />
       </Main>
-      <SiteFooter />
+      <SiteFooter compact />
     </>
   );
 }

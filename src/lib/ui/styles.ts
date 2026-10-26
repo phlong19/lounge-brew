@@ -1,5 +1,6 @@
 export const surfaceStyles = {
   paper: "bg-[#FFFAE7] text-[#15201C]",
+  stone: "bg-[#F1EEE7] text-[#15201C]",
   brand: "bg-[#006B57] text-[#FFFAE7]",
   evening: "bg-[#15201C] text-[#FFFAE7]",
   white: "bg-white text-[#15201C]",
