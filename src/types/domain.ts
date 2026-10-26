@@ -1,4 +1,4 @@
-import type {AppLocale} from '@/i18n/config';
+import type { AppLocale } from "@/i18n/config";
 
 export type Locale = AppLocale;
 
@@ -34,6 +34,8 @@ export type EventRow = {
   description_en: string | null;
   cover_image_url: string | null;
   is_active: boolean;
+  end_date?: string | null;
+  source_url?: string | null;
 };
 
 export type ArticleRow = {
@@ -62,6 +64,8 @@ export type LocalizedEvent = {
   description: string | null;
   coverImageUrl: string | null;
   fallbackFromVietnamese: boolean;
+  endDate?: string | null;
+  sourceUrl?: string | null;
 };
 
 export type LocalizedArticle = {
@@ -78,7 +82,11 @@ export type MenuPage = {
   id: string;
   /** Physical index in the flipbook (0-based, each index = one face of a leaf) */
   physicalIndex: number;
-  kind: 'cover' | 'content' | 'back';
+  kind: "cover" | "content" | "back";
   /** Single image displayed on this page face */
   image: string;
+  label: string;
+  category: string;
+  width: number;
+  height: number;
 };

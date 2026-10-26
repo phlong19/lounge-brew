@@ -1,61 +1,63 @@
-'use client';
+"use client";
 
-import {useRouter} from 'next/navigation';
-import {useLocale, useTranslations} from 'next-intl';
-import {useTransition} from 'react';
+import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useState, useTransition } from "react";
 
-import {locales} from '@/i18n/config';
-import {cn} from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import { Inline, Status } from "@/components/ui/layout";
+import { locales } from "@/i18n/config";
 
 export function LocaleSwitcher() {
-  const currentLocale = useLocale();
+  const locale = useLocale();
+  const t = useTranslations("Navigation");
   const router = useRouter();
-  const t = useTranslations('Navigation');
-  const [isPending, startTransition] = useTransition();
-
-  async function handleLocaleChange(nextLocale: (typeof locales)[number]) {
-    const response = await fetch('/api/locale', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({locale: nextLocale})
-    });
-
-    if (!response.ok) {
-      return;
-    }
-
-    startTransition(() => {
-      router.refresh();
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState(false);
+  function select(next: (typeof locales)[number]) {
+    if (next === locale || pending) return;
+    setError(false);
+    startTransition(async () => {
+      try {
+        const response = await fetch("/api/locale", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ locale: next }),
+        });
+        if (!response.ok) throw new Error("Locale change failed");
+        router.refresh();
+      } catch {
+        setError(true);
+      }
     });
   }
-
   return (
-    <div className="inline-flex items-center gap-1 rounded-full border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-1 text-xs backdrop-blur">
-      <span className="px-2 text-[#a8c4b8]/60">{t('language')}</span>
-      {locales.map((locale) => {
-        const isActive = locale === currentLocale;
-
-        return (
-          <button
-            key={locale}
-            type="button"
-            onClick={() => void handleLocaleChange(locale)}
-            disabled={isPending || isActive}
-            className={cn(
-              'rounded-full px-3 py-1.5 font-medium uppercase tracking-[0.25em] transition',
-              isActive
-                ? 'bg-accent text-[#f5f0e3] shadow-[0_8px_24px_rgba(15,123,95,0.35)]'
-                : 'text-[#f5f0e3]/70 hover:text-[#f5f0e3]',
-              isPending && 'opacity-60'
-            )}
-            aria-pressed={isActive}
-          >
-            {locale}
-          </button>
-        );
-      })}
-    </div>
+    <Inline
+      gap="none"
+      role="group"
+      aria-label={t("language")}
+      aria-busy={pending}
+    >
+      {locales.map((value) => (
+        <Button
+          key={value}
+          variant="ghost"
+          size="sm"
+          aria-pressed={locale === value}
+          disabled={pending}
+          onClick={() => select(value)}
+          className={
+            locale === value
+              ? "font-bold underline decoration-2 underline-offset-4"
+              : "font-normal"
+          }
+        >
+          {value.toUpperCase()}
+        </Button>
+      ))}
+      {error ? (
+        <Status className="max-w-56 text-red-800">{t("languageError")}</Status>
+      ) : null}
+    </Inline>
   );
 }

@@ -1,138 +1,207 @@
-import Link from 'next/link';
-import {getLocale, getTranslations} from 'next-intl/server';
+import { getLocale, getTranslations } from "next-intl/server";
 
-import {SiteHeader} from '@/components/layout/site-header';
-import {EventPolaroids} from '@/components/lounge/event-polaroids';
-import type {AppLocale} from '@/i18n/config';
-import type {LocalizedEvent} from '@/types/domain';
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { EventGrid } from "@/components/lounge/event-grid";
+import { PhotoGallery } from "@/components/lounge/photo-gallery";
+import { VisitSection } from "@/components/lounge/visit-section";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+import {
+  Container,
+  Grid,
+  Inline,
+  Main,
+  Section,
+  Stack,
+  Surface,
+} from "@/components/ui/layout";
+import { AppLink } from "@/components/ui/link";
+import { Media } from "@/components/ui/media";
+import { Typography } from "@/components/ui/typography";
+import { venue } from "@/data/trixie-content";
+import type { AppLocale } from "@/i18n/config";
+import { localizeEvents } from "@/lib/menu/map-menu";
+import { getLoungeData } from "@/lib/server/lounge-data";
+import { surfaceStyles } from "@/lib/ui/styles";
 
 export default async function LandingPage() {
-  const [landingT, locale] = await Promise.all([
-    getTranslations('LandingPage'),
-    getLocale()
+  const [t, locale, data] = await Promise.all([
+    getTranslations("Site"),
+    getLocale(),
+    getLoungeData(),
   ]);
-
-  const mockEvents: LocalizedEvent[] = [
-    {
-      id: '1',
-      title: 'Acoustic Night',
-      performerName: 'Vicky Nhung',
-      eventDate: new Date(Date.now() + 86400000 * 3).toISOString(), // +3 days
-      description: 'An intimate evening featuring acoustic covers of classic love songs.',
-      coverImageUrl: 'https://images.unsplash.com/photo-1516280440502-628d66cb63a5?q=80&w=600&auto=format&fit=crop',
-      fallbackFromVietnamese: false
-    },
-    {
-      id: '2',
-      title: 'Minishow',
-      performerName: 'Bùi Anh Tuấn',
-      eventDate: new Date(Date.now() + 86400000 * 10).toISOString(),
-      description: 'The return of the prince of ballads to Lounge Brew.',
-      coverImageUrl: 'https://images.unsplash.com/photo-1598387993441-a364f854c3e1?q=80&w=600&auto=format&fit=crop',
-      fallbackFromVietnamese: true
-    },
-    {
-      id: '3',
-      title: 'Weekend Jazz',
-      performerName: 'The Hà Nội Ensemble',
-      eventDate: new Date(Date.now() + 86400000 * 15).toISOString(),
-      description: 'Smooth jazz to pair with your signature drinks.',
-      coverImageUrl: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=600&auto=format&fit=crop',
-      fallbackFromVietnamese: false
-    }
-  ];
-
+  const events = localizeEvents(locale as AppLocale, data.events).slice(0, 4);
   return (
-    <main className="min-h-dvh">
-      <div className="absolute left-0 right-0 top-0 z-50 px-4 pt-4 md:px-6 lg:px-8">
-        <div className="mx-auto max-w-[1400px]">
-          <SiteHeader active="home" />
-        </div>
-      </div>
-
-      {/* Hero Section */}
-      <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden px-4 text-center">
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top,_rgba(15,123,95,0.15),_transparent_65%),linear-gradient(180deg,#0e1f1a_0%,#070d0b_100%)]" />
-        <div className="relative z-10 flex max-w-4xl flex-col items-center gap-6 mt-16">
-          <p className="text-xs uppercase tracking-[0.45em] text-accent-soft">{landingT('heroSubtitle')}</p>
-          <h1 className="font-display text-5xl leading-[1.1] text-[#f5f0e3] sm:text-7xl md:text-8xl">
-            {landingT('heroTitle')}
-          </h1>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
-              href="#events"
-              className="rounded-full bg-accent px-8 py-4 text-sm font-medium text-[#f5f0e3] shadow-[0_14px_32px_rgba(15,123,95,0.3)] transition hover:brightness-110"
-            >
-              {landingT('eventsTitle')}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Vibe / Intro Section */}
-      <section className="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6 lg:px-8">
-        <h2 className="font-display text-4xl text-[#f5f0e3] sm:text-5xl">{landingT('vibeTitle')}</h2>
-        <p className="mt-8 text-lg leading-8 text-[#a8c4b8]/80 sm:text-xl">
-          {landingT('vibeDescription')}
-        </p>
-      </section>
-
-      {/* Live Events Section */}
-      <section className="mx-auto max-w-[1400px] px-4 py-20 sm:px-6 lg:px-8">
-        <EventPolaroids
-          events={mockEvents}
-          locale={locale as AppLocale}
-          title={landingT('eventsTitle')}
-          eyebrow={landingT('eventsEyebrow')}
-          emptyLabel={landingT('eventsEmpty')}
-          fallbackBadge="VI"
-        />
-      </section>
-
-      {/* Menu CTA Section */}
-      <section className="mx-auto my-20 max-w-[1400px] px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[40px] border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 p-10 text-center backdrop-blur sm:p-20">
-          <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_bottom,_rgba(15,123,95,0.12),_transparent_50%)]" />
-          <div className="relative z-10 mx-auto max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.45em] text-[#a8c4b8]/50">{landingT('menuCtaEyebrow')}</p>
-            <h2 className="mt-6 font-display text-4xl leading-tight text-[#f5f0e3]/95 sm:text-6xl">{landingT('menuCtaTitle')}</h2>
-            <p className="mt-6 text-lg leading-8 text-[#f5f0e3]/70">{landingT('menuCtaDescription')}</p>
-            <Link
-              href="/menu"
-              className="mt-10 inline-block rounded-full bg-[#0f7b5f]/20 px-8 py-4 text-sm font-medium text-[#f5f0e3] transition hover:bg-[#0f7b5f]/35"
-            >
-              {landingT('menuCtaButton')}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer / Venue Information Section */}
-      <footer className="mt-32 border-t border-[#f5f0e3]/5 bg-[#070d0b]/60 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-[1400px]">
-          <div className="grid gap-12 text-center md:grid-cols-3 md:text-left">
-            <div>
-              <p className="text-xs uppercase tracking-[0.45em] text-[#a8c4b8]/45">{landingT('footerEyebrow')}</p>
-              <h3 className="mt-4 font-display text-4xl text-[#f5f0e3]/90">{landingT('footerTitle')}</h3>
-            </div>
-            <div className="space-y-4">
-              <h4 className="text-xs uppercase tracking-[0.25em] text-[#a8c4b8]/45">{landingT('footerHotlineLabel')}</h4>
-              <p className="text-lg text-[#f5f0e3]/85">{landingT('footerHotlines')}</p>
-              <div className="pt-4">
-                <h4 className="text-xs uppercase tracking-[0.25em] text-[#a8c4b8]/45">{landingT('footerHoursLabel')}</h4>
-                <p className="mt-2 text-lg text-[#f5f0e3]/85">{landingT('footerHours')}</p>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <h4 className="text-xs uppercase tracking-[0.25em] text-[#a8c4b8]/45">Location</h4>
-              <p className="text-lg text-[#f5f0e3]/85">{landingT('footerAddress')}</p>
-            </div>
-          </div>
-          <div className="mt-20 border-t border-[#f5f0e3]/5 pt-8 text-center text-xs text-[#a8c4b8]/30">
-            © {new Date().getFullYear()} Lounge Brew. All rights reserved.
-          </div>
-        </div>
-      </footer>
-    </main>
+    <>
+      <SiteHeader active="home" />
+      <Main id="main-content">
+        <Section className="py-7 md:py-10 lg:pb-16">
+          <Container>
+            <Grid className="gap-10 lg:grid-cols-[0.95fr_1.2fr] lg:items-center lg:gap-16">
+              <Stack gap="lg" className="py-3 lg:py-10">
+                <Typography
+                  as="h1"
+                  variant="display"
+                  tone="brand"
+                  className="whitespace-pre-line"
+                >
+                  {t("heroTitle")}
+                </Typography>
+                <Typography variant="lead" tone="muted" className="max-w-md">
+                  {t("heroDescription")}
+                </Typography>
+                <Inline gap="sm" className="pt-2">
+                  <Button asChild size="lg">
+                    <AppLink href={venue.phoneHref}>
+                      {t("book")}
+                      <Icon name="arrowUpRight" />
+                    </AppLink>
+                  </Button>
+                  <Button asChild variant="ghost" size="lg">
+                    <AppLink href="/menu">
+                      {t("openMenu")}
+                      <Icon name="arrowRight" className="size-4" />
+                    </AppLink>
+                  </Button>
+                </Inline>
+              </Stack>
+              <Surface className="relative aspect-[4/3] overflow-hidden lg:aspect-[5/6]">
+                <Media
+                  src="/trixie/stage.jpg"
+                  alt={t("heroAlt")}
+                  fill
+                  priority
+                  sizes="(min-width:1024px) 55vw, 100vw"
+                  className="object-[58%_center]"
+                />
+              </Surface>
+            </Grid>
+          </Container>
+        </Section>
+        <Section
+          id="shows"
+          aria-labelledby="shows-heading"
+          className="bg-white"
+        >
+          <Container>
+            <Stack gap="xl">
+              <Inline className="items-end justify-between" gap="lg">
+                <Stack gap="sm">
+                  <Typography as="h2" variant="heading" id="shows-heading">
+                    {t("upcoming")}
+                  </Typography>
+                  <Typography tone="muted">{t("showsIntro")}</Typography>
+                </Stack>
+                <AppLink
+                  href="/events"
+                  className="inline-flex min-h-11 items-center gap-2 font-medium hover:underline"
+                >
+                  {t("allShows")}
+                  <Icon name="arrowUpRight" className="size-4" />
+                </AppLink>
+              </Inline>
+              <EventGrid events={events} locale={locale as AppLocale} compact />
+            </Stack>
+          </Container>
+        </Section>
+        <Section
+          aria-labelledby="menu-preview-heading"
+          className={surfaceStyles.brand}
+        >
+          <Container>
+            <Grid className="items-center gap-10 md:grid-cols-2 lg:gap-24">
+              <Surface className="mx-auto w-full max-w-sm rotate-[-3deg] overflow-hidden motion-reduce:rotate-0">
+                <AppLink href="/menu?page=3" aria-label={t("openMenu")}>
+                  <Media
+                    src="/menu/page-03.webp"
+                    alt={t("menuAlt")}
+                    width={1211}
+                    height={1683}
+                    sizes="(min-width:768px) 35vw, 80vw"
+                    fit="contain"
+                    className="h-auto w-full"
+                  />
+                </AppLink>
+              </Surface>
+              <Stack gap="lg">
+                <Typography
+                  as="h2"
+                  variant="title"
+                  id="menu-preview-heading"
+                  className="whitespace-pre-line"
+                >
+                  {t("menuTitle")}
+                </Typography>
+                <Typography variant="lead" className="max-w-md">
+                  {t("menuDescription")}
+                </Typography>
+                <Typography variant="small">
+                  {t("menuPages")} · {t("menuNote")}
+                </Typography>
+                <Button asChild variant="secondary" size="lg" className="w-fit">
+                  <AppLink href="/menu">
+                    {t("openMenu")}
+                    <Icon name="arrowUpRight" />
+                  </AppLink>
+                </Button>
+              </Stack>
+            </Grid>
+          </Container>
+        </Section>
+        <Section id="venue" aria-labelledby="venue-heading">
+          <Container>
+            <Grid className="items-center gap-10 lg:grid-cols-2 lg:gap-24">
+              <Stack gap="lg">
+                <Typography
+                  as="h2"
+                  variant="title"
+                  tone="brand"
+                  id="venue-heading"
+                  className="whitespace-pre-line"
+                >
+                  {t("storyTitle")}
+                </Typography>
+                <Typography variant="lead" tone="muted">
+                  {t("storyDescription")}
+                </Typography>
+                <AppLink
+                  href="#contact"
+                  className="inline-flex min-h-11 w-fit items-center gap-2 font-medium hover:underline"
+                >
+                  {t("storyLink")}
+                  <Icon name="arrowDown" className="size-4" />
+                </AppLink>
+              </Stack>
+              <Surface className="relative aspect-[4/3] overflow-hidden">
+                <Media
+                  src="/trixie/venue-1.jpg"
+                  alt={t("cafeAlt")}
+                  fill
+                  sizes="(min-width:1024px) 50vw, 100vw"
+                />
+              </Surface>
+            </Grid>
+          </Container>
+        </Section>
+        <Section aria-labelledby="gallery-heading" className="bg-white">
+          <Container>
+            <Stack gap="xl">
+              <Inline className="items-end justify-between" gap="lg">
+                <Typography as="h2" variant="heading" id="gallery-heading">
+                  {t("galleryTitle")}
+                </Typography>
+                <Typography tone="muted" className="max-w-sm">
+                  {t("galleryDescription")}
+                </Typography>
+              </Inline>
+              <PhotoGallery />
+            </Stack>
+          </Container>
+        </Section>
+        <VisitSection />
+      </Main>
+      <SiteFooter />
+    </>
   );
 }

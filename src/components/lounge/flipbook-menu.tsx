@@ -1,176 +1,192 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Image from "next/image";
-import { forwardRef, useRef, useState } from "react";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+import {
+  Grid,
+  Inline,
+  List,
+  ListItem,
+  NoScript,
+  Stack,
+  Status,
+  Surface,
+} from "@/components/ui/layout";
+import { AppLink } from "@/components/ui/link";
+import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import type { MenuPage } from "@/types/domain";
+import { MenuArtwork } from "./menu-artwork";
+import { MenuIndex, MenuThumbnails } from "./menu-index";
+import { MenuZoomDialog } from "./menu-zoom-dialog";
+import { useMenuViewer } from "./use-menu-viewer";
 
-const HTMLFlipBook = dynamic(() => import("react-pageflip"), {
-  ssr: false,
-});
-
-type PageFlipCorner = "top" | "bottom";
-type PageFlipOrientation = "portrait" | "landscape";
-
-type PageFlipApi = {
-  flip: (pageNum: number, corner?: PageFlipCorner) => void;
-  flipNext: (corner?: PageFlipCorner) => void;
-  flipPrev: (corner?: PageFlipCorner) => void;
-  getOrientation: () => PageFlipOrientation;
-  turnToPage: (pageNum: number) => void;
-};
-
-type FlipBookRef = {
-  pageFlip: () => PageFlipApi | undefined;
-};
-
-type Props = {
-  pages: MenuPage[];
-  labels: {
-    previousPage: string;
-    nextPage: string;
-    frontCover: string;
-    backCover: string;
-  };
-};
-
-type MenuImagePageProps = {
-  page: MenuPage;
-};
-
-const MenuImagePage = forwardRef<HTMLDivElement, MenuImagePageProps>(
-  function MenuImagePage({ page }, ref) {
-    const isCover = page.kind === "cover" || page.kind === "back";
-
-    return (
-      <div
-        ref={ref}
-        className="h-full w-full"
-        data-density={isCover ? "hard" : undefined}
-      >
-        <div
-          className={cn(
-            "relative h-full w-full overflow-hidden rounded-[28px] border",
-            isCover
-              ? "border-[#f5f0e3]/12 bg-[#0c1a17] shadow-[inset_0_1px_0_rgba(245,240,227,0.06)]"
-              : "border-[#1a3a30]/10 bg-page shadow-[inset_0_0_0_1px_rgba(26,58,48,0.06)]",
-          )}
-        >
-          <Image
-            src={page.image}
-            alt={`Menu ${page.id}`}
-            fill
-            sizes="(max-width: 768px) 90vw, 560px"
-            className="object-cover object-center"
-            priority={page.physicalIndex <= 1}
-          />
-        </div>
-      </div>
-    );
-  },
+const MenuBook = dynamic(
+  () => import("./menu-book").then((module) => module.MenuBook),
+  { ssr: false },
 );
+const viewerStyles = {
+  root: "rounded-lg border border-[#FFFAE7]/15 bg-[#15201C] p-4 text-[#FFFAE7] sm:p-6 lg:p-8",
+  stage:
+    "grid w-full place-items-center overflow-hidden rounded-sm bg-black/20 p-1 sm:p-4",
+  single: "mx-auto w-full max-w-[560px]",
+  spread: "mx-auto w-full max-w-[900px]",
+  layer: "col-start-1 row-start-1 w-full",
+} as const;
 
-export function FlipbookMenu({ pages, labels }: Props) {
-  const bookRef = useRef<FlipBookRef | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const canGoBack = currentPage > 0;
-  const canGoNext = currentPage < pages.length - 1;
-
-  const totalContentPages = pages.filter((p) => p.kind === "content").length;
-  const activePage = pages[currentPage] ?? pages[0];
-
-  function getProgressLabel(page: MenuPage) {
-    if (page.kind === "cover") {
-      return labels.frontCover;
-    }
-
-    if (page.kind === "back") {
-      return labels.backCover;
-    }
-
-    // Find 1-based content page number
-    const contentPages = pages.filter((p) => p.kind === "content");
-    const contentIndex = contentPages.indexOf(page);
-
-    return `${contentIndex + 1} / ${totalContentPages}`;
-  }
+export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
+  const t = useTranslations("Menu");
+  const viewer = useMenuViewer(pages.length);
+  const [readyMode, setReadyMode] = useState<string | null>(null);
+  const mode = viewer.spread ? "spread" : "single";
+  const engineReady = readyMode === mode && !viewer.reducedMotion;
+  const current = viewer.visible[0] ?? 0;
+  const last = viewer.visible.at(-1) ?? 0;
+  if (!pages.length) return <Status>{t("imageError")}</Status>;
+  const progress =
+    viewer.visible.length === 2
+      ? t("spread", { from: current + 1, to: last + 1, total: pages.length })
+      : t("page", { current: current + 1, total: pages.length });
 
   return (
-    <section className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 py-4">
-      <div className="w-full">
-        <div className="overflow-visible rounded-[30px] bg-[#0f7b5f]/8 p-1 md:p-2">
-          <div className="menu-flipbook-stage">
-            <HTMLFlipBook
-              ref={bookRef}
-              startPage={0}
-              width={560}
-              height={760}
-              size="stretch"
-              minWidth={300}
-              maxWidth={560}
-              minHeight={420}
-              maxHeight={760}
-              showCover
-              usePortrait
-              drawShadow
-              maxShadowOpacity={0.22}
-              autoSize
-              mobileScrollSupport
-              clickEventForward
-              useMouseEvents
-              swipeDistance={24}
-              showPageCorners={false}
-              disableFlipByClick={false}
-              flippingTime={900}
-              startZIndex={12}
-              className="menu-flipbook"
-              style={{ margin: "0 auto" }}
-              onFlip={(event: { data: number }) =>
-                setCurrentPage(event.data ?? 0)
-              }
-            >
-              {pages.map((page) => (
-                <MenuImagePage key={page.id} page={page} />
-              ))}
-            </HTMLFlipBook>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 rounded-full border border-[#f5f0e3]/10 bg-[#0f7b5f]/8 px-3 py-2 text-sm backdrop-blur">
-        <button
-          type="button"
-          onClick={() => bookRef.current?.pageFlip()?.flipPrev("bottom")}
-          disabled={!canGoBack}
-          className={cn(
-            "rounded-full px-4 py-2 transition",
-            canGoBack
-              ? "bg-[#0f7b5f]/20 text-[#f5f0e3] hover:bg-[#0f7b5f]/30"
-              : "cursor-not-allowed bg-[#0f7b5f]/5 text-[#f5f0e3]/35",
-          )}
-        >
-          ← {labels.previousPage}
-        </button>
-        <span className="min-w-20 text-center font-medium text-[#f5f0e3]/75">
-          {getProgressLabel(activePage)}
-        </span>
-        <button
-          type="button"
-          onClick={() => bookRef.current?.pageFlip()?.flipNext("bottom")}
-          disabled={!canGoNext}
-          className={cn(
-            "rounded-full px-4 py-2 transition",
-            canGoNext
-              ? "bg-accent text-[#f5f0e3] hover:brightness-110"
-              : "cursor-not-allowed bg-[#0f7b5f]/5 text-[#f5f0e3]/35",
-          )}
-        >
-          {labels.nextPage} →
-        </button>
-      </div>
-    </section>
+    <Surface className={viewerStyles.root}>
+      <Grid className="lg:grid-cols-[190px_minmax(0,1fr)]" gap="lg">
+        <MenuIndex pages={pages} page={viewer.page} onSelect={viewer.goTo} />
+        <Stack gap="md" className="min-w-0">
+          <Surface
+            role="region"
+            aria-label={t("title")}
+            aria-describedby="menu-keyboard-hint"
+            tabIndex={0}
+            onKeyDown={viewer.onKeyDown}
+            className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C6B573]"
+          >
+            <Stack gap="md">
+              <Inline className="justify-between" gap="sm">
+                <Inline gap="xs">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    disabled={current === 0}
+                    aria-label={t("previous")}
+                    onClick={() => viewer.step(-1)}
+                  >
+                    <Icon name="chevronLeft" />
+                  </Button>
+                  <Status className="min-w-24 text-center">{progress}</Status>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    disabled={last === pages.length - 1}
+                    aria-label={t("next")}
+                    onClick={() => viewer.step(1)}
+                  >
+                    <Icon name="chevronRight" />
+                  </Button>
+                </Inline>
+                <MenuZoomDialog
+                  pages={pages}
+                  visible={viewer.visible}
+                  page={viewer.page}
+                />
+              </Inline>
+              <Surface className={viewerStyles.stage}>
+                <Grid
+                  className={
+                    viewer.spread ? viewerStyles.spread : viewerStyles.single
+                  }
+                  gap="none"
+                >
+                  <Grid
+                    gap="none"
+                    aria-hidden={engineReady}
+                    className={cn(
+                      viewerStyles.layer,
+                      viewer.visible.length === 2
+                        ? "grid-cols-2"
+                        : "grid-cols-1",
+                      engineReady && "invisible",
+                    )}
+                  >
+                    {viewer.visible.map((index) => (
+                      <MenuArtwork
+                        key={pages[index].id}
+                        page={pages[index]}
+                        eager
+                        className={
+                          viewer.visible.length === 1 && viewer.spread
+                            ? "mx-auto max-w-[450px]"
+                            : undefined
+                        }
+                      />
+                    ))}
+                  </Grid>
+                  {!viewer.reducedMotion ? (
+                    <Surface
+                      className={cn(
+                        viewerStyles.layer,
+                        !engineReady && "invisible",
+                      )}
+                    >
+                      <MenuBook
+                        key={mode}
+                        pages={pages}
+                        page={viewer.page}
+                        spread={viewer.spread}
+                        onPageChange={viewer.goTo}
+                        onReady={() => setReadyMode(mode)}
+                      />
+                    </Surface>
+                  ) : null}
+                </Grid>
+              </Surface>
+            </Stack>
+          </Surface>
+          <Typography
+            id="menu-keyboard-hint"
+            variant="small"
+            className="text-stone-300"
+          >
+            {t("useKeyboard")}
+          </Typography>
+          <MenuThumbnails
+            pages={pages}
+            page={viewer.page}
+            visible={viewer.visible}
+            onSelect={viewer.goTo}
+          />
+          <Typography variant="small" className="text-stone-300">
+            {t("hint")}
+          </Typography>
+        </Stack>
+      </Grid>
+      <NoScript>
+        <Stack gap="sm" className="mt-6 border-t border-[#FFFAE7]/20 pt-6">
+          <Typography as="h2" variant="subheading">
+            {t("allPages")}
+          </Typography>
+          <List className="grid gap-2 sm:grid-cols-2">
+            {pages.map((item, index) => (
+              <ListItem key={item.id}>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full justify-start"
+                >
+                  <AppLink href={item.image} target="_blank">
+                    {index + 1}. {item.label}
+                    <Icon name="externalLink" />
+                  </AppLink>
+                </Button>
+              </ListItem>
+            ))}
+          </List>
+        </Stack>
+      </NoScript>
+    </Surface>
   );
 }
