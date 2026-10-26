@@ -15,11 +15,21 @@ export const venue = {
   hours: "07:00 — 23:00",
   facebookUrl: "https://www.facebook.com/TrixieCafe",
   loungeFacebookUrl: "https://www.facebook.com/trixie.cafe.lounge/",
+  pinterestUrl: "https://www.pinterest.com/trixiecafe/",
+  youtubeUrl: "https://www.youtube.com/c/TrixieCafeLounge165ThaiHa",
   // No Instagram account is linked by the original venue website.
   instagramUrl: "",
   sourceUrl: "https://trixie.com.vn/",
   reviewedAt: "2026-10-26",
 } as const;
+
+/** Social destinations linked by the official venue homepage, reviewed 26 October 2026. */
+export const socialLinks = [
+  { id: "cafe", label: "Facebook · Café", href: venue.facebookUrl },
+  { id: "lounge", label: "Facebook · Lounge", href: venue.loungeFacebookUrl },
+  { id: "pinterest", label: "Pinterest", href: venue.pinterestUrl },
+  { id: "youtube", label: "YouTube", href: venue.youtubeUrl },
+] as const;
 
 export const verifiedEvents: EventRow[] = [
   {

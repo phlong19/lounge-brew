@@ -10,7 +10,7 @@ import {
 import { AppLink } from "@/components/ui/link";
 import { Media } from "@/components/ui/media";
 import { Typography } from "@/components/ui/typography";
-import { venue } from "@/data/trixie-content";
+import { socialLinks, venue } from "@/data/trixie-content";
 
 export async function SiteFooter() {
   const [t, nav] = await Promise.all([
@@ -72,13 +72,11 @@ export async function SiteFooter() {
             <AppLink href="/events" className="hover:underline">
               {nav("events")}
             </AppLink>
-            <AppLink
-              href={venue.loungeFacebookUrl}
-              target="_blank"
-              className="hover:underline"
-            >
-              Facebook ↗
-            </AppLink>
+            {socialLinks.map((link) => (
+              <AppLink key={link.id} href={link.href} target="_blank" className="inline-flex min-h-11 items-center hover:underline">
+                {link.label} ↗
+              </AppLink>
+            ))}
           </Inline>
         </Inline>
       </Container>

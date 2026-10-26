@@ -19,7 +19,7 @@ export default async function MenuPage() {
     <>
       <SiteHeader active="menu" />
       <Main id="main-content">
-        <Section className="pb-6 md:pb-8">
+        <Section className="py-6 md:py-8">
           <Container>
             <Stack gap="sm">
               <Typography as="h1" variant="title" tone="brand">

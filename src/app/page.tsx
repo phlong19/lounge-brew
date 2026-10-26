@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { EventGrid } from "@/components/lounge/event-grid";
 import { PhotoGallery } from "@/components/lounge/photo-gallery";
+import { SocialSection } from "@/components/lounge/social-section";
 import { VisitSection } from "@/components/lounge/visit-section";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
@@ -105,13 +106,48 @@ export default async function LandingPage() {
             </Stack>
           </Container>
         </Section>
+        <Section id="venue" aria-labelledby="venue-heading">
+          <Container>
+            <Grid className="items-center gap-10 lg:grid-cols-2 lg:gap-24">
+              <Stack gap="lg">
+                <Typography
+                  as="h2"
+                  variant="title"
+                  tone="brand"
+                  id="venue-heading"
+                  className="whitespace-pre-line"
+                >
+                  {t("storyTitle")}
+                </Typography>
+                <Typography variant="lead" tone="muted">
+                  {t("storyDescription")}
+                </Typography>
+                <AppLink
+                  href="#contact"
+                  className="inline-flex min-h-11 w-fit items-center gap-2 font-medium hover:underline"
+                >
+                  {t("storyLink")}
+                  <Icon name="arrowDown" className="size-4" />
+                </AppLink>
+              </Stack>
+              <Surface className="relative aspect-[4/3] overflow-hidden">
+                <Media
+                  src="/trixie/venue-1.jpg"
+                  alt={t("cafeAlt")}
+                  fill
+                  sizes="(min-width:1024px) 50vw, 100vw"
+                />
+              </Surface>
+            </Grid>
+          </Container>
+        </Section>
         <Section
           aria-labelledby="menu-preview-heading"
           className={surfaceStyles.brand}
         >
           <Container>
             <Grid className="items-center gap-10 md:grid-cols-2 lg:gap-24">
-              <Surface className="mx-auto w-full max-w-sm rotate-[-3deg] overflow-hidden motion-reduce:rotate-0">
+              <Surface className="mx-auto w-full max-w-sm overflow-hidden">
                 <AppLink href="/menu?page=3" aria-label={t("openMenu")}>
                   <Media
                     src="/menu/page-03.webp"
@@ -149,41 +185,6 @@ export default async function LandingPage() {
             </Grid>
           </Container>
         </Section>
-        <Section id="venue" aria-labelledby="venue-heading">
-          <Container>
-            <Grid className="items-center gap-10 lg:grid-cols-2 lg:gap-24">
-              <Stack gap="lg">
-                <Typography
-                  as="h2"
-                  variant="title"
-                  tone="brand"
-                  id="venue-heading"
-                  className="whitespace-pre-line"
-                >
-                  {t("storyTitle")}
-                </Typography>
-                <Typography variant="lead" tone="muted">
-                  {t("storyDescription")}
-                </Typography>
-                <AppLink
-                  href="#contact"
-                  className="inline-flex min-h-11 w-fit items-center gap-2 font-medium hover:underline"
-                >
-                  {t("storyLink")}
-                  <Icon name="arrowDown" className="size-4" />
-                </AppLink>
-              </Stack>
-              <Surface className="relative aspect-[4/3] overflow-hidden">
-                <Media
-                  src="/trixie/venue-1.jpg"
-                  alt={t("cafeAlt")}
-                  fill
-                  sizes="(min-width:1024px) 50vw, 100vw"
-                />
-              </Surface>
-            </Grid>
-          </Container>
-        </Section>
         <Section aria-labelledby="gallery-heading" className="bg-white">
           <Container>
             <Stack gap="xl">
@@ -200,6 +201,7 @@ export default async function LandingPage() {
           </Container>
         </Section>
         <VisitSection />
+        <SocialSection />
       </Main>
       <SiteFooter />
     </>
