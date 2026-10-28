@@ -2,7 +2,7 @@
 
 import { Children, useCallback, useEffect, useId, useMemo, useRef, useState, type ComponentPropsWithRef, type ReactNode } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
+import AutoScroll from "embla-carousel-auto-scroll";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
@@ -16,17 +16,17 @@ type Props = ComponentPropsWithRef<"div"> & {
   heading: ReactNode;
   action?: ReactNode;
   controls?: boolean;
-  autoplay?: boolean;
+  autoScroll?: boolean;
   paused?: boolean;
 };
 
-/** Embla owns transforms and timers. Owned interaction state gates autoplay. */
-export function Carousel({ label, columns = 3, heading, action, controls = true, autoplay = false, paused = false, className, children, ref, ...props }: Props) {
+/** Embla owns continuous movement. Interaction and motion preferences gate it. */
+export function Carousel({ label, columns = 3, heading, action, controls = true, autoScroll = false, paused = false, className, children, ref, ...props }: Props) {
   const t = useTranslations("Carousel");
   const id = useId();
   const root = useRef<HTMLDivElement | null>(null);
-  const plugins = useMemo(() => autoplay ? [Autoplay({ delay: 4000, playOnInit: false, stopOnInteraction: false, stopOnMouseEnter: false, stopOnFocusIn: false })] : [], [autoplay]);
-  const [viewport, api] = useEmblaCarousel({ align: "start", slidesToScroll: autoplay ? 1 : "auto", containScroll: "trimSnaps", loop: autoplay, breakpoints: { "(prefers-reduced-motion: reduce)": { duration: 0 } } }, plugins);
+  const plugins = useMemo(() => autoScroll ? [AutoScroll({ speed: 0.65, startDelay: 0, playOnInit: false, stopOnInteraction: true, stopOnMouseEnter: false, stopOnFocusIn: false })] : [], [autoScroll]);
+  const [viewport, api] = useEmblaCarousel({ align: "start", slidesToScroll: autoScroll ? 1 : "auto", containScroll: "trimSnaps", dragFree: autoScroll, loop: autoScroll, breakpoints: { "(prefers-reduced-motion: reduce)": { duration: 0 } } }, plugins);
   const [state, setState] = useState({ ready: false, previous: false, next: false, selected: 0, pages: 1 });
   const [visible, setVisible] = useState<number[]>([]);
   const [hovered, setHovered] = useState(false);
@@ -47,7 +47,7 @@ export function Carousel({ label, columns = 3, heading, action, controls = true,
     return () => { api.off("select", update).off("reInit", update).off("reInit", updateVisible).off("settle", updateVisible).off("slidesInView", updateVisible); };
   }, [api, update, updateVisible]);
   useEffect(() => {
-    if (!autoplay) return;
+    if (!autoScroll) return;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const motion = () => setReduced(media.matches);
     const visibility = () => setHidden(document.hidden);
@@ -57,21 +57,21 @@ export function Carousel({ label, columns = 3, heading, action, controls = true,
     const observer = new IntersectionObserver(entries => setInView(entries.some(entry => entry.isIntersecting)), { threshold: 0.1 });
     if (root.current) observer.observe(root.current);
     return () => { media.removeEventListener("change", motion); document.removeEventListener("visibilitychange", visibility); observer.disconnect(); };
-  }, [autoplay]);
+  }, [autoScroll]);
   useEffect(() => {
-    const player = api?.plugins().autoplay;
+    const player = api?.plugins().autoScroll;
     if (!player) return;
     const sync = () => setPlaying(player.isPlaying());
-    api?.on("autoplay:play", sync).on("autoplay:stop", sync);
-    const permitted = autoplay && !paused && !hovered && !focused && !pressed && inView && !hidden && !reduced;
-    const apply = () => { if (permitted) player.play(); else player.stop(); sync(); };
+    api?.on("autoScroll:play", sync).on("autoScroll:stop", sync);
+    const permitted = autoScroll && !paused && !hovered && !focused && !pressed && inView && !hidden && !reduced;
+    const apply = () => { if (permitted) player.play(0); else player.stop(); sync(); };
     // Embla also processes pointer-up and reinitialization; reapply our full gate.
     const afterEngine = () => queueMicrotask(apply);
     apply();
     api?.on("pointerUp", afterEngine).on("reInit", afterEngine);
-    return () => { player.stop(); api?.off("autoplay:play", sync).off("autoplay:stop", sync).off("pointerUp", afterEngine).off("reInit", afterEngine); };
-  }, [api, autoplay, paused, hovered, focused, pressed, inView, hidden, reduced]);
-  return <div {...props} ref={node => { root.current = node; if (typeof ref === "function") ref(node); else if (ref) ref.current = node; }} role="region" aria-label={label} aria-roledescription={t("carousel")} data-carousel-engine="embla" data-carousel-index={state.selected} data-autoplay-state={autoplay ? playing ? "playing" : "paused" : undefined} className={cn("min-w-0", className)}
+    return () => { player.stop(); api?.off("autoScroll:play", sync).off("autoScroll:stop", sync).off("pointerUp", afterEngine).off("reInit", afterEngine); };
+  }, [api, autoScroll, paused, hovered, focused, pressed, inView, hidden, reduced]);
+  return <div {...props} ref={node => { root.current = node; if (typeof ref === "function") ref(node); else if (ref) ref.current = node; }} role="region" aria-label={label} aria-roledescription={t("carousel")} data-carousel-engine="embla" data-carousel-index={state.selected} data-auto-scroll-state={autoScroll ? playing ? "playing" : "paused" : undefined} className={cn("min-w-0", className)}
     onPointerEnter={event => { props.onPointerEnter?.(event); if (event.pointerType === "mouse") setHovered(true); }}
     onPointerLeave={event => { props.onPointerLeave?.(event); if (event.pointerType === "mouse") setHovered(false); setPressed(false); }}
     onPointerDown={event => { props.onPointerDown?.(event); setPressed(true); }}

@@ -62,9 +62,14 @@ export const headerStyles = {
 
 
 export const dayStyles = {
-  chapter: "scroll-mt-20 py-12 lg:scroll-mt-24 md:py-16",
+  heading: "pt-10 pb-4 md:pt-12 md:pb-4",
+  chapter: "scroll-mt-20 py-8 lg:scroll-mt-24 md:py-10",
+  firstChapter: "pt-4 md:pt-4",
+  grid: "items-center gap-8 lg:grid-cols-12 lg:gap-12",
+  imageColumn: "lg:col-span-5",
+  textColumn: "lg:col-span-7",
   fields: ["bg-white text-[#15201C]", "bg-[#F1EEE7] text-[#15201C]", "bg-[#152F28] text-[#FFFAE7]"],
-  photo: "relative overflow-hidden",
+  photo: "relative mx-auto w-full max-w-[480px] overflow-hidden",
   action: "inline-flex min-h-11 w-fit items-center gap-3 font-medium underline-offset-8 hover:underline",
 } as const;
 

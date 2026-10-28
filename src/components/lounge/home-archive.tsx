@@ -22,7 +22,7 @@ export function HomeArchive({ locale }: { locale: AppLocale }) {
   const [selected, setSelected] = useState<ArchiveItem | null>(null);
   const trigger = useRef<HTMLButtonElement | null>(null);
   return <Section id="archive" data-home-section="archive" aria-labelledby="archive-heading" className="bg-white">
-    <Container><Carousel label={t("archiveTitle")} columns={4} controls={false} autoplay paused={selected !== null} heading={<Reveal><Stack gap="sm"><Typography as="h2" variant="title" id="archive-heading">{t("archiveTitle")}</Typography><Typography variant="lead">{t("archiveDescription")}</Typography></Stack></Reveal>}>
+    <Container><Carousel label={t("archiveTitle")} columns={4} controls={false} autoScroll paused={selected !== null} heading={<Reveal><Stack gap="sm"><Typography as="h2" variant="title" id="archive-heading">{t("archiveTitle")}</Typography><Typography variant="lead">{t("archiveDescription")}</Typography></Stack></Reveal>}>
       {source.archive.map(item => <CarouselItem key={item.id} data-source-id={item.id}><Article>
         {item.image.src ? <Button variant="ghost" aria-haspopup="dialog" aria-label={t("openArchivePhoto", { name: item.title })} className={archiveStyles.trigger} onClick={event => { trigger.current = event.currentTarget; setSelected(item); }}>
           <Media src={item.image.src} alt={item.sourceTitle || item.title} fill sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw" className={archiveStyles.image} />
