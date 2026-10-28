@@ -1,61 +1,60 @@
-'use client';
+"use client";
 
-import {useRouter} from 'next/navigation';
-import {useLocale, useTranslations} from 'next-intl';
-import {useTransition} from 'react';
+import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
+import { Button } from "@/components/ui/button";
+import { Flag } from "@/components/ui/flag";
+import { Icon } from "@/components/ui/icon";
+import { Stack, Status, Surface } from "@/components/ui/layout";
+import { Typography } from "@/components/ui/typography";
+import { headerStyles } from "@/lib/ui/home-styles";
+import { cn } from "@/lib/utils";
+import { locales } from "@/i18n/config";
 
-import {locales} from '@/i18n/config';
-import {cn} from '@/lib/utils';
-
-export function LocaleSwitcher() {
-  const currentLocale = useLocale();
+export function LocaleSwitcher({ side = "bottom" }: { side?: "top" | "bottom" }) {
+  const locale = useLocale();
+  const t = useTranslations("Navigation");
   const router = useRouter();
-  const t = useTranslations('Navigation');
-  const [isPending, startTransition] = useTransition();
-
-  async function handleLocaleChange(nextLocale: (typeof locales)[number]) {
-    const response = await fetch('/api/locale', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({locale: nextLocale})
-    });
-
-    if (!response.ok) {
-      return;
-    }
-
-    startTransition(() => {
-      router.refresh();
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState(false);
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const id = useId();
+  useEffect(() => {
+    if (!open) return;
+    const dismiss = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
+    document.addEventListener("pointerdown", dismiss);
+    return () => document.removeEventListener("pointerdown", dismiss);
+  }, [open]);
+  function select(next: (typeof locales)[number]) {
+    if (pending) return;
+    setOpen(false); trigger.current?.focus();
+    if (next === locale) return;
+    setError(false);
+    startTransition(async () => {
+      try {
+        const response = await fetch("/api/locale", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ locale: next }) });
+        if (!response.ok) throw new Error("Locale change failed");
+        router.refresh();
+      } catch { setError(true); }
     });
   }
-
-  return (
-    <div className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1 text-xs backdrop-blur">
-      <span className="px-2 text-white/60">{t('language')}</span>
-      {locales.map((locale) => {
-        const isActive = locale === currentLocale;
-
-        return (
-          <button
-            key={locale}
-            type="button"
-            onClick={() => void handleLocaleChange(locale)}
-            disabled={isPending || isActive}
-            className={cn(
-              'rounded-full px-3 py-1.5 font-medium uppercase tracking-[0.25em] transition',
-              isActive
-                ? 'bg-accent text-white shadow-[0_8px_24px_rgba(194,139,93,0.35)]'
-                : 'text-white/70 hover:text-white',
-              isPending && 'opacity-60'
-            )}
-            aria-pressed={isActive}
-          >
-            {locale}
-          </button>
-        );
-      })}
-    </div>
-  );
+  return <Surface data-language-switcher ref={root} className="relative" aria-busy={pending}
+    onPointerEnter={event => { if (event.pointerType === "mouse") setOpen(true); }}
+    onPointerLeave={() => { if (!root.current?.querySelector(":focus-visible")) setOpen(false); }}
+    onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}
+    onKeyDown={event => {
+      if (event.key === "Escape" && open) { event.preventDefault(); event.stopPropagation(); setOpen(false); trigger.current?.focus(); }
+      if (event.key === "ArrowDown" && event.target === trigger.current) { event.preventDefault(); setOpen(true); requestAnimationFrame(() => root.current?.querySelector<HTMLButtonElement>("[data-language-options] button")?.focus()); }
+    }}>
+    <Button ref={trigger} variant="ghost" className={cn(headerStyles.navLink, headerStyles.trigger)} aria-label={`${t("language")}: ${locale === "vi" ? t("vietnamese") : t("english")}`} aria-expanded={open} aria-controls={id} disabled={pending} onClick={() => setOpen(value => !value)}>
+      <Flag locale={locale === "vi" ? "vi" : "en"} /><Typography as="span" variant="small">{locale.toUpperCase()}</Typography><Icon name="chevronDown" className="size-3.5" />
+    </Button>
+    {open ? <Surface id={id} className={cn("absolute right-0 z-50 min-w-48", side === "top" ? "bottom-full pb-2" : "top-full pt-2")} data-language-options>
+      <Surface tone="white" className="rounded-md p-2 shadow-lg"><Stack gap="xs" role="group" aria-label={t("language")}>{locales.map(value => <Button key={value} variant="ghost" className={cn(headerStyles.navLink, headerStyles.trigger, "w-full justify-start px-3")} aria-pressed={locale === value} disabled={pending} onClick={() => select(value)}><Flag locale={value} />{value === "vi" ? t("vietnamese") : t("english")}{locale === value ? <Icon name="check" className="ml-auto size-4" /> : null}</Button>)}</Stack></Surface>
+    </Surface> : null}
+    {error ? <Status className="absolute top-full right-0 z-50 w-56 bg-white p-3 text-red-800">{t("languageError")}</Status> : null}
+  </Surface>;
 }

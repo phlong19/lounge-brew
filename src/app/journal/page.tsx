@@ -1,63 +1,104 @@
-import Link from 'next/link';
-import {getLocale, getTranslations} from 'next-intl/server';
+import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
 
-import {SiteHeader} from '@/components/layout/site-header';
-import type {AppLocale} from '@/i18n/config';
-import {localizeArticles} from '@/lib/menu/map-menu';
-import {getLoungeData} from '@/lib/server/lounge-data';
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { Icon } from "@/components/ui/icon";
+import {
+  Article,
+  Container,
+  Grid,
+  Main,
+  Section,
+  Stack,
+  Surface,
+} from "@/components/ui/layout";
+import { AppLink } from "@/components/ui/link";
+import { Media } from "@/components/ui/media";
+import { Typography } from "@/components/ui/typography";
+import type { AppLocale } from "@/i18n/config";
+import { localizeArticles } from "@/lib/menu/map-menu";
+import { getLoungeData } from "@/lib/server/lounge-data";
 
-function toExcerpt(html: string) {
-  const plainText = html.replace(/<[^>]+>/g, '').trim();
-  return plainText.length > 150 ? `${plainText.slice(0, 150).trim()}…` : plainText;
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Stories");
+  return { title: t("title") };
 }
-
-export default async function JournalIndexPage() {
-  const locale = (await getLocale()) as AppLocale;
-  const [journalT, menuT, loungeData] = await Promise.all([
-    getTranslations('JournalIndexPage'),
-    getTranslations('HomePage'),
-    getLoungeData()
+export default async function JournalPage() {
+  const [t, locale, data] = await Promise.all([
+    getTranslations("Stories"),
+    getLocale(),
+    getLoungeData(),
   ]);
-
-  const articles = localizeArticles(locale, loungeData.articles);
-
+  const articles = localizeArticles(locale as AppLocale, data.articles);
   return (
-    <main className="min-h-dvh px-4 pb-10 pt-4 md:px-6 lg:px-8">
-      <div className="mx-auto flex max-w-[1400px] flex-col gap-6">
-        <SiteHeader active="journal" />
-
-        <section className="rounded-[36px] border border-white/10 bg-white/5 p-6 backdrop-blur sm:p-8">
-          <p className="text-xs uppercase tracking-[0.45em] text-white/45">{journalT('eyebrow')}</p>
-          <h1 className="mt-4 font-display text-5xl leading-none text-white/95">{journalT('title')}</h1>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-white/72">{journalT('description')}</p>
-        </section>
-
-        {articles.length === 0 ? (
-          <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 text-sm leading-7 text-white/70 backdrop-blur">
-            {menuT('emptyArticles')}
-          </div>
-        ) : (
-          <section className="grid gap-4 lg:grid-cols-2">
-            {articles.map((article) => (
-              <Link
-                key={article.id}
-                href={`/journal/${article.slug}`}
-                className="rounded-[32px] border border-white/10 bg-white/5 p-6 transition hover:border-white/20 hover:bg-white/7"
-              >
-                <p className="text-xs uppercase tracking-[0.38em] text-white/40">{journalT('cardEyebrow')}</p>
-                <h2 className="mt-4 font-display text-4xl leading-none text-white/95">{article.title}</h2>
-                <p className="mt-4 text-sm leading-7 text-white/70">{toExcerpt(article.content)}</p>
-                {article.fallbackFromVietnamese && locale === 'en' ? (
-                  <span className="mt-4 inline-flex rounded-full bg-accent/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-accent">
-                    {menuT('fromVietnamese')}
-                  </span>
-                ) : null}
-              </Link>
-            ))}
-          </section>
-        )}
-      </div>
-    </main>
+    <>
+      <SiteHeader active="journal" />
+      <Main id="main-content">
+        <Section>
+          <Container>
+            <Stack gap="xl">
+              <Stack>
+                <Typography as="h1" variant="display" tone="brand">
+                  {t("title")}
+                </Typography>
+                <Typography variant="lead" tone="muted">
+                  {t("description")}
+                </Typography>
+              </Stack>
+              {articles.length ? (
+                <Grid className="gap-12 md:grid-cols-2">
+                  {articles.map((article) => (
+                    <Article key={article.id}>
+                      <AppLink
+                        href={`/journal/${article.slug}`}
+                        className="group block"
+                      >
+                        <Stack gap="lg">
+                          {article.thumbnailUrl ? (
+                            <Surface className="relative aspect-[4/3] overflow-hidden">
+                              <Media
+                                src={article.thumbnailUrl}
+                                alt={article.title}
+                                fill
+                                sizes="(min-width:768px) 50vw, 100vw"
+                                className="transition-transform duration-500 group-hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
+                              />
+                            </Surface>
+                          ) : null}
+                          <Typography as="h2" variant="heading">
+                            {article.title}
+                          </Typography>
+                          <Typography tone="muted">
+                            {article.content
+                              .replace(/<[^>]*>/g, " ")
+                              .replace(/&amp;/g, "&")
+                              .replace(/\s+/g, " ")
+                              .trim()
+                              .slice(0, 160)}
+                            …
+                          </Typography>
+                          <Typography
+                            as="span"
+                            variant="caption"
+                            className="inline-flex items-center gap-2"
+                          >
+                            {t("read")}
+                            <Icon name="arrowUpRight" className="size-4" />
+                          </Typography>
+                        </Stack>
+                      </AppLink>
+                    </Article>
+                  ))}
+                </Grid>
+              ) : (
+                <Typography tone="muted">{t("empty")}</Typography>
+              )}
+            </Stack>
+          </Container>
+        </Section>
+      </Main>
+      <SiteFooter />
+    </>
   );
 }
-

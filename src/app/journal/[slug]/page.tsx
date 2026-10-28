@@ -1,69 +1,103 @@
-import Link from 'next/link';
-import {getLocale, getTranslations} from 'next-intl/server';
-import {notFound} from 'next/navigation';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 
-import type {AppLocale} from '@/i18n/config';
-import {localizeArticle} from '@/lib/menu/map-menu';
-import {getArticleBySlug} from '@/lib/server/lounge-data';
+import { RichText } from "@/components/content/rich-text";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { Icon } from "@/components/ui/icon";
+import {
+  Article,
+  Container,
+  Main,
+  Section,
+  Stack,
+  Surface,
+} from "@/components/ui/layout";
+import { AppLink } from "@/components/ui/link";
+import { Media } from "@/components/ui/media";
+import { Typography } from "@/components/ui/typography";
+import type { AppLocale } from "@/i18n/config";
+import { localizeArticle } from "@/lib/menu/map-menu";
+import { getArticleBySlug } from "@/lib/server/lounge-data";
 
-type Props = {
-  params: Promise<{slug: string}>;
-};
-
-function formatPublishedAt(value: string | null, locale: AppLocale) {
-  if (!value) {
-    return null;
-  }
-
-  return new Intl.DateTimeFormat(locale === 'vi' ? 'vi-VN' : 'en-US', {
-    dateStyle: 'long'
-  }).format(new Date(value));
+type Props = { params: Promise<{ slug: string }> };
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const [{ slug }, locale] = await Promise.all([params, getLocale()]);
+  const { article } = await getArticleBySlug(slug);
+  return {
+    title: article
+      ? localizeArticle(locale as AppLocale, article).title
+      : "Trixie",
+  };
 }
-
-export default async function JournalArticlePage({params}: Props) {
-  const locale = (await getLocale()) as AppLocale;
-  const {slug} = await params;
-  const [journalT, articleResult] = await Promise.all([
-    getTranslations('Journal'),
-    getArticleBySlug(slug)
+export default async function JournalArticlePage({ params }: Props) {
+  const [{ slug }, locale, t] = await Promise.all([
+    params,
+    getLocale(),
+    getTranslations("Stories"),
   ]);
-
-  if (!articleResult.article) {
-    notFound();
-  }
-
-  const article = localizeArticle(locale, articleResult.article);
-  const publishedAt = formatPublishedAt(article.publishedAt, locale);
-
+  const { article: row } = await getArticleBySlug(slug);
+  if (!row) notFound();
+  const article = localizeArticle(locale as AppLocale, row);
   return (
-    <main className="min-h-dvh px-4 py-8 md:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl space-y-6">
-        <Link
-          href="/journal"
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 backdrop-blur"
-        >
-          ← {journalT('backToMenu')}
-        </Link>
-
-        <article className="rounded-[36px] border border-white/10 bg-white/5 p-6 backdrop-blur sm:p-8 md:p-10">
-          <p className="text-xs uppercase tracking-[0.45em] text-white/45">{journalT('sectionLabel')}</p>
-          <h1 className="mt-4 font-display text-5xl leading-none text-white/95">{article.title}</h1>
-          {publishedAt ? (
-            <p className="mt-4 text-sm uppercase tracking-[0.24em] text-white/45">{publishedAt}</p>
-          ) : null}
-          {article.fallbackFromVietnamese && locale === 'en' ? (
-            <div className="mt-6 rounded-2xl border border-amber-400/20 bg-amber-400/10 px-4 py-3 text-sm text-amber-50">
-              {journalT('fallbackNotice')}
-            </div>
-          ) : null}
-
-          <div
-            className="mt-8 space-y-4 text-base leading-8 text-white/80 [&_h2]:mt-10 [&_h2]:font-display [&_h2]:text-3xl [&_p]:leading-8 [&_ul]:list-disc [&_ul]:pl-6"
-            dangerouslySetInnerHTML={{__html: article.content}}
-          />
-        </article>
-      </div>
-    </main>
+    <>
+      <SiteHeader active="journal" />
+      <Main id="main-content">
+        <Section>
+          <Container className="max-w-4xl">
+            <Stack gap="xl">
+              <AppLink
+                href="/journal"
+                className="inline-flex min-h-11 w-fit items-center gap-2 hover:underline"
+              >
+                <Icon name="arrowLeft" className="size-4" />
+                {t("back")}
+              </AppLink>
+              <Article>
+                <Stack gap="xl">
+                  <Stack gap="lg">
+                    <Typography as="h1" variant="title" tone="brand">
+                      {article.title}
+                    </Typography>
+                    {article.publishedAt ? (
+                      <Typography
+                        as="time"
+                        dateTime={article.publishedAt}
+                        variant="small"
+                        tone="muted"
+                      >
+                        {new Intl.DateTimeFormat(
+                          locale === "vi" ? "vi-VN" : "en-GB",
+                          { dateStyle: "long", timeZone: "Asia/Ho_Chi_Minh" },
+                        ).format(new Date(article.publishedAt))}
+                      </Typography>
+                    ) : null}
+                  </Stack>
+                  {article.thumbnailUrl ? (
+                    <Surface className="relative aspect-[16/10] overflow-hidden">
+                      <Media
+                        src={article.thumbnailUrl}
+                        alt={article.title}
+                        fill
+                        priority
+                        sizes="(min-width:1024px) 800px, 100vw"
+                      />
+                    </Surface>
+                  ) : null}
+                  {article.fallbackFromVietnamese && locale === "en" ? (
+                    <Typography variant="small" tone="muted">
+                      {t("fallback")}
+                    </Typography>
+                  ) : null}
+                  <RichText content={article.content} />
+                </Stack>
+              </Article>
+            </Stack>
+          </Container>
+        </Section>
+      </Main>
+      <SiteFooter />
+    </>
   );
 }
-

@@ -1,104 +1,201 @@
+import { cache } from "react";
+import { verifiedArticles, verifiedEvents } from "@/data/trixie-content";
 import {
-  mockArticles,
-  mockCategories,
-  mockEvents,
-  mockMenuItems
-} from '@/data/mock-data';
-import {createSupabaseServerClient} from '@/lib/supabase/server';
-import type {ArticleRow, HomePageData} from '@/types/domain';
+  isPublicEvent,
+  publishedArticles,
+  resolveDataset,
+  upcomingEvents,
+} from "@/lib/server/content-policy";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type {
+  ArticleRow,
+  CategoryRow,
+  EventRow,
+  HomePageData,
+  MenuItemRow,
+} from "@/types/domain";
+
+type ContentSource = "snapshot" | "supabase" | "mixed";
 
 export type LoungeDataResult = HomePageData & {
+  /** Retained for callers; the verified snapshot is not invented mock content. */
   usingMockData: boolean;
+  contentSource: ContentSource;
 };
 
-function buildMockData(): LoungeDataResult {
+function snapshot(now: Date): LoungeDataResult {
   return {
-    categories: mockCategories,
-    menuItems: mockMenuItems,
-    events: mockEvents,
-    articles: mockArticles,
-    usingMockData: true
+    // The original menu artwork is authoritative; never substitute old mock prices.
+    categories: [],
+    menuItems: [],
+    events: upcomingEvents(verifiedEvents, now),
+    articles: publishedArticles(verifiedArticles, now),
+    usingMockData: false,
+    contentSource: "snapshot",
   };
 }
 
-export async function getLoungeData(): Promise<LoungeDataResult> {
-  const supabase = await createSupabaseServerClient();
-
-  if (!supabase) {
-    return buildMockData();
-  }
-
+async function getContentClient() {
   try {
-    const now = new Date().toISOString();
-
-    const [categoriesResult, menuItemsResult, eventsResult, articlesResult] = await Promise.all([
-      supabase.from('categories').select('*').order('sort_order', {ascending: true}),
-      supabase.from('menu_items').select('*').order('sort_order', {ascending: true}),
-      supabase
-        .from('events')
-        .select('*')
-        .eq('is_active', true)
-        .gte('event_date', now)
-        .order('event_date', {ascending: true}),
-      supabase
-        .from('articles')
-        .select('*')
-        .not('published_at', 'is', null)
-        .order('published_at', {ascending: false})
-    ]);
-
-    if (
-      categoriesResult.error ||
-      menuItemsResult.error ||
-      eventsResult.error ||
-      articlesResult.error
-    ) {
-      return buildMockData();
-    }
-
-    return {
-      categories: categoriesResult.data,
-      menuItems: menuItemsResult.data,
-      events: eventsResult.data,
-      articles: articlesResult.data,
-      usingMockData: false
-    };
+    return await createSupabaseServerClient();
   } catch {
-    return buildMockData();
+    console.warn(
+      "Trixie content connection unavailable; using the verified snapshot.",
+    );
+    return null;
   }
 }
+
+async function readLoungeData(): Promise<LoungeDataResult> {
+  const now = new Date();
+  const fallback = snapshot(now);
+  const supabase = await getContentClient();
+  if (!supabase) return fallback;
+
+  const [categories, menuItems, events, articles] = await Promise.all([
+    resolveDataset<CategoryRow[] | null>(
+      () =>
+        supabase
+          .from("categories")
+          .select("*")
+          .order("sort_order", { ascending: true })
+          .abortSignal(AbortSignal.timeout(5000)),
+      [],
+    ),
+    resolveDataset<MenuItemRow[] | null>(
+      () =>
+        supabase
+          .from("menu_items")
+          .select("*")
+          .order("sort_order", { ascending: true })
+          .abortSignal(AbortSignal.timeout(5000)),
+      [],
+    ),
+    resolveDataset<EventRow[] | null>(
+      () =>
+        supabase
+          .from("events")
+          .select("*")
+          .eq("is_active", true)
+          .order("event_date", { ascending: true })
+          .abortSignal(AbortSignal.timeout(5000)),
+      fallback.events,
+    ),
+    resolveDataset<ArticleRow[] | null>(
+      () =>
+        supabase
+          .from("articles")
+          .select("*")
+          .not("published_at", "is", null)
+          .lte("published_at", now.toISOString())
+          .order("published_at", { ascending: false })
+          .abortSignal(AbortSignal.timeout(5000)),
+      fallback.articles,
+    ),
+  ]);
+
+  const sources = [categories, menuItems, events, articles].map(
+    (result) => result.source,
+  );
+  if (sources.includes("snapshot")) {
+    console.warn(
+      "Some Trixie content is unavailable; using its verified snapshot.",
+    );
+  }
+  return {
+    categories: categories.data ?? [],
+    menuItems: menuItems.data ?? [],
+    events: upcomingEvents(events.data ?? [], now),
+    articles: publishedArticles(articles.data ?? [], now),
+    usingMockData: false,
+    contentSource: sources.every((source) => source === "supabase")
+      ? "supabase"
+      : sources.every((source) => source === "snapshot")
+        ? "snapshot"
+        : "mixed",
+  };
+}
+
+// Deduplicate shared public data for the page and its booking dialog per request.
+export const getLoungeData = cache(readLoungeData);
 
 export async function getArticleBySlug(slug: string): Promise<{
   article: ArticleRow | null;
   usingMockData: boolean;
+  contentSource: ContentSource;
 }> {
-  const supabase = await createSupabaseServerClient();
+  const now = new Date();
+  const fallback =
+    publishedArticles(verifiedArticles, now).find(
+      (article) => article.slug === slug,
+    ) ?? null;
+  const supabase = await getContentClient();
+  if (!supabase)
+    return {
+      article: fallback,
+      usingMockData: false,
+      contentSource: "snapshot",
+    };
 
+  const result = await resolveDataset<ArticleRow | null>(
+    () =>
+      supabase
+        .from("articles")
+        .select("*")
+        .eq("slug", slug)
+        .not("published_at", "is", null)
+        .lte("published_at", now.toISOString())
+        .abortSignal(AbortSignal.timeout(5000))
+        .maybeSingle(),
+    fallback,
+  );
+  if (result.source === "snapshot") {
+    console.warn(
+      "Trixie article content unavailable; using the verified snapshot.",
+    );
+  }
+  return {
+    article: result.data
+      ? (publishedArticles([result.data], now)[0] ?? null)
+      : null,
+    usingMockData: false,
+    contentSource: result.source,
+  };
+}
+
+/** A show's URL remains useful after it leaves the upcoming schedule. */
+export async function getEventById(id: string): Promise<{
+  event: EventRow | null;
+  usingMockData: boolean;
+  contentSource: ContentSource;
+}> {
+  const fallback =
+    verifiedEvents.find((event) => event.id === id && isPublicEvent(event)) ??
+    null;
+  const supabase = await getContentClient();
   if (!supabase) {
-    return {
-      article: mockArticles.find((article) => article.slug === slug) ?? null,
-      usingMockData: true
-    };
+    return { event: fallback, usingMockData: false, contentSource: "snapshot" };
   }
 
-  try {
-    const result = await supabase.from('articles').select('*').eq('slug', slug).maybeSingle();
-
-    if (result.error || !result.data) {
-      return {
-        article: mockArticles.find((article) => article.slug === slug) ?? null,
-        usingMockData: true
-      };
-    }
-
-    return {
-      article: result.data,
-      usingMockData: false
-    };
-  } catch {
-    return {
-      article: mockArticles.find((article) => article.slug === slug) ?? null,
-      usingMockData: true
-    };
+  const result = await resolveDataset<EventRow | null>(
+    () =>
+      supabase
+        .from("events")
+        .select("*")
+        .eq("id", id)
+        .eq("is_active", true)
+        .abortSignal(AbortSignal.timeout(5000))
+        .maybeSingle(),
+    fallback,
+  );
+  if (result.source === "snapshot") {
+    console.warn(
+      "Trixie show content unavailable; using the verified snapshot.",
+    );
   }
+  return {
+    event: result.data && isPublicEvent(result.data) ? result.data : null,
+    usingMockData: false,
+    contentSource: result.source,
+  };
 }

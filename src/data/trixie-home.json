@@ -1,0 +1,958 @@
+{
+  "source": "https://trixie.com.vn/",
+  "reviewedAt": "2026-10-26",
+  "sectionOrder": [
+    "hero",
+    "shows",
+    "introduction",
+    "food",
+    "booking",
+    "video",
+    "archive",
+    "contact"
+  ],
+  "bookingVideoLayout": "Booking and video share a desktop row; booking precedes video in document/mobile order.",
+  "products": [
+    {
+      "id": "60543187",
+      "order": 1,
+      "title": {
+        "vi": "Trà thảo mộc",
+        "en": "Herbal tea"
+      },
+      "description": {
+        "vi": "Trà thảo mộc cho một cuộc hẹn chậm rãi.",
+        "en": "Herbal tea for a slower moment."
+      },
+      "sourceUrl": "https://trixie.com.vn/tra-thao-moc-P60543187.html",
+      "image": {
+        "src": "/trixie/drink-1.jpg",
+        "width": 1200,
+        "height": 800,
+        "source": "https://trixie.com.vn/media/images/product/60543187/Tr%C3%A0_hoa_c%C3%BAc_kh%C3%B4ng_ch%E1%BB%89_l%C3%A0_th%E1%BB%A9c_u%E1%BB%91ng_th%C6%A1m_ngon_m%C3%A0_c%C3%B2n_l%C3%A0_li%E1%BB%81u_thu%E1%BB%91c_an_th%E1%BA%A7n_t%E1%BB%B1_nhi%C3%AAn.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "53962041",
+      "order": 2,
+      "title": {
+        "vi": "Trà vải hoa hồng",
+        "en": "Lychee and rose tea"
+      },
+      "description": {
+        "vi": "Vải và hoa hồng trong một ly trà dịu mát.",
+        "en": "Lychee and rose in a refreshing tea."
+      },
+      "sourceUrl": "https://trixie.com.vn/tra-vai-hoa-hong-P53962041.html",
+      "image": {
+        "src": "/trixie/drink-2.jpg",
+        "width": 730,
+        "height": 445,
+        "source": "https://trixie.com.vn/media/images/product/53962041/3-cach-lam-tra-vai-va-hong-tra-vai-don-gian-ta-nha.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "76819432",
+      "order": 3,
+      "title": {
+        "vi": "Nấm chiên sốt curry đỏ",
+        "en": "Mushrooms with red curry sauce"
+      },
+      "description": {
+        "vi": "Nấm chiên giòn, dùng cùng sốt curry đỏ.",
+        "en": "Fried mushrooms served with red curry sauce."
+      },
+      "sourceUrl": "https://trixie.com.vn/nam-chien-sot-curry-do-P76819432.html",
+      "image": {
+        "src": "/trixie/products/76819432.png",
+        "width": 1600,
+        "height": 1065,
+        "source": "https://trixie.com.vn/media/images/product/76819432/384468026_849031336775575_5842831076951259151_n.png",
+        "available": true
+      }
+    },
+    {
+      "id": "57286190",
+      "order": 4,
+      "title": {
+        "vi": "Lợn mán gác bếp",
+        "en": "Smoked mountain pork"
+      },
+      "description": {
+        "vi": "Hương vị gác bếp đặc trưng của món lợn mán.",
+        "en": "The distinctive flavours of smoked mountain pork."
+      },
+      "sourceUrl": "https://trixie.com.vn/lon-man-gac-bep-P57286190.html",
+      "image": {
+        "src": "/trixie/products/57286190.jpg",
+        "width": 760,
+        "height": 475,
+        "source": "https://trixie.com.vn/media/images/product/57286190/cach-an-thit-trau-gac-bep-dung-chuan-ngon-tuyet-voi-3-760x367.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "9735684",
+      "order": 5,
+      "title": {
+        "vi": "Xúc xích cay Caribe",
+        "en": "Spicy Caribbean sausage"
+      },
+      "description": {
+        "vi": "Xúc xích cay cho bữa ăn cùng bạn bè.",
+        "en": "Spicy sausage to share over a meal."
+      },
+      "sourceUrl": "https://trixie.com.vn/xuc-xich-cay-caribe-P9735684.html",
+      "image": {
+        "src": "/trixie/products/9735684.jpg",
+        "width": 600,
+        "height": 400,
+        "source": "https://trixie.com.vn/media/images/product/9735684/Resize%20%C4%91%E1%BB%93%20%C4%83n%20trixie_0012_xx%20cay.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "64815027",
+      "order": 6,
+      "title": {
+        "vi": "Mỳ Ý sốt kem nấm",
+        "en": "Pasta with mushroom cream"
+      },
+      "description": {
+        "vi": "Mỳ Ý kết hợp nấm và sốt kem.",
+        "en": "Pasta with mushrooms and a creamy sauce."
+      },
+      "sourceUrl": "https://trixie.com.vn/my-y-sot-kem-nam-P64815027.html",
+      "image": {
+        "src": "/trixie/products/64815027.jpg",
+        "width": 600,
+        "height": 400,
+        "source": "https://trixie.com.vn/media/images/product/64815027/Resize%20%C4%91%E1%BB%93%20%C4%83n%20trixie_0043_m%E1%BB%B3%20%C3%BD%20s%E1%BB%91t%20kem%20n%E1%BA%A5m.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "1963487",
+      "order": 7,
+      "title": {
+        "vi": "Hoa lơ xanh xào sốt nấm",
+        "en": "Broccoli with mushroom sauce"
+      },
+      "description": {
+        "vi": "Hoa lơ xanh cùng phần sốt nấm.",
+        "en": "Broccoli served with mushroom sauce."
+      },
+      "sourceUrl": "https://trixie.com.vn/hoa-lo-xanh-xao-sot-nam-P1963487.html",
+      "image": {
+        "src": "/trixie/products/1963487.jpg",
+        "width": 600,
+        "height": 400,
+        "source": "https://trixie.com.vn/media/images/product/1963487/Resize%20%C4%91%E1%BB%93%20%C4%83n%20trixie_0042_nam-dong-co-xao-sup-lo.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "41967028",
+      "order": 8,
+      "title": {
+        "vi": "Hoa lơ xanh xào tỏi",
+        "en": "Garlic broccoli"
+      },
+      "description": {
+        "vi": "Hoa lơ xanh xào với tỏi.",
+        "en": "Broccoli stir-fried with garlic."
+      },
+      "sourceUrl": "https://trixie.com.vn/hoa-lo-xanh-xao-toi-P41967028.html",
+      "image": {
+        "src": "/trixie/products/41967028.jpg",
+        "width": 500,
+        "height": 330,
+        "source": "https://trixie.com.vn/media/images/product/41967028/hoa-lo-xanh-xao-toi-sparta(1).jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "53681249",
+      "order": 9,
+      "title": {
+        "vi": "Cánh gà khúc giữa chiên mắm",
+        "en": "Fish-sauce chicken wings"
+      },
+      "description": {
+        "vi": "Cánh gà chiên với vị mắm đậm đà.",
+        "en": "Fried chicken wings with savoury fish sauce."
+      },
+      "sourceUrl": "https://trixie.com.vn/canh-ga-khuc-giua-chien-mam-P53681249.html",
+      "image": {
+        "src": "/trixie/products/53681249.jpg",
+        "width": 600,
+        "height": 400,
+        "source": "https://trixie.com.vn/media/images/product/53681249/Resize%20%C4%91%E1%BB%93%20%C4%83n%20trixie_0076_c%C3%A1nh%20g%C3%A0%20chi%C3%AAn%20m%E1%BA%AFm.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "41098632",
+      "order": 10,
+      "title": {
+        "vi": "Chân giò chiên mắm",
+        "en": "Fish-sauce pork knuckle"
+      },
+      "description": {
+        "vi": "Chân giò chiên, quyện vị mắm mặn ngọt.",
+        "en": "Fried pork knuckle with a sweet-savoury finish."
+      },
+      "sourceUrl": "https://trixie.com.vn/chan-gio-chien-mam-P41098632.html",
+      "image": {
+        "src": "/trixie/products/41098632.jpg",
+        "width": 600,
+        "height": 400,
+        "source": "https://trixie.com.vn/media/images/product/41098632/Resize%20%C4%91%E1%BB%93%20%C4%83n%20trixie_0072_ch%C3%A2n%20gi%E1%BB%9D%20chi%C3%AAn%20m%E1%BA%AFm.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "73041682",
+      "order": 11,
+      "title": {
+        "vi": "Salad rong biển trứng cua",
+        "en": "Seaweed and crab-roe salad"
+      },
+      "description": {
+        "vi": "Rong biển và trứng cua trong một phần salad.",
+        "en": "A salad of seaweed and crab roe."
+      },
+      "sourceUrl": "https://trixie.com.vn/salad-rong-bien-trung-cua-P73041682.html",
+      "image": {
+        "src": "/trixie/products/73041682.jpg",
+        "width": 600,
+        "height": 400,
+        "source": "https://trixie.com.vn/media/images/product/73041682/Resize%20%C4%91%E1%BB%93%20%C4%83n%20trixie_0003_Slad%20rong%20bi%E1%BB%83n%20tr%E1%BB%A9ng%20cua.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "57024961",
+      "order": 12,
+      "title": {
+        "vi": "Khô mực nướng",
+        "en": "Grilled dried squid"
+      },
+      "description": {
+        "vi": "Mực khô nướng cho những buổi gặp gỡ.",
+        "en": "Grilled dried squid for the table."
+      },
+      "sourceUrl": "https://trixie.com.vn/kho-muc-nuong-P57024961.html",
+      "image": {
+        "src": "/trixie/products/57024961.jpg",
+        "width": 600,
+        "height": 400,
+        "source": "https://trixie.com.vn/media/images/product/57024961/Resize%20%C4%91%E1%BB%93%20%C4%83n%20trixie_0046_muc-nuong-bang-con.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "1385247",
+      "order": 13,
+      "title": {
+        "vi": "Phomai que Nga hun khói",
+        "en": "Russian smoked cheese sticks"
+      },
+      "description": {
+        "vi": "Một lựa chọn phomai que hun khói.",
+        "en": "A smoked cheese-stick selection."
+      },
+      "sourceUrl": "https://trixie.com.vn/phomai-que-nga-hun-khoi-P1385247.html",
+      "image": {
+        "src": "/trixie/products/1385247.jpg",
+        "width": 1200,
+        "height": 800,
+        "source": "https://trixie.com.vn/media/images/product/1385247/phomai%20nga.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "39584127",
+      "order": 14,
+      "title": {
+        "vi": "Phomai Nga hun Khói",
+        "en": "Russian smoked cheese"
+      },
+      "description": {
+        "vi": "Phomai Nga với hương vị hun khói.",
+        "en": "Russian cheese with a smoky flavour."
+      },
+      "sourceUrl": "https://trixie.com.vn/phomai-nga-hun-khoi-P39584127.html",
+      "image": {
+        "src": "/trixie/products/39584127.jpg",
+        "width": 1200,
+        "height": 800,
+        "source": "https://trixie.com.vn/media/images/product/39584127/phomai%20nga.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "91732064",
+      "order": 15,
+      "title": {
+        "vi": "Cà chua Bi",
+        "en": "Cherry tomatoes"
+      },
+      "description": {
+        "vi": "Cà chua bi dùng kèm bữa ăn.",
+        "en": "Cherry tomatoes to accompany your meal."
+      },
+      "sourceUrl": "https://trixie.com.vn/ca-chua-bi-P91732064.html",
+      "image": {
+        "src": "/trixie/products/91732064.jpg",
+        "width": 600,
+        "height": 400,
+        "source": "https://trixie.com.vn/media/images/product/91732064/Resize%20%C4%91%E1%BB%93%20%C4%83n%20trixie_0085_c%C3%A0%20chua%20bi.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "80392651",
+      "order": 16,
+      "title": {
+        "vi": "Trà táo",
+        "en": "Apple tea"
+      },
+      "description": {
+        "vi": "Một ly trà mang hương vị táo.",
+        "en": "Tea with the flavour of apple."
+      },
+      "sourceUrl": "https://trixie.com.vn/tra-tao-P80392651.html",
+      "image": {
+        "src": "/trixie/products/80392651.jpg",
+        "width": 500,
+        "height": 360,
+        "source": "https://trixie.com.vn/media/images/product/80392651/y-tuong-kinh-doanh-nuoc-giai-khat-tu-trai-cay-ngam-5.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "10724936",
+      "order": 17,
+      "title": {
+        "vi": "Khoai tây chiên",
+        "en": "French fries"
+      },
+      "description": {
+        "vi": "Khoai tây chiên cho món ăn kèm.",
+        "en": "French fries for the side of the table."
+      },
+      "sourceUrl": "https://trixie.com.vn/khoai-tay-chien-P10724936.html",
+      "image": {
+        "src": "/trixie/products/10724936.jpg",
+        "width": 570,
+        "height": 410,
+        "source": "https://trixie.com.vn/media/images/product/10724936/khoai-tay-chien-bo-toi(1).jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "43580127",
+      "order": 18,
+      "title": {
+        "vi": "Nước táo",
+        "en": "Apple juice"
+      },
+      "description": {
+        "vi": "Nước ép táo để đổi vị.",
+        "en": "Apple juice for a refreshing change."
+      },
+      "sourceUrl": "https://trixie.com.vn/nuoc-tao-P43580127.html",
+      "image": {
+        "src": "/trixie/products/43580127.jpg",
+        "width": 1200,
+        "height": 800,
+        "source": "https://trixie.com.vn/media/images/product/43580127/1478072930867_8560386(1).jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "74062815",
+      "order": 19,
+      "title": {
+        "vi": "Bánh mỳ nướng bơ đường",
+        "en": "Butter and sugar toast"
+      },
+      "description": {
+        "vi": "Bánh mỳ nướng cùng bơ và đường.",
+        "en": "Toast with butter and sugar."
+      },
+      "sourceUrl": "https://trixie.com.vn/banh-my-nuong-bo-duong-P74062815.html",
+      "image": {
+        "src": "/trixie/products/74062815.jpg",
+        "width": 1600,
+        "height": 1081,
+        "source": "https://trixie.com.vn/media/images/product/74062815/b%C3%A1nh%20m%E1%BB%B3%20n%C6%B0%E1%BB%9Bng%20b%C6%A1%20t%E1%BB%8Fi.JPG",
+        "available": true
+      }
+    },
+    {
+      "id": "38017265",
+      "order": 20,
+      "title": {
+        "vi": "Thịt nguội tổng hợp",
+        "en": "Mixed cold cuts"
+      },
+      "description": {
+        "vi": "Một phần thịt nguội tổng hợp để chia sẻ.",
+        "en": "A mixed cold-cut selection for sharing."
+      },
+      "sourceUrl": "https://trixie.com.vn/thit-nguoi-tong-hop-P38017265.html",
+      "image": {
+        "src": "/trixie/products/38017265.jpg",
+        "width": 1600,
+        "height": 974,
+        "source": "https://trixie.com.vn/media/images/product/38017265/47181769_2492165000799093_8380636338835161088_n.jpg",
+        "available": true
+      }
+    },
+    {
+      "id": "26087519",
+      "order": 21,
+      "title": {
+        "vi": "Bánh mỳ nướng Sparta",
+        "en": "Sparta toast"
+      },
+      "description": {
+        "vi": "Một lựa chọn bánh mỳ nướng của Trixie.",
+        "en": "A toasted-bread selection from Trixie."
+      },
+      "sourceUrl": "https://trixie.com.vn/banh-my-nuong-sparta-P26087519.html",
+      "image": {
+        "src": "/trixie/products/26087519.jpg",
+        "width": 600,
+        "height": 400,
+        "source": "https://trixie.com.vn/media/images/product/26087519/52298501b1ff73a12aee.jpg",
+        "available": true
+      }
+    }
+  ],
+  "introduction": [
+    {
+      "id": "cafe",
+      "order": 1,
+      "sourceTitle": "Quán cafe đẹp nhất Hà Nội",
+      "title": {
+        "vi": "Quán cafe đẹp nhất Hà Nội",
+        "en": "A garden café in Hanoi"
+      },
+      "description": {
+        "vi": "Bắt đầu ngày mới với bữa sáng, cà phê và khoảng xanh sân vườn. Trixie mang đến một góc thư thái giữa phố, nơi bạn có thể ngồi lại, trò chuyện và tận hưởng nhịp sáng của Hà Nội.",
+        "en": "Start the day with breakfast, coffee, and a little garden greenery. Trixie offers a calm corner of Hanoi to settle in, catch up, and enjoy the morning."
+      },
+      "image": {
+        "src": "/trixie/venue-1.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/config/about/24281911_909794142506693_1634277223_o.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/",
+      "localHref": "/menu",
+      "content": {
+        "vi": "<p><span data-color=\"#29abe2\"><strong>Buổi sáng</strong></span> - hãy tới <em>cafe Trixie</em><strong> </strong>để khởi đầu khởi đầu ngày mới với bữa ăn tràn đầy năng lượng, chuẩn bị tinh thần và sự tỉnh táo cho một ngày làm việc hiệu quả. 6h30 - 8h30 là khoảng thời gian tốt nhất để thưởng thức bữa sáng cùng 1 ly cà phê trong không xanh như một khu vườn thiên nhiên. Trixie được thiết kế như một <em>quán cà phê sân vườn</em> với không gian tuyệt đẹp mang lại cảm giác nhẹ nhàng thư thái. Hòa quện trong sắc xanh, tinh tế trong không gian thiết kế giúp Trixie nằm trong top những <strong>quán cafe đẹp nhất ở Hà Nội</strong>.</p>",
+        "en": "<p><span data-color=\"#29abe2\"><strong>Morning</strong></span> — visit <em>Trixie café</em> to begin a new day with an energising breakfast and prepare for a productive day at work. From 6:30 to 8:30 is the ideal time to enjoy breakfast and a cup of coffee in greenery reminiscent of a natural garden. Designed as a <em>garden café</em>, Trixie offers a beautiful space with a gentle, relaxing atmosphere. Its greenery and carefully designed interior place Trixie among <strong>Hanoi’s most beautiful cafés</strong>.</p>"
+      },
+      "copyProvenance": {
+        "source": "https://trixie.com.vn/",
+        "providedBy": "User screenshots supplied 2026-10-28",
+        "reviewedAt": "2026-10-28"
+      }
+    },
+    {
+      "id": "live-music",
+      "order": 2,
+      "sourceTitle": "Nhạc sống cùng thần tượng",
+      "title": {
+        "vi": "Nhạc sống cùng thần tượng",
+        "en": "Live music, up close"
+      },
+      "description": {
+        "vi": "Từ bữa trưa đến những phút nghỉ ngơi, rồi khi chiều tối đến là các minishow với những giọng ca quen thuộc. Cùng khám phá lịch diễn và chọn một cuộc hẹn âm nhạc ở Trixie.",
+        "en": "From lunch and a pause in the day to evening minishows with familiar voices. Explore the programme and choose a musical gathering at Trixie."
+      },
+      "image": {
+        "src": "/trixie/venue-2.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/config/about/14753363_1490528040962799_7575665567205561993_o.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/",
+      "localHref": "/events",
+      "content": {
+        "vi": "<p><span data-color=\"#29abe2\"><strong>Buổi trưa</strong></span> - ngoài thực đơn phong phú (hơn 100 món chính, 20 loại cơm văn phòng, nhiều món ăn phụ,...) Trixie còn đặc biệt thiết kế những chiếc giường êm ái nhằm giúp thực khách nghỉ ngơi thư giãn sau bữa ăn. Đến chiều tối, Trixie Cafe &amp; Lounge tự hào là <span data-color=\"#29abe2\"><strong>nơi thường xuyên tổ chức sự kiện Mini Show ca nhạc</strong></span> cho các ca sĩ nổi tiếng nhất showbiz Việt như: Đàm Vĩnh Hưng, Mỹ Tâm, Hồ Ngọc Hà, Tuấn Hưng, Noo Phước Thịnh, Vũ Cát Tường, Duy Mạnh... Còn chờ gì nữa, hãy đến <em>quán cafe nhạc sống</em> Trixie để gặp gỡ thần thượng của bạn !!!</p>",
+        "en": "<p><span data-color=\"#29abe2\"><strong>Midday</strong></span> — alongside an extensive menu of more than 100 main dishes, 20 office lunch options and many side dishes, Trixie has specially designed comfortable beds for guests to rest after lunch. As evening approaches, Trixie Cafe &amp; Lounge is proud to be a <span data-color=\"#29abe2\"><strong>regular venue for live-music minishows</strong></span> featuring leading Vietnamese artists such as Đàm Vĩnh Hưng, Mỹ Tâm, Hồ Ngọc Hà, Tuấn Hưng, Noo Phước Thịnh, Vũ Cát Tường and Duy Mạnh. Come to <em>Trixie’s live-music café</em> and meet your favourite artists!</p>"
+      },
+      "copyProvenance": {
+        "source": "https://trixie.com.vn/",
+        "providedBy": "User screenshots supplied 2026-10-28",
+        "reviewedAt": "2026-10-28"
+      }
+    },
+    {
+      "id": "music-lounge",
+      "order": 3,
+      "sourceTitle": "Phòng trà ca nhạc",
+      "title": {
+        "vi": "Phòng trà ca nhạc",
+        "en": "The music lounge"
+      },
+      "description": {
+        "vi": "Dành buổi tối cho mình và những người thân yêu. Thưởng thức cà phê, trà hoặc một ly rượu, lắng nghe âm nhạc và cảm nhận không khí phòng trà Trixie.",
+        "en": "Make time for yourself and the people you love. Enjoy coffee, tea, or a glass of wine as you listen and take in the atmosphere of the Trixie music lounge."
+      },
+      "image": {
+        "src": "/trixie/venue-3.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/config/about/HLO_1249(1).jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/phong-tra-ha-noi.html",
+      "localHref": "https://trixie.com.vn/phong-tra-ha-noi.html",
+      "content": {
+        "vi": "<p><span data-color=\"#29abe2\"><strong>Buổi tối </strong></span><strong>-</strong><span data-color=\"#29abe2\"><strong> </strong></span>Kết thúc một ngày làm việc vất vả là thời gian bạn dành riêng cho mình và những người thân yêu. Phòng trà Trixie - không gian của những đêm ca nhạc tuyệt vời ở Hà Nội. Không chỉ thưởng thức nhạc sống và <span data-color=\"#29abe2\"><strong>chụp ảnh cùng thần tượng</strong></span>, đến với <strong>Phòng trà TRIXIE</strong> bạn còn có cơ hội <span data-color=\"#29abe2\"><strong>lên sân khấu thể hiện mình</strong></span>. Hãy mạnh dạn thể hiện tài năng, ca hát theo cách của cách của bạn. Thật tuyệt vời khi vừa thưởng thức những tách cafe, tách trà, những ly rượu vang và hòa mình vào không gian âm nhạc đặc sắc đúng không? Hãy đến và cảm nhận <strong><a href=\"https://trixie.com.vn/phong-tra-ha-noi.html\"><span data-color=\"#29abe2\">phòng trà ca nhạc</span></a><span data-color=\"#29abe2\"> </span>TRIXIE</strong> - 165 Thái Hà, Đống Đa, Hà Nội.</p>",
+        "en": "<p><span data-color=\"#29abe2\"><strong>Evening</strong></span> — after a hard day’s work, it is time for yourself and the people you love. Trixie music lounge is a place for wonderful musical evenings in Hanoi. Alongside live music and <span data-color=\"#29abe2\"><strong>photographs with your favourite artists</strong></span>, <strong>Trixie music lounge</strong> offers the chance to <span data-color=\"#29abe2\"><strong>step onto the stage and express yourself</strong></span>. Share your talent and sing in your own way. Enjoy coffee, tea or wine as you immerse yourself in the music. Come and experience <strong><a href=\"https://trixie.com.vn/phong-tra-ha-noi.html\"><span data-color=\"#29abe2\">Trixie music lounge</span></a></strong> at 165 Thái Hà, Đống Đa, Hanoi.</p>"
+      },
+      "copyProvenance": {
+        "source": "https://trixie.com.vn/",
+        "providedBy": "User screenshots supplied 2026-10-28",
+        "reviewedAt": "2026-10-28"
+      }
+    }
+  ],
+  "archive": [
+    {
+      "id": "7569138",
+      "order": 1,
+      "title": "Trung Quân IDOL",
+      "sourceTitle": "MiniShow TRUNG QUÂN IDOL 22-05-2022",
+      "date": "2022-05-22",
+      "image": {
+        "src": "/trixie/gallery-2.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/7569138/282632879_5864719920210234_8708275630919204928_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/7569138/282632879_5864719920210234_8708275630919204928_n.jpg"
+    },
+    {
+      "id": "12953607",
+      "order": 2,
+      "title": "Văn Mai Hương",
+      "sourceTitle": "MiniShow Văn Mai Hương 24-07-2022",
+      "date": "2022-07-24",
+      "image": {
+        "src": "/trixie/gallery-3.jpg",
+        "width": 1600,
+        "height": 1066,
+        "source": "https://trixie.com.vn/media/images/album/12953607/294885782_6050896984925859_6312451679847997724_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/12953607/294885782_6050896984925859_6312451679847997724_n.jpg"
+    },
+    {
+      "id": "19865347",
+      "order": 3,
+      "title": "Lân Nhã",
+      "sourceTitle": "MIniShow LÂN NHÃ 06.01.2023",
+      "date": "2023-01-06",
+      "image": {
+        "src": "/trixie/gallery-4.jpg",
+        "width": 1600,
+        "height": 1066,
+        "source": "https://trixie.com.vn/media/images/album/19865347/324182225_901479061038394_8057747053752204134_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/19865347/324182225_901479061038394_8057747053752204134_n.jpg"
+    },
+    {
+      "id": "24863915",
+      "order": 4,
+      "title": "Trịnh Thăng Bình",
+      "sourceTitle": "MiniShow Trịnh Thăng Bình 15-07-2022",
+      "date": "2022-07-15",
+      "image": {
+        "src": "/trixie/archive/24863915.jpg",
+        "width": 1600,
+        "height": 1066,
+        "source": "https://trixie.com.vn/media/images/album/24863915/293837851_6022958614386363_7213996286788468054_n%20(1).jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/24863915/293837851_6022958614386363_7213996286788468054_n%20(1).jpg"
+    },
+    {
+      "id": "26907845",
+      "order": 5,
+      "title": "Lệ Quyên",
+      "sourceTitle": "Minishow LỆ QUYÊN 18-11-2022",
+      "date": "2022-11-18",
+      "image": {
+        "src": "/trixie/archive/26907845.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/26907845/YUH07633(1).JPG",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/26907845/YUH07633(1).JPG"
+    },
+    {
+      "id": "27486319",
+      "order": 6,
+      "title": "Vũ Cát Tường",
+      "sourceTitle": "Minishow VŨ CÁT TƯỜNG 24.12.2022",
+      "date": "2022-12-24",
+      "image": {
+        "src": "/trixie/archive/27486319.jpg",
+        "width": 621,
+        "height": 414,
+        "source": "https://trixie.com.vn/media/images/album/27486319/320928561_727592088892278_4267239507339092911_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/27486319/320928561_727592088892278_4267239507339092911_n.jpg"
+    },
+    {
+      "id": "30846217",
+      "order": 7,
+      "title": "Đan Trường & Trung Quang",
+      "sourceTitle": "MiniShow ĐAN TRƯỜNG & TRUNG QUANG 01-01-2023",
+      "date": "2023-01-01",
+      "image": {
+        "src": "/trixie/archive/30846217.jpg",
+        "width": 1600,
+        "height": 1066,
+        "source": "https://trixie.com.vn/media/images/album/30846217/323430301_724022919246371_7349064934944691306_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/30846217/323430301_724022919246371_7349064934944691306_n.jpg"
+    },
+    {
+      "id": "31258976",
+      "order": 8,
+      "title": "Myra Trần",
+      "sourceTitle": "Minishow MYRA TRẦN 08-11-2022",
+      "date": "2022-11-08",
+      "image": {
+        "src": "/trixie/archive/31258976.jpg",
+        "width": 1600,
+        "height": 1084,
+        "source": "https://trixie.com.vn/media/images/album/31258976/313419364_508954634606709_5501170685104344798_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/31258976/313419364_508954634606709_5501170685104344798_n.jpg"
+    },
+    {
+      "id": "38162497",
+      "order": 9,
+      "title": "Album 38162497",
+      "sourceTitle": "",
+      "date": null,
+      "image": {
+        "src": null,
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/38162497",
+        "available": false,
+        "reason": "HTTP Error 403: Forbidden"
+      },
+      "sourceUrl": "https://trixie.com.vn/album-anh.html"
+    },
+    {
+      "id": "41956082",
+      "order": 10,
+      "title": "Album 41956082",
+      "sourceTitle": "",
+      "date": null,
+      "image": {
+        "src": null,
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/41956082",
+        "available": false,
+        "reason": "HTTP Error 403: Forbidden"
+      },
+      "sourceUrl": "https://trixie.com.vn/album-anh.html"
+    },
+    {
+      "id": "45637290",
+      "order": 11,
+      "title": "Phạm Quỳnh Anh",
+      "sourceTitle": "MiniShow PHẠM QUỲNH ANH 16-12-2022",
+      "date": "2022-12-16",
+      "image": {
+        "src": "/trixie/archive/45637290.jpg",
+        "width": 1600,
+        "height": 1066,
+        "source": "https://trixie.com.vn/media/images/album/45637290/HUY07194.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/45637290/HUY07194.jpg"
+    },
+    {
+      "id": "46139025",
+      "order": 12,
+      "title": "Quốc Thiên",
+      "sourceTitle": "Minishow QUỐC THIÊN 10-02-2023",
+      "date": "2023-02-10",
+      "image": {
+        "src": "/trixie/archive/46139025.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/46139025/NUI_2724.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/46139025/NUI_2724.jpg"
+    },
+    {
+      "id": "48317920",
+      "order": 13,
+      "title": "Jimmii Nguyễn",
+      "sourceTitle": "MiniShow JIMMII NGUYỄN 19-06-2022",
+      "date": "2022-06-19",
+      "image": {
+        "src": "/trixie/archive/48317920.jpg",
+        "width": 1600,
+        "height": 1066,
+        "source": "https://trixie.com.vn/media/images/album/48317920/289226005_5948599541822271_356244649416367694_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/48317920/289226005_5948599541822271_356244649416367694_n.jpg"
+    },
+    {
+      "id": "51742638",
+      "order": 14,
+      "title": "Ưng Hoàng Phúc",
+      "sourceTitle": "Minishow ƯNG HOÀNG PHÚC 29.01.2023",
+      "date": "2023-01-29",
+      "image": {
+        "src": "/trixie/archive/51742638.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/51742638/NUI_4645.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/51742638/NUI_4645.jpg"
+    },
+    {
+      "id": "57061432",
+      "order": 15,
+      "title": "Mai Tiến Dũng",
+      "sourceTitle": "MiniShow MAI TIẾN DŨNG 08-03-2023",
+      "date": "2023-03-08",
+      "image": {
+        "src": "/trixie/archive/57061432.jpg",
+        "width": 1600,
+        "height": 1068,
+        "source": "https://trixie.com.vn/media/images/album/57061432/NUI_5660.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/57061432/NUI_5660.jpg"
+    },
+    {
+      "id": "57813290",
+      "order": 16,
+      "title": "Vũ",
+      "sourceTitle": "MiniShow VŨ 07-05-2022",
+      "date": "2022-05-07",
+      "image": {
+        "src": "/trixie/archive/57813290.jpg",
+        "width": 1600,
+        "height": 1066,
+        "source": "https://trixie.com.vn/media/images/album/57813290/279902075_5814863388529221_4076368653545936945_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/57813290/279902075_5814863388529221_4076368653545936945_n.jpg"
+    },
+    {
+      "id": "58274631",
+      "order": 17,
+      "title": "Lệ Quyên",
+      "sourceTitle": "Minishow LỆ QUYÊN 06-04-2023",
+      "date": "2023-04-06",
+      "image": {
+        "src": "/trixie/archive/58274631.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/58274631/2.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/58274631/2.jpg"
+    },
+    {
+      "id": "61489532",
+      "order": 18,
+      "title": "Quang Dũng",
+      "sourceTitle": "MiniShow Quang Dũng 30-09-2022",
+      "date": "2022-09-30",
+      "image": {
+        "src": "/trixie/archive/61489532.jpg",
+        "width": 1600,
+        "height": 1066,
+        "source": "https://trixie.com.vn/media/images/album/61489532/309209102_476767717825401_8727398708260665384_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/61489532/309209102_476767717825401_8727398708260665384_n.jpg"
+    },
+    {
+      "id": "62095438",
+      "order": 19,
+      "title": "Thuỳ Chi",
+      "sourceTitle": "Minishow THUỲ CHI 11-03-2023",
+      "date": "2023-03-11",
+      "image": {
+        "src": "/trixie/archive/62095438.jpg",
+        "width": 1600,
+        "height": 1068,
+        "source": "https://trixie.com.vn/media/images/album/62095438/335684081_2369968359832513_4461208077428214547_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/62095438/335684081_2369968359832513_4461208077428214547_n.jpg"
+    },
+    {
+      "id": "64018359",
+      "order": 20,
+      "title": "Hà Nhi",
+      "sourceTitle": "MiniShow Hà Nhi 13-05-2022",
+      "date": "2022-05-13",
+      "image": {
+        "src": "/trixie/archive/64018359.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/64018359/280480350_5832943703387856_9018970114895003617_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/64018359/280480350_5832943703387856_9018970114895003617_n.jpg"
+    },
+    {
+      "id": "67583492",
+      "order": 21,
+      "title": "Phương Phương Thảo",
+      "sourceTitle": "MiniShow Phương Phương Thảo 12-11-2022",
+      "date": "2022-11-12",
+      "image": {
+        "src": "/trixie/archive/67583492.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/67583492/YUH09782.JPG",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/67583492/YUH09782.JPG"
+    },
+    {
+      "id": "68392507",
+      "order": 22,
+      "title": "Đàm Vĩnh Hưng",
+      "sourceTitle": "MiniShow ĐÀM VĨNH HƯNG 22-10-2022",
+      "date": "2022-10-22",
+      "image": {
+        "src": "/trixie/archive/68392507.jpg",
+        "width": 1600,
+        "height": 1075,
+        "source": "https://trixie.com.vn/media/images/album/68392507/312720424_494999782668861_3547409892889826694_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/68392507/312720424_494999782668861_3547409892889826694_n.jpg"
+    },
+    {
+      "id": "76502489",
+      "order": 23,
+      "title": "Lệ Quyên",
+      "sourceTitle": "Minishow LỆ QUYÊN 06-05-2023",
+      "date": "2023-05-06",
+      "image": {
+        "src": "/trixie/archive/76502489.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/76502489/IMG_5696.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/76502489/IMG_5696.jpg"
+    },
+    {
+      "id": "81247650",
+      "order": 24,
+      "title": "Uyên Linh",
+      "sourceTitle": "MiniShow UYÊN LINH 04-03-2023",
+      "date": "2023-03-04",
+      "image": {
+        "src": "/trixie/archive/81247650.jpg",
+        "width": 1600,
+        "height": 1068,
+        "source": "https://trixie.com.vn/media/images/album/81247650/330834435_911225363413203_4699545138793334600_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/81247650/330834435_911225363413203_4699545138793334600_n.jpg"
+    },
+    {
+      "id": "82564137",
+      "order": 25,
+      "title": "Phan Mạnh Quỳnh",
+      "sourceTitle": "MiniShow Phan Mạnh Quỳnh 10-06-2022",
+      "date": "2022-06-10",
+      "image": {
+        "src": "/trixie/archive/82564137.jpg",
+        "width": 1600,
+        "height": 1067,
+        "source": "https://trixie.com.vn/media/images/album/82564137/285816102_5919273108088248_7387397577474551641_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/82564137/285816102_5919273108088248_7387397577474551641_n.jpg"
+    },
+    {
+      "id": "90256748",
+      "order": 26,
+      "title": "Vicky Nhung",
+      "sourceTitle": "MiniShow VICKY NHUNG 10-03-2023",
+      "date": "2023-03-10",
+      "image": {
+        "src": "/trixie/gallery-1.jpg",
+        "width": 1600,
+        "height": 1068,
+        "source": "https://trixie.com.vn/media/images/album/90256748/335440440_934547487991857_8974721054069221744_n.jpg",
+        "available": true
+      },
+      "sourceUrl": "https://trixie.com.vn/media/images/album/90256748/335440440_934547487991857_8974721054069221744_n.jpg"
+    }
+  ],
+  "video": {
+    "id": "1d8o7eGGcHU",
+    "sourceUrl": "https://www.youtube.com/watch?v=1d8o7eGGcHU",
+    "collectionUrl": "https://trixie.com.vn/video.html",
+    "status": "private",
+    "checkedAt": "2026-10-26"
+  },
+  "reservationFields": [
+    "event",
+    "name",
+    "phone",
+    "email",
+    "date",
+    "time",
+    "guests",
+    "notes"
+  ],
+  "sourceExceptions": [
+    {
+      "id": "38162497",
+      "reason": "Original archive has no title and image directory returns 403; retained as an explicitly unavailable album."
+    },
+    {
+      "id": "41956082",
+      "reason": "Original archive has no title and image directory returns 403; retained as an explicitly unavailable album."
+    },
+    {
+      "id": "19874562",
+      "reason": "The source booking menu contains a stale 2021 show. It is excluded from upcoming reservation choices."
+    },
+    "Introduction wording and emphasis restored verbatim from user-provided screenshots on 2026-10-28; English copy is a translation of those source passages."
+  ]
+}

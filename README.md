@@ -1,61 +1,32 @@
-# Lounge Brew 2.0
+# Trixie Café & Lounge
 
-Premium bilingual lounge menu built with Next.js App Router, `next-intl`, Supabase, `react-pageflip`, Tailwind CSS, and Framer Motion.
+A bilingual Trixie website built with Next.js 16, React 19, TypeScript, Tailwind 4, next-intl, Supabase, and react-pageflip. The public redesign preserves Trixie's logo, venue imagery, and latest 18 original menu pages.
 
-## Included foundation
+Use Node 22.18 or newer. Install dependencies with `pnpm install`, then run `pnpm dev`. For production, run `pnpm build` followed by `pnpm start`.
 
-- App Router + strict TypeScript scaffold
-- Cookie-backed server i18n with `next-intl`
-- Server-side i18n structure for zero-flicker rendering
-- Supabase schema migration for categories, menu items, events, and articles
-- Smart locale fallback helpers for `_en` to `_vi`
-- Dedicated `/menu` route with `react-pageflip` and responsive portrait fallback
-- Dedicated events and journal routes with shared cookie locale state
-- Admin dashboard scaffold with side-by-side bilingual fields
+## Project conventions
 
-## Quick start
+Read [AGENTS.md](AGENTS.md) before editing UI. All authored styling uses Tailwind classes. Pages and feature components compose primitives from `src/components/ui`; native elements belong inside that layer. The repository owns its `Typography` component and shared class maps. `globals.css` contains only the Tailwind import.
 
-1. Install dependencies:
+The approved design is in [the design specification](docs/superpowers/specs/2026-10-26-trixie-redesign-design.md). See [the implementation report](docs/reports/2026-10-26-trixie-implementation.md) for scope and verification.
 
-   ```bash
-   pnpm install
-   ```
+## Content and configuration
 
-2. Copy environment variables:
+Public pages work without database credentials using a verified local Trixie content snapshot. Upcoming shows are filtered using their actual dates; successful empty database results remain empty. The menu always uses the preserved original artwork, independently of database menu rows. Asset origins and dimensions are recorded in `src/data/trixie-assets.json`.
 
-   ```bash
-   cp .env.example .env.local
-   ```
+Supabase integration uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Apply `supabase/migrations/0001_initial_schema.sql` when configuring a database. Keep credentials in `.env.local`. The existing admin area is a read-only scaffold; authentication, staff permissions, editing, and publishing need a separate backend implementation.
 
-3. Start development:
+The interface language is stored in the `LB_LOCALE` cookie. Both Vietnamese and English share the same original bilingual menu artwork. Reservations use the verified venue hotline; no booking form or seat-availability service is simulated.
 
-   ```bash
-   pnpm dev
-   ```
+## Verification
 
-4. Apply the Supabase schema in `supabase/migrations/0001_initial_schema.sql`.
+Run `npm run verify` for ESLint, TypeScript, UI source-rule checks, the Node test suites, and a production build. The first font-enabled build requires access to Google Fonts. Browser verification covers production output at mobile, tablet, and desktop sizes, both languages, menu navigation, zoom, focus restoration, reduced motion, and failure fallbacks.
 
-## Environment variables
+## Main locations
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `NEXT_PUBLIC_APP_URL`
-
-If Supabase is not configured yet, the app falls back to local mock data so the UI still renders.
-
-## Project structure
-
-- `src/app` flat routes without locale segments
-- `src/components/lounge` flipbook and event UI
-- `src/components/admin` bilingual admin form primitives
-- `src/i18n` cookie locale config and request config
-- `src/lib/menu` locale mapping and page chunking helpers
-- `src/lib/server` server-side data fetchers with mock fallback
-- `supabase/migrations` database schema
-
-## Next steps
-
-- Wire Supabase Auth into `/admin`
-- Add CRUD mutations and drag-and-drop ordering
-- Replace mock data with seeded Supabase content
-- Polish page textures, sounds, and book physics details
+- `src/app`: public routes, locale API, and admin scaffold.
+- `src/components/ui`: reusable primitives and adapted shadcn/Radix components.
+- `src/components/lounge`: menu viewer, show cards, gallery, and visit sections.
+- `src/data`: verified content and asset provenance.
+- `src/lib/server`: filtered database content with per-dataset snapshot fallback.
+- `scripts`: source-rule enforcement and regression tests.

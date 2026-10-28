@@ -1,34 +1,38 @@
-import type {MenuPage} from '@/types/domain';
+import type { AppLocale } from "@/i18n/config";
+import type { MenuPage } from "@/types/domain";
 
-/**
- * Menu image filenames from /public/menu/, in page order.
- * Each image is one face of a flipbook leaf.
- * Two consecutive images share the same physical leaf (front + back).
- */
-const MENU_IMAGES: { src: string; kind: MenuPage['kind'] }[] = [
-  {src: '/menu/thucdon_bia.webp', kind: 'cover'},
-  {src: '/menu/trang-1-1769419455.webp', kind: 'content'},
-  {src: '/menu/trang-2-1769419493.webp', kind: 'content'},
-  {src: '/menu/trang-3-1769419503.webp', kind: 'content'},
-  {src: '/menu/trang-4-1769419515.webp', kind: 'content'},
-  {src: '/menu/trang-5-1769419523.webp', kind: 'content'},
-  {src: '/menu/trang-6-1769419536.webp', kind: 'content'},
-  {src: '/menu/trang-7-1769419548.webp', kind: 'content'},
-  {src: '/menu/trang-8-1769419557.webp', kind: 'content'},
-  {src: '/menu/trang-9-1769419570.webp', kind: 'content'},
-  {src: '/menu/trang-10-1769419579.webp', kind: 'content'},
-  {src: '/menu/trang-11-1769419591.webp', kind: 'content'},
-  {src: '/menu/trang-12-1769419600.webp', kind: 'content'},
-  {src: '/menu/trang-13-1769419611.webp', kind: 'content'},
-  {src: '/menu/trang-14-1769419620.webp', kind: 'content'},
-  {src: '/menu/thucdon_cuoi.webp', kind: 'back'},
-];
+/** Order and categories inspected against the original 18-page menu on 26 October 2026. */
+const artwork = [
+  ["cover", "Bìa thực đơn", "Menu cover"],
+  ["welcome", "Trixie · Chào bạn", "Welcome to Trixie"],
+  ["tea", "Trà & nước ép", "Tea & fresh juice"],
+  ["juice", "Nước ép pha chế", "Mixed juices"],
+  ["cocktails", "Cocktail", "Cocktails"],
+  ["gin", "Cocktail gin trái cây", "Fruity gin cocktails"],
+  ["mixed-drinks", "Đồ uống pha chế", "Mixed drinks & by the glass"],
+  ["wine", "Rượu vang", "Wine"],
+  ["spirits", "Rượu mạnh", "Spirits by the bottle"],
+  ["snacks", "Đồ ăn nhẹ", "Snacks"],
+  ["beer", "Bia, nước ngọt & trái cây", "Beer, soft drinks & fruit"],
+  ["food", "Thực đơn món ăn", "Food menu"],
+  ["appetisers", "Khai vị & salad", "Appetisers & salads"],
+  ["beef-pork", "Bò & heo", "Beef & pork"],
+  ["chicken", "Gà", "Chicken"],
+  ["rice-pasta", "Cơm & mỳ Ý", "Rice & pasta"],
+  ["thanks", "Lời cảm ơn", "Thank you"],
+  ["back", "Bìa sau", "Back cover"],
+] as const;
 
-export function buildImageMenuPages(): MenuPage[] {
-  return MENU_IMAGES.map((entry, index) => ({
-    id: entry.kind === 'cover' ? 'cover' : entry.kind === 'back' ? 'back' : `page-${index}`,
+export function buildImageMenuPages(locale: AppLocale = "vi"): MenuPage[] {
+  return artwork.map(([id, vi, en], index) => ({
+    id,
     physicalIndex: index,
-    kind: entry.kind,
-    image: entry.src,
+    kind:
+      index === 0 ? "cover" : index === artwork.length - 1 ? "back" : "content",
+    image: `/menu/page-${String(index + 1).padStart(2, "0")}.webp`,
+    label: locale === "vi" ? vi : en,
+    category: id,
+    width: index === 0 || index === 17 ? 1200 : 1211,
+    height: index === 0 || index === 17 ? 1700 : 1683,
   }));
 }

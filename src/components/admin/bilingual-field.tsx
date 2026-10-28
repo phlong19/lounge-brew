@@ -1,3 +1,14 @@
+import {
+  Field,
+  Fieldset,
+  Input,
+  Label,
+  Legend,
+  Textarea,
+} from "@/components/ui/form";
+import { Grid } from "@/components/ui/layout";
+import { Typography } from "@/components/ui/typography";
+
 type Props = {
   legend: string;
   vietnameseLabel: string;
@@ -8,10 +19,6 @@ type Props = {
   englishPlaceholder?: string;
   textarea?: boolean;
 };
-
-const fieldClassName =
-  'w-full rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 focus:border-accent/70';
-
 export function BilingualFieldPair({
   legend,
   vietnameseLabel,
@@ -20,52 +27,57 @@ export function BilingualFieldPair({
   englishValue,
   vietnamesePlaceholder,
   englishPlaceholder,
-  textarea = false
+  textarea,
 }: Props) {
-  const sharedProps = {
-    className: fieldClassName,
-    rows: 5
-  };
-
   return (
-    <fieldset className="space-y-3">
-      <legend className="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">{legend}</legend>
-      <div className="grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-white/70">
-          <span>{vietnameseLabel}</span>
-          {textarea ? (
-            <textarea
-              {...sharedProps}
-              defaultValue={vietnameseValue}
-              placeholder={vietnamesePlaceholder}
-            />
-          ) : (
-            <input
-              className={fieldClassName}
-              defaultValue={vietnameseValue}
-              placeholder={vietnamesePlaceholder}
-            />
-          )}
-        </label>
-
-        <label className="grid gap-2 text-sm text-white/70">
-          <span>{englishLabel}</span>
-          {textarea ? (
-            <textarea
-              {...sharedProps}
-              defaultValue={englishValue}
-              placeholder={englishPlaceholder}
-            />
-          ) : (
-            <input
-              className={fieldClassName}
-              defaultValue={englishValue}
-              placeholder={englishPlaceholder}
-            />
-          )}
-        </label>
-      </div>
-    </fieldset>
+    <Fieldset>
+      <Legend>{legend}</Legend>
+      <Grid className="md:grid-cols-2" gap="md">
+        <Field>
+          <Label>
+            <Typography as="span" variant="small">
+              {vietnameseLabel}
+            </Typography>
+            {textarea ? (
+              <Textarea
+                defaultValue={vietnameseValue}
+                placeholder={vietnamesePlaceholder}
+                readOnly
+                className="mt-2"
+              />
+            ) : (
+              <Input
+                defaultValue={vietnameseValue}
+                placeholder={vietnamesePlaceholder}
+                readOnly
+                className="mt-2"
+              />
+            )}
+          </Label>
+        </Field>
+        <Field>
+          <Label>
+            <Typography as="span" variant="small">
+              {englishLabel}
+            </Typography>
+            {textarea ? (
+              <Textarea
+                defaultValue={englishValue}
+                placeholder={englishPlaceholder}
+                readOnly
+                className="mt-2"
+              />
+            ) : (
+              <Input
+                defaultValue={englishValue}
+                placeholder={englishPlaceholder}
+                readOnly
+                className="mt-2"
+              />
+            )}
+          </Label>
+        </Field>
+      </Grid>
+    </Fieldset>
   );
 }
-
