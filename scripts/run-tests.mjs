@@ -1,5 +1,6 @@
 import { readdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 // Each suite owns its Node loader hooks; isolate them in normal Node processes.
 let failed = 0;
@@ -11,7 +12,7 @@ for (const file of files) {
     process.execPath,
     [
       "--disable-warning=MODULE_TYPELESS_PACKAGE_JSON",
-      new URL(`./tests/${file}`, import.meta.url).pathname,
+      fileURLToPath(new URL(`./tests/${file}`, import.meta.url)),
     ],
     { stdio: "inherit" },
   );
