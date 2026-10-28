@@ -22,7 +22,6 @@ export async function SocialSection() {
                 </AppLink>
               ))}
             </Inline>
-            <Typography variant="small" tone="muted">{t("socialFallback")}</Typography>
           </Stack>
           <Grid className="justify-items-center gap-6 sm:grid-cols-2">
             {[{ label: "Trixie Café", href: venue.facebookUrl }, { label: "Trixie Lounge", href: venue.loungeFacebookUrl }].map((page) => (

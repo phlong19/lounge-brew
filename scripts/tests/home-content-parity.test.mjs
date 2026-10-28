@@ -22,3 +22,12 @@ test("unavailable source media stays explicit without invented artist metadata",
  assert.equal(unavailable.length,2);
  for(const item of unavailable){assert.equal(item.image.src,null);assert.equal(item.date,null);assert.equal(item.sourceTitle,"");}
 });
+
+test("food browsing groups retain every original dish exactly once", async () => {
+ const { foodGroups } = await import("../../src/lib/lounge/food-groups.ts");
+ const grouped = foodGroups.flatMap(group => [...group.productIds]);
+ assert.equal(grouped.length, source.products.length);
+ assert.equal(new Set(grouped).size, grouped.length);
+ assert.deepEqual([...grouped].sort(), source.products.map(item => item.id).sort());
+ assert(foodGroups.every(group => group.productIds.length > 0));
+});

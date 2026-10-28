@@ -34,11 +34,11 @@ function layoutPrimitive(tag: LayoutTag, base: string) {
 
 export const Container = layoutPrimitive(
   "div",
-  "mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-12",
+  "mx-auto w-full max-w-[1600px] px-5 md:px-8 lg:px-12",
 );
 export const Section = layoutPrimitive(
   "section",
-  "scroll-mt-24 py-12 md:py-20",
+  "scroll-mt-24 py-12 md:scroll-mt-32 md:py-20",
 );
 export const Main = layoutPrimitive("main", "min-h-dvh");
 export const Navigation = layoutPrimitive("nav", "flex items-center gap-4");

@@ -21,7 +21,9 @@
     "offers": "Offers",
     "albums": "Photo albums",
     "video": "Video",
-    "news": "News"
+    "news": "News",
+    "vietnamese": "Tiếng Việt",
+    "english": "English"
   },
   "LandingPage": {
     "heroTitle": "The Best Live Music Cafe",
@@ -176,7 +178,8 @@
     "sliderHint": "Choose a thumbnail or use the arrow keys.",
     "socialTitle": "Follow Trixie",
     "socialDescription": "Show announcements, live performances and moments from the café.",
-    "socialFallback": "If Facebook cannot load here, open either page directly."
+    "mapTitle": "Find Trixie",
+    "viewMap": "View map"
   },
   "Menu": {
     "title": "The Trixie menu",
@@ -263,7 +266,6 @@
   },
   "Reservation": {
     "title": "Reservations",
-    "previewNote": "Form preview only. No reservation request will be sent.",
     "name": "Your name",
     "phone": "Phone number",
     "date": "Date",
@@ -273,7 +275,6 @@
     "optional": "optional",
     "review": "Review details",
     "reviewTitle": "Your visit details",
-    "notSent": "These details have not been sent and no table has been reserved.",
     "edit": "Edit details",
     "errorTitle": "Please check these details:",
     "nameRequired": "Enter your name.",
@@ -292,7 +293,8 @@
     "notProvided": "Not provided",
     "emailInvalid": "Enter a valid email address.",
     "eventInvalid": "Choose an available programme or a general visit.",
-    "eventDateMismatch": "Choose the date of the selected programme."
+    "eventDateMismatch": "Choose the date of the selected programme.",
+    "close": "Close reservations"
   },
   "Carousel": {
     "carousel": "carousel",
@@ -330,6 +332,18 @@
     "loungePage": "Trixie Lounge",
     "cafeSocialNote": "Coffee, the café, and everyday moments.",
     "loungeSocialNote": "Minishows and the music lounge.",
-    "openFacebook": "Visit the fanpage"
+    "openFacebook": "Visit the fanpage",
+    "dayTitle": "A day at Trixie",
+    "dayDescription": "From morning coffee to live music at 165 Thái Hà.",
+    "dayNavigation": "Explore a day at Trixie",
+    "morning": "Morning",
+    "midday": "Midday",
+    "evening": "Evening",
+    "foodCategories": "Choose a food category",
+    "foodDrinks": "Drinks",
+    "foodMeals": "Meals",
+    "foodSharing": "To share",
+    "openArchivePhoto": "View photo of {name}",
+    "closeArchivePhoto": "Close photo"
   }
 }

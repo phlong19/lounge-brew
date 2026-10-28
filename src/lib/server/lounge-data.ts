@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { verifiedArticles, verifiedEvents } from "@/data/trixie-content";
 import {
   isPublicEvent,
@@ -45,7 +46,7 @@ async function getContentClient() {
   }
 }
 
-export async function getLoungeData(): Promise<LoungeDataResult> {
+async function readLoungeData(): Promise<LoungeDataResult> {
   const now = new Date();
   const fallback = snapshot(now);
   const supabase = await getContentClient();
@@ -114,6 +115,9 @@ export async function getLoungeData(): Promise<LoungeDataResult> {
         : "mixed",
   };
 }
+
+// Deduplicate shared public data for the page and its booking dialog per request.
+export const getLoungeData = cache(readLoungeData);
 
 export async function getArticleBySlug(slug: string): Promise<{
   article: ArticleRow | null;

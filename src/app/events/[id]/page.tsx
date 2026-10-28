@@ -4,7 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { Button } from "@/components/ui/button";
+import { ReservationButton } from "@/components/lounge/reservation-provider";
 import { Icon } from "@/components/ui/icon";
 import {
   Container,
@@ -123,12 +123,9 @@ export default async function ShowPage({ params }: Props) {
                       {t("ended")}
                     </Typography>
                   ) : (
-                    <Button asChild size="lg" className="w-fit">
-                      <AppLink href={venue.phoneHref}>
-                        <Icon name="phone" />
-                        {t("book")}
-                      </AppLink>
-                    </Button>
+                    <ReservationButton eventId={event.id} size="lg" className="w-fit">
+                      <Icon name="calendar" />{t("book")}
+                    </ReservationButton>
                   )}
                   {!ended ? (
                     <Typography variant="small" tone="muted">

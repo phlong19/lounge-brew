@@ -64,3 +64,23 @@ test("article images retain safe source, alternative text and dimensions through
   assert.match(result, /width="1000" height="750"/);
   assert.doesNotMatch(result, /onerror|display:none|alert\(1\)/);
 });
+
+test("editorial color emphasis uses owned Tailwind classes without forwarding CSS", () => {
+  const result = render('<p><span data-color="#29abe2"><strong>Buổi sáng</strong></span> <span style="color:red;position:fixed" onclick="alert(1)">Evening</span></p>');
+  assert.match(result, /text-\[#00759B\]/);
+  assert.match(result, /text-red-700/);
+  assert.doesNotMatch(result, /style=|position:fixed|onclick|data-color=/);
+});
+test("unknown or executable color declarations never become rendered attributes", () => {
+  const result = render('<span data-color="bg-red-500" style="color:expression(alert(1))">Readable</span>');
+  assert.match(result, /Readable/);
+  assert.doesNotMatch(result, /bg-red-500|expression|alert|style=/);
+});
+
+test("evening editorial colors remain readable without forwarding source styles", () => {
+ const result = renderToStaticMarkup(React.createElement(RichText, {
+  content: '<p><span data-color="#29abe2">Buổi tối</span></p>', tone: "inverse"
+ }));
+ assert.match(result, /text-\[#73D5F5\]/);
+ assert.doesNotMatch(result, /style=|data-color=/);
+});

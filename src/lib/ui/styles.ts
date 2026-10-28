@@ -62,7 +62,7 @@ export const buttonSizeStyles = {
 } as const;
 
 export const controlStyles =
-  "w-full rounded-md border border-[#15201C]/25 bg-white px-3 py-2.5 text-base text-[#15201C] shadow-none placeholder:text-stone-500 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-red-800";
+  "w-full rounded-md border-2 border-[#15201C]/25 bg-white px-3 py-2.5 text-base text-[#15201C] shadow-none placeholder:text-stone-500 focus:border-[#006B57] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-red-800 aria-invalid:focus:border-red-800";
 
 export const detailStyles = {
   eyebrow: "text-xs font-semibold uppercase tracking-[0.18em]",
@@ -73,3 +73,21 @@ export const detailStyles = {
   image: "overflow-hidden rounded-lg",
   page: "min-h-dvh overflow-x-clip",
 } as const;
+
+// Source editorial colors map to a readable palette; never forward stored CSS.
+export const richTextColorStyles: Record<string, string> = {
+  "#29abe2": "text-[#00759B]", "#00759b": "text-[#00759B]",
+  blue: "text-blue-700", "#0000ff": "text-blue-700",
+  red: "text-red-700", "#ff0000": "text-red-700",
+  green: "text-emerald-800", "#008000": "text-emerald-800",
+  "#006b57": "text-[#006B57]", purple: "text-purple-800",
+};
+
+
+export const inverseRichTextColorStyles: Record<string, string> = {
+  "#29abe2": "text-[#73D5F5]", "#00759b": "text-[#73D5F5]",
+  blue: "text-blue-300", "#0000ff": "text-blue-300",
+  red: "text-red-300", "#ff0000": "text-red-300",
+  green: "text-emerald-300", "#008000": "text-emerald-300",
+  "#006b57": "text-emerald-300", purple: "text-purple-300",
+};

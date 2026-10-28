@@ -1,5 +1,7 @@
 "use client";
 
+import { ReservationButton } from "@/components/lounge/reservation-provider";
+
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
@@ -91,9 +93,7 @@ export function HeroCarousel() {
             {t(`${slides[active].key}Description`)}
           </Typography>
           <Inline gap="sm" className="pt-2">
-            <Button asChild variant="secondary" size="lg">
-              <AppLink href="#reservation">{t("book")}<Icon name="arrowUpRight" /></AppLink>
-            </Button>
+            <ReservationButton variant="secondary" size="lg">{t("book")}<Icon name="arrowUpRight" /></ReservationButton>
             <AppLink href="/events" className={heroStyles.textLink}>{t("lineup")}<Icon name="arrowRight" /></AppLink>
           </Inline>
         </Stack>

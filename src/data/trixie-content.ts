@@ -12,23 +12,25 @@ export const venue = {
   secondaryPhone: "0888 165 165",
   secondaryPhoneHref: "tel:0888165165",
   mapUrl: "https://www.google.com/maps?cid=1629843242895371718",
+  mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7448.895306395395!2d105.816875!3d21.014767!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x169e5dcb4c596dc6!2sTrixie+Cafe+Lounge!5e0!3m2!1svi!2sus!4v1492253232649",
   hours: "07:00 — 23:00",
   facebookUrl: "https://www.facebook.com/TrixieCafe",
   loungeFacebookUrl: "https://www.facebook.com/trixie.cafe.lounge/",
   pinterestUrl: "https://www.pinterest.com/trixiecafe/",
   youtubeUrl: "https://www.youtube.com/c/TrixieCafeLounge165ThaiHa",
-  // No Instagram account is linked by the original venue website.
-  instagramUrl: "",
+  // Linked by official venue articles; verified 28 October 2026.
+  instagramUrl: "https://www.instagram.com/trixie.cafe.lounge/",
   sourceUrl: "https://trixie.com.vn/",
   reviewedAt: "2026-10-26",
 } as const;
 
-/** Social destinations linked by the official venue homepage, reviewed 26 October 2026. */
+/** Social destinations verified from the official venue homepage and articles. */
 export const socialLinks = [
   { id: "cafe", label: "Facebook · Café", href: venue.facebookUrl },
   { id: "lounge", label: "Facebook · Lounge", href: venue.loungeFacebookUrl },
   { id: "pinterest", label: "Pinterest", href: venue.pinterestUrl },
   { id: "youtube", label: "YouTube", href: venue.youtubeUrl },
+  { id: "instagram", label: "Instagram", href: venue.instagramUrl },
 ] as const;
 
 export const verifiedEvents: EventRow[] = [

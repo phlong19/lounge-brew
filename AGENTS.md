@@ -51,3 +51,8 @@ These rules apply to all work in this repository. Explicit user instructions tak
 - Verify lint, TypeScript, production build, and browser interactions at 390/768/1440px. Inspect real screenshots in both languages and test keyboard/reduced-motion behavior.
 - Do not claim that rules are mechanically enforced until the checks exist and run successfully. Do not claim build/test success from an earlier run.
 - Preserve unrelated user changes, including the existing `.env.example` modification. Do not commit or publish changes without an instruction to do so.
+
+## Public interface clarity
+
+- Avoid duplicate actions or repeated information within the same section. When an embedded widget already provides an action, do not add another equivalent control next to it (for example, a directions link beside Google Maps’ Open in Maps control).
+- Keep demo explanations and implementation disclaimers out of the public page unless the user explicitly asks for them. Preserve truthful UI behavior: never invent a successful booking or submission.

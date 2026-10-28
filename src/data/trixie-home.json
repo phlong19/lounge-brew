@@ -455,7 +455,16 @@
         "available": true
       },
       "sourceUrl": "https://trixie.com.vn/",
-      "localHref": "/menu"
+      "localHref": "/menu",
+      "content": {
+        "vi": "<p><span data-color=\"#29abe2\"><strong>Buổi sáng</strong></span> - hãy tới <em>cafe Trixie</em><strong> </strong>để khởi đầu khởi đầu ngày mới với bữa ăn tràn đầy năng lượng, chuẩn bị tinh thần và sự tỉnh táo cho một ngày làm việc hiệu quả. 6h30 - 8h30 là khoảng thời gian tốt nhất để thưởng thức bữa sáng cùng 1 ly cà phê trong không xanh như một khu vườn thiên nhiên. Trixie được thiết kế như một <em>quán cà phê sân vườn</em> với không gian tuyệt đẹp mang lại cảm giác nhẹ nhàng thư thái. Hòa quện trong sắc xanh, tinh tế trong không gian thiết kế giúp Trixie nằm trong top những <strong>quán cafe đẹp nhất ở Hà Nội</strong>.</p>",
+        "en": "<p><span data-color=\"#29abe2\"><strong>Morning</strong></span> — visit <em>Trixie café</em> to begin a new day with an energising breakfast and prepare for a productive day at work. From 6:30 to 8:30 is the ideal time to enjoy breakfast and a cup of coffee in greenery reminiscent of a natural garden. Designed as a <em>garden café</em>, Trixie offers a beautiful space with a gentle, relaxing atmosphere. Its greenery and carefully designed interior place Trixie among <strong>Hanoi’s most beautiful cafés</strong>.</p>"
+      },
+      "copyProvenance": {
+        "source": "https://trixie.com.vn/",
+        "providedBy": "User screenshots supplied 2026-10-28",
+        "reviewedAt": "2026-10-28"
+      }
     },
     {
       "id": "live-music",
@@ -477,7 +486,16 @@
         "available": true
       },
       "sourceUrl": "https://trixie.com.vn/",
-      "localHref": "/events"
+      "localHref": "/events",
+      "content": {
+        "vi": "<p><span data-color=\"#29abe2\"><strong>Buổi trưa</strong></span> - ngoài thực đơn phong phú (hơn 100 món chính, 20 loại cơm văn phòng, nhiều món ăn phụ,...) Trixie còn đặc biệt thiết kế những chiếc giường êm ái nhằm giúp thực khách nghỉ ngơi thư giãn sau bữa ăn. Đến chiều tối, Trixie Cafe &amp; Lounge tự hào là <span data-color=\"#29abe2\"><strong>nơi thường xuyên tổ chức sự kiện Mini Show ca nhạc</strong></span> cho các ca sĩ nổi tiếng nhất showbiz Việt như: Đàm Vĩnh Hưng, Mỹ Tâm, Hồ Ngọc Hà, Tuấn Hưng, Noo Phước Thịnh, Vũ Cát Tường, Duy Mạnh... Còn chờ gì nữa, hãy đến <em>quán cafe nhạc sống</em> Trixie để gặp gỡ thần thượng của bạn !!!</p>",
+        "en": "<p><span data-color=\"#29abe2\"><strong>Midday</strong></span> — alongside an extensive menu of more than 100 main dishes, 20 office lunch options and many side dishes, Trixie has specially designed comfortable beds for guests to rest after lunch. As evening approaches, Trixie Cafe &amp; Lounge is proud to be a <span data-color=\"#29abe2\"><strong>regular venue for live-music minishows</strong></span> featuring leading Vietnamese artists such as Đàm Vĩnh Hưng, Mỹ Tâm, Hồ Ngọc Hà, Tuấn Hưng, Noo Phước Thịnh, Vũ Cát Tường and Duy Mạnh. Come to <em>Trixie’s live-music café</em> and meet your favourite artists!</p>"
+      },
+      "copyProvenance": {
+        "source": "https://trixie.com.vn/",
+        "providedBy": "User screenshots supplied 2026-10-28",
+        "reviewedAt": "2026-10-28"
+      }
     },
     {
       "id": "music-lounge",
@@ -499,7 +517,16 @@
         "available": true
       },
       "sourceUrl": "https://trixie.com.vn/phong-tra-ha-noi.html",
-      "localHref": "https://trixie.com.vn/phong-tra-ha-noi.html"
+      "localHref": "https://trixie.com.vn/phong-tra-ha-noi.html",
+      "content": {
+        "vi": "<p><span data-color=\"#29abe2\"><strong>Buổi tối </strong></span><strong>-</strong><span data-color=\"#29abe2\"><strong> </strong></span>Kết thúc một ngày làm việc vất vả là thời gian bạn dành riêng cho mình và những người thân yêu. Phòng trà Trixie - không gian của những đêm ca nhạc tuyệt vời ở Hà Nội. Không chỉ thưởng thức nhạc sống và <span data-color=\"#29abe2\"><strong>chụp ảnh cùng thần tượng</strong></span>, đến với <strong>Phòng trà TRIXIE</strong> bạn còn có cơ hội <span data-color=\"#29abe2\"><strong>lên sân khấu thể hiện mình</strong></span>. Hãy mạnh dạn thể hiện tài năng, ca hát theo cách của cách của bạn. Thật tuyệt vời khi vừa thưởng thức những tách cafe, tách trà, những ly rượu vang và hòa mình vào không gian âm nhạc đặc sắc đúng không? Hãy đến và cảm nhận <strong><a href=\"https://trixie.com.vn/phong-tra-ha-noi.html\"><span data-color=\"#29abe2\">phòng trà ca nhạc</span></a><span data-color=\"#29abe2\"> </span>TRIXIE</strong> - 165 Thái Hà, Đống Đa, Hà Nội.</p>",
+        "en": "<p><span data-color=\"#29abe2\"><strong>Evening</strong></span> — after a hard day’s work, it is time for yourself and the people you love. Trixie music lounge is a place for wonderful musical evenings in Hanoi. Alongside live music and <span data-color=\"#29abe2\"><strong>photographs with your favourite artists</strong></span>, <strong>Trixie music lounge</strong> offers the chance to <span data-color=\"#29abe2\"><strong>step onto the stage and express yourself</strong></span>. Share your talent and sing in your own way. Enjoy coffee, tea or wine as you immerse yourself in the music. Come and experience <strong><a href=\"https://trixie.com.vn/phong-tra-ha-noi.html\"><span data-color=\"#29abe2\">Trixie music lounge</span></a></strong> at 165 Thái Hà, Đống Đa, Hanoi.</p>"
+      },
+      "copyProvenance": {
+        "source": "https://trixie.com.vn/",
+        "providedBy": "User screenshots supplied 2026-10-28",
+        "reviewedAt": "2026-10-28"
+      }
     }
   ],
   "archive": [
@@ -926,9 +953,6 @@
       "id": "19874562",
       "reason": "The source booking menu contains a stale 2021 show. It is excluded from upcoming reservation choices."
     },
-    {
-      "id": "intro-claims",
-      "reason": "Old menu item counts, breakfast times inconsistent with published hours, and specific resting-bed availability are not asserted as current facts."
-    }
+    "Introduction wording and emphasis restored verbatim from user-provided screenshots on 2026-10-28; English copy is a translation of those source passages."
   ]
 }

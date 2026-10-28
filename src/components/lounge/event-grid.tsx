@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+import { eventCardStyles } from "@/lib/ui/home-styles";
 import { getTranslations } from "next-intl/server";
 
 import { Icon } from "@/components/ui/icon";
@@ -45,7 +47,7 @@ export async function EventGrid({
         <Article key={event.id} className="group">
           <AppLink
             href={`/events/${event.id}`}
-            className="block overflow-hidden"
+            className={cn(eventCardStyles.base,eventCardStyles.light)}
             aria-label={`${event.performerName} · ${shortEventDate(event.eventDate, locale)}`}
           >
             <Surface
@@ -63,7 +65,7 @@ export async function EventGrid({
                       ? "(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
                       : "(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
                   }
-                  className="transition-transform duration-500 group-hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
+                  className={eventCardStyles.image}
                 />
               ) : (
                 <Stack className="h-full items-center justify-center p-8">
@@ -74,8 +76,7 @@ export async function EventGrid({
                 </Stack>
               )}
             </Surface>
-          </AppLink>
-          <Stack gap="sm" className="pt-5">
+          <Stack gap="sm" className="p-4">
             <Inline className="justify-between" gap="sm">
               <Typography
                 as="time"
@@ -86,10 +87,8 @@ export async function EventGrid({
               </Typography>
               <Icon name="arrowUpRight" className="size-4" />
             </Inline>
-            <Typography as={compact ? "h3" : "h2"} variant="subheading">
-              <AppLink href={`/events/${event.id}`} className="hover:underline">
-                {event.performerName}
-              </AppLink>
+            <Typography as={compact ? "h3" : "h2"} variant="subheading" className={eventCardStyles.title}>
+              {event.performerName}
             </Typography>
             <Typography variant="small" tone="muted">
               {new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-GB", {
@@ -101,6 +100,7 @@ export async function EventGrid({
               · Trixie Café & Lounge
             </Typography>
           </Stack>
+          </AppLink>
         </Article>
       ))}
     </Grid>

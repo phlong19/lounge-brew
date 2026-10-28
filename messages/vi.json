@@ -21,7 +21,9 @@
     "offers": "Ưu đãi",
     "albums": "Album ảnh",
     "video": "Video",
-    "news": "Tin tức"
+    "news": "Tin tức",
+    "vietnamese": "Tiếng Việt",
+    "english": "English"
   },
   "LandingPage": {
     "heroTitle": "Quán Cà Phê Nhạc Sống",
@@ -176,7 +178,8 @@
     "sliderHint": "Chọn ảnh thu nhỏ hoặc dùng phím mũi tên.",
     "socialTitle": "Kết nối với Trixie",
     "socialDescription": "Lịch diễn, những đêm nhạc và khoảnh khắc tại quán.",
-    "socialFallback": "Nếu Facebook không hiển thị, bạn có thể mở trực tiếp trang."
+    "mapTitle": "Đường đến Trixie",
+    "viewMap": "Xem bản đồ"
   },
   "Menu": {
     "title": "Thực đơn Trixie",
@@ -263,7 +266,6 @@
   },
   "Reservation": {
     "title": "Đặt bàn",
-    "previewNote": "Biểu mẫu xem trước. Thông tin đặt bàn sẽ không được gửi.",
     "name": "Tên của bạn",
     "phone": "Số điện thoại",
     "date": "Ngày đến",
@@ -273,7 +275,6 @@
     "optional": "không bắt buộc",
     "review": "Xem lại thông tin",
     "reviewTitle": "Thông tin cuộc hẹn",
-    "notSent": "Thông tin chưa được gửi và chưa có bàn nào được đặt.",
     "edit": "Chỉnh sửa thông tin",
     "errorTitle": "Vui lòng kiểm tra các thông tin sau:",
     "nameRequired": "Vui lòng nhập tên của bạn.",
@@ -292,7 +293,8 @@
     "notProvided": "Chưa cung cấp",
     "emailInvalid": "Vui lòng nhập email hợp lệ.",
     "eventInvalid": "Vui lòng chọn chương trình hoặc đặt bàn thông thường.",
-    "eventDateMismatch": "Vui lòng chọn đúng ngày của chương trình."
+    "eventDateMismatch": "Vui lòng chọn đúng ngày của chương trình.",
+    "close": "Đóng đặt bàn"
   },
   "Carousel": {
     "carousel": "băng chuyền",
@@ -330,6 +332,18 @@
     "loungePage": "Trixie Lounge",
     "cafeSocialNote": "Cà phê, không gian và những khoảnh khắc mỗi ngày.",
     "loungeSocialNote": "Minishow và những cuộc hẹn âm nhạc.",
-    "openFacebook": "Ghé thăm fanpage"
+    "openFacebook": "Ghé thăm fanpage",
+    "dayTitle": "Một ngày ở Trixie",
+    "dayDescription": "Từ cà phê đầu ngày đến những đêm nhạc ở 165 Thái Hà.",
+    "dayNavigation": "Khám phá một ngày ở Trixie",
+    "morning": "Sáng",
+    "midday": "Trưa",
+    "evening": "Tối",
+    "foodCategories": "Chọn nhóm món",
+    "foodDrinks": "Đồ uống",
+    "foodMeals": "Món chính",
+    "foodSharing": "Ăn cùng nhau",
+    "openArchivePhoto": "Xem ảnh {name}",
+    "closeArchivePhoto": "Đóng ảnh"
   }
 }

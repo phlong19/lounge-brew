@@ -5,6 +5,7 @@ import { List, ListItem, Stack } from "@/components/ui/layout";
 import { Media } from "@/components/ui/media";
 import { AppLink } from "@/components/ui/link";
 import { Typography } from "@/components/ui/typography";
+import { richTextColorStyles, inverseRichTextColorStyles } from "@/lib/ui/styles";
 import { safeHref } from "@/lib/ui/href";
 
 type ContentNode = ReturnType<typeof parseDocument>["children"][number];
@@ -26,7 +27,8 @@ const blocked = new Set([
 const heading = new Set(["h2", "h3", "h4", "h5", "h6"]);
 
 /** Parse stored content into owned components; never forward source attributes. */
-export function RichText({ content }: { content: string }) {
+export function RichText({ content, tone = "ink" }: { content: string; tone?: "ink" | "inverse" }) {
+  const colors = tone === "inverse" ? inverseRichTextColorStyles : richTextColorStyles;
   function render(node: ContentNode, key: number): ReactNode {
     if (node.type === "text") return node.data;
     if (node.type !== "tag" || blocked.has(node.name)) return null;
@@ -50,6 +52,11 @@ export function RichText({ content }: { content: string }) {
           className="my-6 h-auto w-full"
         />
       );
+    }
+    if (node.name === "span") {
+      const sourceColor = node.attribs["data-color"] ?? node.attribs.style?.match(/(?:^|;)\s*color\s*:\s*(#[a-f\d]{3,6}|[a-z]+)\s*(?:;|$)/i)?.[1];
+      const colorClass = sourceColor ? colors[sourceColor.trim().toLowerCase()] : undefined;
+      return colorClass ? <Typography key={key} as="span" variant="inline" className={colorClass}>{children}</Typography> : children;
     }
     if (node.name === "p") return <Typography key={key}>{children}</Typography>;
     if (node.name === "h1" || heading.has(node.name))

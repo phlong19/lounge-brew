@@ -6,7 +6,6 @@ import type { ComponentPropsWithRef } from "react";
 import { Icon } from "@/components/ui/icon";
 import {
   controlStyles,
-  focusStyles,
   surfaceStyles,
   typographyStyles,
 } from "@/lib/ui/styles";
@@ -25,7 +24,6 @@ export function SelectTrigger({
     <SelectPrimitive.Trigger
       className={cn(
         controlStyles,
-        focusStyles,
         "flex min-h-11 items-center justify-between gap-3 text-left",
         className,
       )}

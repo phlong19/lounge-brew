@@ -7,7 +7,7 @@ import { HomeIntroduction } from "@/components/lounge/home-introduction";
 import { HomeFood } from "@/components/lounge/home-food";
 import { HomeShows } from "@/components/lounge/home-shows";
 import { HomeArchive } from "@/components/lounge/home-archive";
-import { HomeBookingVideo } from "@/components/lounge/home-booking-video";
+import { HomeVideo } from "@/components/lounge/home-video";
 import { Main } from "@/components/ui/layout";
 import type { AppLocale } from "@/i18n/config";
 import { localizeEvents } from "@/lib/menu/map-menu";
@@ -24,7 +24,7 @@ export default async function LandingPage() {
         <HomeShows events={events} locale={locale as AppLocale} />
         <HomeIntroduction locale={locale as AppLocale} />
         <HomeFood locale={locale as AppLocale} />
-        <HomeBookingVideo events={events} locale={locale as AppLocale} />
+        <HomeVideo />
         <HomeArchive locale={locale as AppLocale} />
       </Main>
       <SiteFooter />

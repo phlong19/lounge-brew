@@ -1,20 +1,18 @@
-import {cookies, headers} from 'next/headers';
+import {cookies} from 'next/headers';
 import {getRequestConfig} from 'next-intl/server';
 
 import {
   defaultLocale,
   isAppLocale,
-  localeCookieName,
-  resolveLocaleFromHeader
+  localeCookieName
 } from './config';
 
 export default getRequestConfig(async () => {
   const cookieStore = await cookies();
-  const headerStore = await headers();
   const cookieLocale = cookieStore.get(localeCookieName)?.value;
   const locale = isAppLocale(cookieLocale)
     ? cookieLocale
-    : resolveLocaleFromHeader(headerStore.get('accept-language')) ?? defaultLocale;
+    : defaultLocale;
 
   return {
     locale,

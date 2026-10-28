@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { useReservation } from "@/components/lounge/reservation-provider";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
@@ -36,19 +37,21 @@ export function MobileNavigation({
   bookingLabel,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const { openReservation } = useReservation();
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"
           size="icon"
+          data-reservation-focus-fallback
           aria-label={openLabel}
           className="xl:hidden"
         >
           <Icon name="menu" />
         </Button>
       </SheetTrigger>
-      <SheetContent closeLabel={closeLabel} className="overflow-y-auto">
+      <SheetContent closeLabel={closeLabel} className="overflow-y-auto" onEscapeKeyDown={event => { if ((event.target as HTMLElement).closest("[data-language-switcher]")?.querySelector("[data-language-options]")) event.preventDefault(); }}>
         <SheetHeader>
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{venue.address}</SheetDescription>
@@ -72,12 +75,12 @@ export function MobileNavigation({
           ))}
         </Navigation>
         <Stack className="mt-auto pb-[env(safe-area-inset-bottom)]">
-          <LocaleSwitcher />
-          <Button asChild size="lg">
-            <AppLink href="/#reservation" onClick={() => setOpen(false)}>
-              <Icon name="calendar" />
-              {bookingLabel}
-            </AppLink>
+          <LocaleSwitcher side="top" />
+          <Button size="lg" aria-haspopup="dialog" onClick={() => {
+            setOpen(false);
+            requestAnimationFrame(() => openReservation());
+          }}>
+            <Icon name="calendar" />{bookingLabel}
           </Button>
         </Stack>
       </SheetContent>
