@@ -21,7 +21,7 @@ import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import type { MenuPage } from "@/types/domain";
 import { MenuArtwork } from "./menu-artwork";
-import { MenuIndex, MenuThumbnails } from "./menu-index";
+import { MenuIndex } from "./menu-index";
 import { MenuZoomDialog } from "./menu-zoom-dialog";
 import { useMenuViewer } from "./use-menu-viewer";
 
@@ -30,9 +30,9 @@ const MenuBook = dynamic(
   { ssr: false },
 );
 const viewerStyles = {
-  root: "rounded-lg border border-[#FFFAE7]/15 bg-[#15201C] p-4 text-[#FFFAE7] sm:p-6 lg:p-8",
+  root: "mx-auto text-[#15201C]",
   stage:
-    "grid w-full place-items-center overflow-hidden rounded-sm bg-black/20 p-1 sm:p-4",
+    "grid w-full place-items-center",
   single: "mx-auto w-full max-w-[560px]",
   spread: "mx-auto w-full max-w-[900px]",
   layer: "col-start-1 row-start-1 w-full",
@@ -42,7 +42,8 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
   const t = useTranslations("Menu");
   const viewer = useMenuViewer(pages.length);
   const [readyMode, setReadyMode] = useState<string | null>(null);
-  const mode = viewer.spread ? "spread" : "single";
+  const bookSpread = viewer.spread && viewer.visible.length === 2;
+  const mode = bookSpread ? "spread" : "single";
   const engineReady = readyMode === mode && !viewer.reducedMotion;
   const current = viewer.visible[0] ?? 0;
   const last = viewer.visible.at(-1) ?? 0;
@@ -53,9 +54,9 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
       : t("page", { current: current + 1, total: pages.length });
 
   return (
-    <Surface className={viewerStyles.root}>
-      <Grid className="lg:grid-cols-[190px_minmax(0,1fr)]" gap="lg">
-        <MenuIndex pages={pages} page={viewer.page} onSelect={viewer.goTo} />
+    <Surface className={cn(viewerStyles.root, bookSpread ? "max-w-[1060px]" : "max-w-[720px]")}>
+      <Grid className="lg:grid-cols-[minmax(0,1fr)_160px] lg:items-start" gap="none">
+
         <Stack gap="md" className="min-w-0">
           <Surface
             role="region"
@@ -66,7 +67,10 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
             className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C6B573]"
           >
             <Stack gap="md">
-              <Inline className="justify-between" gap="sm">
+              <Surface className="lg:hidden">
+                <MenuIndex mode="select" pages={pages} page={viewer.page} onSelect={viewer.goTo} />
+              </Surface>
+              <Inline className="justify-between lg:pr-4" gap="sm">
                 <Inline gap="xs">
                   <Button
                     variant="outline"
@@ -77,7 +81,7 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
                   >
                     <Icon name="chevronLeft" />
                   </Button>
-                  <Status className="min-w-24 text-center">{progress}</Status>
+                  <Status className="min-w-24 text-center tabular-nums">{progress}</Status>
                   <Button
                     variant="outline"
                     size="icon"
@@ -97,7 +101,7 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
               <Surface className={viewerStyles.stage}>
                 <Grid
                   className={
-                    viewer.spread ? viewerStyles.spread : viewerStyles.single
+                    bookSpread ? viewerStyles.spread : viewerStyles.single
                   }
                   gap="none"
                 >
@@ -117,11 +121,6 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
                         key={pages[index].id}
                         page={pages[index]}
                         eager
-                        className={
-                          viewer.visible.length === 1 && viewer.spread
-                            ? "mx-auto max-w-[450px]"
-                            : undefined
-                        }
                       />
                     ))}
                   </Grid>
@@ -136,7 +135,7 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
                         key={mode}
                         pages={pages}
                         page={viewer.page}
-                        spread={viewer.spread}
+                        spread={bookSpread}
                         onPageChange={viewer.goTo}
                         onReady={() => setReadyMode(mode)}
                       />
@@ -146,23 +145,13 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
               </Surface>
             </Stack>
           </Surface>
-          <Typography
-            id="menu-keyboard-hint"
-            variant="small"
-            className="text-stone-300"
-          >
+          <Typography id="menu-keyboard-hint" variant="small" className="sr-only">
             {t("useKeyboard")}
           </Typography>
-          <MenuThumbnails
-            pages={pages}
-            page={viewer.page}
-            visible={viewer.visible}
-            onSelect={viewer.goTo}
-          />
-          <Typography variant="small" className="text-stone-300">
-            {t("hint")}
-          </Typography>
         </Stack>
+        <Surface className="hidden pt-[60px] lg:block">
+          <MenuIndex pages={pages} page={viewer.page} onSelect={viewer.goTo} />
+        </Surface>
       </Grid>
       <NoScript>
         <Stack gap="sm" className="mt-6 border-t border-[#FFFAE7]/20 pt-6">

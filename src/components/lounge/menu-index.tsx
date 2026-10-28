@@ -3,151 +3,79 @@
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { List, ListItem, Navigation } from "@/components/ui/layout";
 import {
-  Inline,
-  List,
-  ListItem,
-  Navigation,
-  Stack,
-} from "@/components/ui/layout";
-import { Media } from "@/components/ui/media";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import type { MenuPage } from "@/types/domain";
 
-const indexStyles = {
-  active: "border-[#A18B47] bg-[#FFFAE7]/10 text-[#FFFAE7]",
-  idle: "border-transparent text-stone-300 hover:bg-[#FFFAE7]/5 hover:text-[#FFFAE7]",
+const tabStyles = {
   entry:
-    "w-full justify-start gap-3 rounded-none border-l-2 px-3 text-left whitespace-normal",
-  thumbnail:
-    "relative h-auto w-16 shrink-0 flex-col gap-1 rounded-none border-2 p-1",
+    "relative h-auto min-h-8 w-full justify-start gap-2 rounded-l-none rounded-r-md border-l-2 px-2 py-1.5 text-left whitespace-normal transition-colors motion-reduce:transition-none",
+  active: "z-10 border-[#A18B47] bg-[#006B57] text-white",
+  idle: "border-[#006B57]/20 bg-[#E5EADD] text-[#15201C] hover:bg-[#D4DFCF]",
 } as const;
 
 export function MenuIndex({
-  pages,
-  page,
-  onSelect,
+  pages, page, onSelect, mode = "tabs",
 }: {
   pages: MenuPage[];
   page: number;
   onSelect: (index: number) => void;
+  mode?: "select" | "tabs";
 }) {
   const t = useTranslations("Menu");
-  return (
-    <Stack gap="sm">
-      <Typography
-        as="h2"
-        variant="caption"
-        className="uppercase tracking-widest text-[#C6B573]"
-      >
-        {t("categories")}
-      </Typography>
-      <Stack className="lg:hidden">
-        <Select
-          value={String(page)}
-          onValueChange={(value) => onSelect(Number(value))}
-        >
-          <SelectTrigger aria-label={t("categories")}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {pages.map((item, index) => (
-              <SelectItem key={item.id} value={String(index)}>
-                {item.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </Stack>
-      <Navigation
-        aria-label={t("categories")}
-        className="hidden max-h-[680px] overflow-y-auto lg:block"
-      >
-        <List className="space-y-0.5">
-          {pages.map((item, index) => (
-            <ListItem key={item.id}>
-              <Button
-                variant="ghost"
-                size="sm"
-                aria-current={page === index ? "page" : undefined}
-                onClick={() => onSelect(index)}
-                className={cn(
-                  indexStyles.entry,
-                  page === index ? indexStyles.active : indexStyles.idle,
-                )}
-              >
-                <Typography
-                  as="span"
-                  variant="caption"
-                  className="w-5 shrink-0 text-[#C6B573]"
-                >
-                  {String(index + 1).padStart(2, "0")}
-                </Typography>
-                <Typography as="span" variant="small">
-                  {item.label}
-                </Typography>
-              </Button>
-            </ListItem>
-          ))}
-        </List>
-      </Navigation>
-    </Stack>
-  );
-}
+  const categories = pages
+    .map((item, index) => ({ item, index }))
+    .filter(({ item }) => !["cover", "welcome", "thanks", "back"].includes(item.id));
 
-export function MenuThumbnails({
-  pages,
-  page,
-  visible,
-  onSelect,
-}: {
-  pages: MenuPage[];
-  page: number;
-  visible: number[];
-  onSelect: (index: number) => void;
-}) {
-  const t = useTranslations("Menu");
+  if (mode === "select") {
+    return (
+      <Select value={String(page)} onValueChange={(value) => onSelect(Number(value))}>
+        <SelectTrigger
+          aria-label={t("categories")}
+          className="border-[#006B57]/30 bg-white text-[#15201C]"
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {pages.map((item, index) => (
+            <SelectItem key={item.id} value={String(index)}>
+              {String(index + 1).padStart(2, "0")} · {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    );
+  }
+
   return (
-    <Navigation
-      aria-label={t("pageNavigation")}
-      className="w-full overflow-x-auto py-2"
-    >
-      <Inline gap="xs" className="flex-nowrap">
-        {pages.map((item, index) => (
-          <Button
-            key={item.id}
-            variant="ghost"
-            onClick={() => onSelect(index)}
-            aria-label={`${t("page", { current: index + 1, total: pages.length })} · ${item.label}`}
-            aria-current={page === index ? "page" : undefined}
-            className={cn(
-              indexStyles.thumbnail,
-              visible.includes(index) ? indexStyles.active : indexStyles.idle,
-            )}
-          >
-            <Media
-              src={item.image}
-              alt=""
-              width={48}
-              height={68}
-              sizes="48px"
-              fit="contain"
-              className="h-[68px] w-12"
-            />
-            <Typography as="span" variant="caption">
-              {index + 1}
-            </Typography>
-          </Button>
+    <Navigation aria-label={t("categories")} className="block self-start">
+      <List ordered className="space-y-0.5">
+        {categories.map(({ item, index }) => (
+          <ListItem key={item.id}>
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-current={page === index ? "page" : undefined}
+              onClick={() => onSelect(index)}
+              className={cn(
+                tabStyles.entry,
+                page === index ? tabStyles.active : tabStyles.idle,
+              )}
+            >
+              <Typography as="span" variant="caption" className="w-5 shrink-0 tabular-nums">
+                {String(index + 1).padStart(2, "0")}
+              </Typography>
+              <Typography as="span" variant="caption" className="leading-tight">
+                {item.label}
+              </Typography>
+            </Button>
+          </ListItem>
         ))}
-      </Inline>
+      </List>
     </Navigation>
   );
 }

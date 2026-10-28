@@ -54,10 +54,13 @@ export function MenuZoomDialog({
         <Button
           variant="outline"
           size="sm"
+          className="size-11 p-0 sm:h-9 sm:w-auto sm:px-3"
           onClick={(event) => show(event, true)}
         >
           <Icon name="zoomIn" />
-          {t("zoom")}
+          <Typography as="span" variant="small" className="sr-only sm:not-sr-only">
+            {t("zoom")}
+          </Typography>
         </Button>
         <Button
           variant="outline"
