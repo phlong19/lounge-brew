@@ -46,7 +46,7 @@ export async function SiteHeader({ active }: Props) {
     <Container className="flex h-20 items-center justify-between gap-4 xl:h-24">
       <AppLink href="/" aria-label="Trixie · Home" className="shrink-0"><Media src="/trixie/logo.png" alt="Trixie Café & Lounge" width={150} height={60} priority fit="contain" className="h-12 w-28 xl:h-14 xl:w-32" /></AppLink>
       <Navigation aria-label={t("home")} className="hidden gap-6 xl:flex">{items.map(item => item.children ? <NavigationGroup key={item.key} item={item} active={active === item.key} /> : <AppLink key={item.key} href={item.href} aria-current={active === item.key ? "page" : undefined} className={headerStyles.navLink}>{item.label}</AppLink>)}</Navigation>
-      <Inline gap="xs" className="flex-nowrap"><Surface className="hidden md:block"><LocaleSwitcher /></Surface><ReservationButton data-reservation-focus-fallback className="hidden hover:bg-[#006B57] hover:text-white sm:inline-flex">{t("book")}<Icon name="arrowUpRight" className="size-4" /></ReservationButton><MobileNavigation items={items} active={active} title={t("brand")} openLabel={t("openMenu")} closeLabel={t("closeMenu")} bookingLabel={t("book")} /></Inline>
+      <Inline gap="sm" className="flex-nowrap md:gap-6"><Surface className="hidden md:block"><LocaleSwitcher /></Surface><ReservationButton data-reservation-focus-fallback className="hidden hover:bg-[#006B57] hover:text-white sm:inline-flex">{t("book")}<Icon name="arrowUpRight" className="size-4" /></ReservationButton><MobileNavigation items={items} active={active} title={t("brand")} openLabel={t("openMenu")} closeLabel={t("closeMenu")} bookingLabel={t("book")} /></Inline>
     </Container>
   </SiteHeaderFrame><ReservationDialogData /></>;
 }
