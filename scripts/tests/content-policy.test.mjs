@@ -135,7 +135,7 @@ test('show end status uses the verified end time with an exact ended boundary', 
 });
 
 
-test("homepage automatically selects the four nearest future visible shows, earliest first", () => {
+test("homepage automatically selects the eight nearest future visible shows, earliest first", () => {
   const at = new Date("2026-11-01T12:00:00+07:00");
   const rows = [
     event("december", "2026-12-02T20:15:00+07:00"),
@@ -143,14 +143,18 @@ test("homepage automatically selects the four nearest future visible shows, earl
     event("november-7", "2026-11-07T20:15:00+07:00"),
     event("december-8", "2026-12-08T20:15:00+07:00"),
     event("december-10", "2026-12-10T20:15:00+07:00"),
+    event("december-11", "2026-12-11T20:15:00+07:00"),
+    event("december-12", "2026-12-12T20:15:00+07:00"),
+    event("december-13", "2026-12-13T20:15:00+07:00"),
+    event("december-14", "2026-12-14T20:15:00+07:00"),
     event("hidden", "2026-11-02T20:15:00+07:00", { is_active: false }),
     event("started", at.toISOString(), { end_date: "2026-11-01T14:00:00+07:00" }),
     event("past", "2026-10-30T20:15:00+07:00"),
   ];
   const before = rows.map(row => row.id);
-  assert.deepEqual(policy.homepageEvents(rows, at).map(row => row.id), ["november-7", "november-9", "december", "december-8"]);
+  assert.deepEqual(policy.homepageEvents(rows, at).map(row => row.id), ["november-7", "november-9", "december", "december-8", "december-10", "december-11", "december-12", "december-13"]);
   assert.deepEqual(rows.map(row => row.id), before);
-  assert.equal(policy.bookableEvents(rows, at).length, 5);
+  assert.equal(policy.bookableEvents(rows, at).length, 9);
 });
 test("booking automatically closes exactly at start, including shows still in progress", () => {
   const show = event("show", "2026-11-07T20:15:00+07:00", { end_date: "2026-11-07T22:00:00+07:00" });

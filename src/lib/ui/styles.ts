@@ -91,3 +91,7 @@ export const inverseRichTextColorStyles: Record<string, string> = {
   green: "text-emerald-300", "#008000": "text-emerald-300",
   "#006b57": "text-emerald-300", purple: "text-purple-300",
 };
+
+export const carouselControlStyles = {
+  side: "cursor-pointer border-[#006B57]/50 bg-white text-[#006B57] hover:border-[#006B57] hover:bg-[#006B57] hover:text-white focus-visible:border-[#006B57] focus-visible:bg-[#006B57] focus-visible:text-white disabled:cursor-default",
+} as const;

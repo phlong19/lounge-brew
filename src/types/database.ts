@@ -136,6 +136,7 @@ export type Database = {
           end_date: string | null
           event_date: string
           id: string
+          is_deleted: boolean
           is_active: boolean
           performer_name: string
           public_id: string
@@ -159,6 +160,7 @@ export type Database = {
           end_date?: string | null
           event_date: string
           id?: string
+          is_deleted?: boolean
           is_active?: boolean
           performer_name: string
           public_id?: string
@@ -182,6 +184,7 @@ export type Database = {
           end_date?: string | null
           event_date?: string
           id?: string
+          is_deleted?: boolean
           is_active?: boolean
           performer_name?: string
           public_id?: string
@@ -410,21 +413,21 @@ export type Database = {
         Row: {
           created_at: string
           is_active: boolean
-          role: string
+          role: "admin" | "editor"
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
           is_active?: boolean
-          role: string
+          role: "admin" | "editor"
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
           is_active?: boolean
-          role?: string
+          role?: "admin" | "editor"
           updated_at?: string
           user_id?: string
         }

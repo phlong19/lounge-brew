@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Label } from "@/components/ui/form";
 import { Icon } from "@/components/ui/icon";
@@ -19,6 +19,8 @@ function ReadOnlyStatus({ enabled, label }: { enabled: boolean; label: string })
   return <Inline gap="xs" className={enabled ? "text-[#205B3B]" : "text-stone-500"} aria-label={`${label}: ${enabled ? "Có" : "Không"}`}><Icon name={enabled ? "check" : "minus"} className="size-4" /><Typography as="span" variant="small">{enabled ? "Có" : "Không"}</Typography></Inline>;
 }
 export function AdminEvents({ items, onEdit, onAdd }: { items: EditableEvent[]; onEdit: (item: EditableEvent, trigger: HTMLButtonElement) => void; onAdd: (trigger: HTMLButtonElement) => void }) {
+  const [now,setNow] = useState(() => Date.now());
+  useEffect(() => { const timer = setInterval(() => setNow(Date.now()),60000); return () => clearInterval(timer); }, []);
   const [search, setSearch] = useState("");
   const [scope, setScope] = useState("all");
   const [month, setMonth] = useState("all");
@@ -44,7 +46,7 @@ export function AdminEvents({ items, onEdit, onAdd }: { items: EditableEvent[]; 
     <Table className="min-w-[760px]" aria-label="Danh sách sự kiện">
       <TableHeader><TableRow><TableHead>Chương trình</TableHead><TableHead className="w-48">Ngày diễn</TableHead><TableHead className="w-40">Phụ thu</TableHead><TableHead className="w-36">Hiển thị</TableHead><TableHead className="w-24"><Typography as="span" className="sr-only">Thao tác</Typography></TableHead></TableRow></TableHeader>
       <TableBody>{shown.map(item => <TableRow key={item.id} data-event-row={item.id}>
-        <TableCell><Inline gap="sm" className="flex-nowrap"><Surface className={s.poster}>{item.cover_file ? <FileImage file={item.cover_file} alt="" className="h-full w-full object-cover" /> : item.cover_image_url ? <Media src={item.cover_image_url} alt="" fill sizes="48px" /> : null}</Surface><Typography className="font-semibold">{item.title_vi}</Typography></Inline></TableCell>
+        <TableCell><Inline gap="sm" className="flex-nowrap"><Surface className={s.poster}>{item.cover_file ? <FileImage file={item.cover_file} alt="" className="h-full w-full object-cover" /> : item.cover_image_url ? <Media src={item.cover_image_url} alt="" fill sizes="48px" /> : null}</Surface><Stack gap="xs"><Typography className="font-semibold">{item.title_vi}</Typography><Typography as="span" variant="caption" className={Date.parse(item.event_date) > now ? s.upcomingBadge : s.pastBadge}>{Date.parse(item.event_date) > now ? "Sắp tới" : "Đã qua"}</Typography></Stack></Inline></TableCell>
         <TableCell><Typography variant="small" className="whitespace-nowrap tabular-nums">{new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(item.event_date))}<Typography as="span" variant="inline" className="ml-3 inline-flex items-center gap-1.5 text-stone-600"><Icon name="clock" className="size-3.5" />{new Intl.DateTimeFormat("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(item.event_date))}</Typography></Typography></TableCell>
         <TableCell><Typography variant="small" className="whitespace-nowrap tabular-nums">{item.additionalFee != null ? new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.additionalFee) : "—"}</Typography></TableCell><TableCell><ReadOnlyStatus enabled={item.is_active} label="Hiển thị" /></TableCell>
         <TableCell><Button variant="ghost" size="sm" aria-label={`Sửa ${item.title_vi}`} onClick={event => onEdit({ ...item }, event.currentTarget)}><Icon name="pencil" className="size-4" />Sửa</Button></TableCell>

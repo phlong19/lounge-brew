@@ -344,7 +344,10 @@
     "foodMeals": "Meals",
     "foodSharing": "To share",
     "openArchivePhoto": "View photo of {name}",
-    "closeArchivePhoto": "Close photo"
+    "closeArchivePhoto": "Close photo",
+    "foodDetails": "View details for {name}",
+    "closeFoodDetails": "Close food details",
+    "backToFood": "Back to dishes"
   },
   "AdminDesign": {
     "workspace": "Website workspace",

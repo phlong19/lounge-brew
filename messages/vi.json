@@ -344,7 +344,10 @@
     "foodMeals": "Món chính",
     "foodSharing": "Ăn cùng nhau",
     "openArchivePhoto": "Xem ảnh {name}",
-    "closeArchivePhoto": "Đóng ảnh"
+    "closeArchivePhoto": "Đóng ảnh",
+    "foodDetails": "Xem chi tiết {name}",
+    "closeFoodDetails": "Đóng chi tiết món",
+    "backToFood": "Trở lại các món ăn"
   },
   "AdminDesign": {
     "workspace": "Quản lý website",

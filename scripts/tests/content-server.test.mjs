@@ -131,11 +131,11 @@ test('an authoritative missing show does not resurrect its snapshot', async () =
   assert.equal(result.contentSource, 'supabase');
 });
 
-test('show detail query failures fall back to the original snapshot', async (t) => {
+test('configured show query failures cannot resurrect deleted snapshot events', async (t) => {
   const warning = t.mock.method(console, 'warn', () => {});
   configureResults({events: {data: null, error: {message: 'private query details'}}});
   const result = await getEventById('19870256');
-  assert.equal(result.event?.id, '19870256');
+  assert.equal(result.event, null);
   assert.equal(result.contentSource, 'snapshot');
   assert.equal(warning.mock.callCount(), 1);
   assert.ok(!warning.mock.calls[0].arguments.join(' ').includes('private'));

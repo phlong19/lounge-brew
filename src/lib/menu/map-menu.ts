@@ -50,7 +50,8 @@ export function localizeEvent(
   );
 
   return {
-    id: event.id,
+    id: event.public_id || event.id,
+    content: localizeText(locale,event.content_vi,event.content_en).value || null,
     title: localizedTitle.value,
     performerName: event.performer_name,
     eventDate: event.event_date,

@@ -77,9 +77,10 @@ async function readLoungeData(): Promise<LoungeDataResult> {
           .from("events")
           .select("*")
           .eq("is_active", true)
+          .eq("is_deleted", false)
           .order("event_date", { ascending: true })
           .abortSignal(AbortSignal.timeout(5000)),
-      fallback.events,
+      [],
     ),
     resolveDataset<ArticleRow[] | null>(
       () =>
@@ -182,11 +183,12 @@ export async function getEventById(id: string): Promise<{
       supabase
         .from("events")
         .select("*")
-        .eq("id", id)
+        .eq("public_id", id)
         .eq("is_active", true)
+          .eq("is_deleted", false)
         .abortSignal(AbortSignal.timeout(5000))
         .maybeSingle(),
-    fallback,
+    null,
   );
   if (result.source === "snapshot") {
     console.warn(

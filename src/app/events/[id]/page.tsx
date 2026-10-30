@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { RichText } from "@/components/content/rich-text";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ReservationButton } from "@/components/lounge/reservation-provider";
@@ -113,7 +114,7 @@ export default async function ShowPage({ params }: Props) {
                     <Typography>{venue.address}</Typography>
                   </Inline>
                 </Stack>
-                {event.description ? (
+                {event.content ? <RichText content={event.content} /> : event.description ? (
                   <Typography variant="lead" tone="muted">
                     {event.description}
                   </Typography>

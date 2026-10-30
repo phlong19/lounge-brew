@@ -43,6 +43,7 @@ export const eventCardStyles = {
   light: "hover:border-[#006B57] hover:bg-[#006B57]/5 focus-visible:border-[#006B57] focus-visible:bg-[#006B57]/5",
   title: "underline-offset-4 group-hover:underline group-focus-visible:underline",
   image: "transition-[filter] duration-200 group-hover:brightness-75 group-focus-visible:brightness-75 motion-reduce:transition-none",
+  details: "w-fit rounded-sm px-2 py-1 -ml-2 transition-colors group-hover:bg-[#FFFAE7] group-hover:text-[#15201C] group-focus-visible:bg-[#FFFAE7] group-focus-visible:text-[#15201C] motion-reduce:transition-none",
   arrow: "transition-transform duration-200 group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none",
 } as const;
 
@@ -75,11 +76,17 @@ export const dayStyles = {
 
 export const foodStyles = {
   section: "bg-white text-[#15201C]",
-  filter: "gap-3 rounded-none border-0 bg-[#F1EEE7] px-5 py-3 text-[#15201C] hover:bg-[#E2E9E3] aria-pressed:bg-[#006B57] aria-pressed:text-white",
-  grid: "items-start gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-4",
-  slots: ["", "lg:pt-6", "", "lg:pt-6"],
-  item: "group grid grid-cols-[112px_minmax(0,1fr)] items-start gap-4 rounded-none sm:block",
-  photo: "relative overflow-hidden bg-[#F1EEE7]",
+  item: "group min-w-0",
+  trigger: "block h-auto w-full overflow-hidden rounded-none border-0 bg-transparent p-0 hover:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-[#006B57]",
+  photo: "relative aspect-[3/2] w-full overflow-hidden bg-[#F1EEE7]",
+  title: "line-clamp-2 min-h-6 font-semibold",
+  preview: "border-[#A6BCAF] bg-[#E5EEE8] text-[#152F28] shadow-xl",
+  previewEye: "size-8 text-white",
+  previewText: "gap-1",
+  backLink: "inline-flex min-h-11 w-fit items-center gap-2 hover:underline",
+  detailGrid: "items-center gap-8 lg:grid-cols-2 lg:gap-12",
+  thumbnailOverlay: "pointer-events-none absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none",
+  description: "line-clamp-2 min-h-[3.25em] text-[#15201C]/80",
 } as const;
 
 

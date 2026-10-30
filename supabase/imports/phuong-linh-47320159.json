@@ -1,0 +1,21 @@
+{
+  "event": {
+    "source_id": "47320159",
+    "source_url": "https://trixie.com.vn/thu-sau-30-10-2026-minishow-phuong-linh-E47320159.html",
+    "title_vi": "THỨ SÁU [30.10.2026] MINISHOW PHƯƠNG LINH",
+    "title_en": null,
+    "performer_name": "Phương Linh",
+    "event_date": "2026-10-30T20:15:00+07:00",
+    "end_date": "2026-10-30T22:00:00+07:00",
+    "description_vi": "Đêm nhạc Phương Linh tại Trixie, từ 20:15 đến 22:00 ngày 30/10/2026.",
+    "description_en": null,
+    "additional_fee": null,
+    "is_active": false
+  },
+  "contentTemplate": "<h2>Minishow Phương Linh · 30/10/2026</h2><p>Phương Linh trở lại sân khấu Trixie với đêm nhạc dành cho khán giả yêu giọng hát và phong cách trình diễn của cô.</p><img src=\"{{poster}}\" alt=\"Poster minishow Phương Linh ngày 30 tháng 10 năm 2026\"><p>Thời gian: 20:15–22:00, thứ Sáu, ngày 30/10/2026. Địa điểm: Trixie, 165 Thái Hà, Hà Nội.</p><h2>Sơ đồ chỗ ngồi tại Trixie</h2><img src=\"{{seating1}}\" alt=\"Sơ đồ chỗ ngồi Trixie, hình 1\"><img src=\"{{seating2}}\" alt=\"Sơ đồ chỗ ngồi Trixie, hình 2\">",
+  "assets": [
+    {"key":"poster","localPath":"public/trixie/shows/47320159.jpg","filename":"phuong-linh-30-10-2026.jpg","alt":"Poster Phương Linh 30/10/2026","sourceUrl":"https://trixie.com.vn/media/images/event/47320159/1789375519139_7705236198682647334_g449158859298759411_85a2f1f3cea577fd0886dd54222611a5.jpg"},
+    {"key":"seating1","localPath":"supabase/imports/assets/trixie-seating-1.jpg","filename":"trixie-seating-1.jpg","alt":"Sơ đồ chỗ ngồi Trixie, hình 1","sourceUrl":"https://trixie.com.vn/media/images/event/82173654/z7062981209289_28d9dfe5c186b5e79f44c125fb63a382.jpg"},
+    {"key":"seating2","localPath":"supabase/imports/assets/trixie-seating-2.jpg","filename":"trixie-seating-2.jpg","alt":"Sơ đồ chỗ ngồi Trixie, hình 2","sourceUrl":"https://trixie.com.vn/media/images/event/82173654/z7062981263757_50dbd24cc66fff43d350e015efb68146.jpg"}
+  ]
+}
