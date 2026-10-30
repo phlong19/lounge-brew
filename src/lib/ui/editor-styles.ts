@@ -1,0 +1,7 @@
+export const editorStyles = {
+  frame: "overflow-hidden rounded-md border border-[#15201C]/25 bg-white focus-within:border-[#006B57] focus-within:ring-1 focus-within:ring-[#006B57]",
+  toolbar: "flex flex-wrap items-center gap-1 border-b border-[#E2E6DE] bg-[#F8F9F6] p-2",
+  tool: "size-9 rounded-sm p-0 aria-pressed:bg-[#DCEBE2] aria-pressed:text-[#006B57]",
+  content: "min-h-80 whitespace-pre-wrap break-words p-4 text-base leading-relaxed outline-none [&_p]:my-3 [&_p:first-child]:mt-0 [&_h2]:mt-6 [&_h2]:mb-3 [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:mt-5 [&_h3]:mb-2 [&_h3]:text-xl [&_h3]:font-semibold [&_strong]:font-bold [&_em]:italic [&_u]:underline [&_s]:line-through [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_blockquote]:border-l-4 [&_blockquote]:border-[#006B57] [&_blockquote]:pl-4 [&_blockquote]:italic [&_a]:text-blue-700 [&_a]:underline [&_img]:mx-auto [&_img]:my-4 [&_img]:h-auto [&_img]:max-h-[640px] [&_img]:max-w-full [&_img]:object-contain [&_img.ProseMirror-selectednode]:outline-2 [&_img.ProseMirror-selectednode]:outline-[#006B57]",
+  dropzone: "flex min-h-80 cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-[#15201C]/25 bg-[#F8F9F6] p-5 text-center outline-none transition-colors hover:border-[#006B57] focus-visible:border-[#006B57] focus-visible:ring-2 focus-visible:ring-[#006B57] data-[drag=true]:border-[#006B57] data-[drag=true]:bg-[#EAF4ED] aria-invalid:border-red-600 motion-reduce:transition-none",
+} as const;

@@ -85,3 +85,14 @@ test("only the exact Tailwind entry stylesheet is accepted", () => {
     1,
   );
 });
+
+
+test("only the approved rich-text span can author a single validated colour", () => {
+ assert.equal(inspectSource("src/components/ui/colored-text.tsx", 'export function Text(){return <span style={{ color: safeColor }}>Text</span>}').length, 0);
+ for (const [file, source] of [
+  ["src/components/ui/other.tsx", '<span style={{ color: safeColor }}>Text</span>'],
+  ["src/components/ui/colored-text.tsx", '<span style={{ color: safeColor, background: "red" }}>Text</span>'],
+  ["src/components/ui/colored-text.tsx", '<span style={{ color: unsafeValue }}>Text</span>'],
+  ["src/components/ui/colored-text.tsx", '<div style={{ color: safeColor }}>Text</div>'],
+ ]) assert(inspectSource(file, source).some(issue => issue.rule === "authored-style-or-html"));
+});

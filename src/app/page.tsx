@@ -11,11 +11,12 @@ import { HomeVideo } from "@/components/lounge/home-video";
 import { Main } from "@/components/ui/layout";
 import type { AppLocale } from "@/i18n/config";
 import { localizeEvents } from "@/lib/menu/map-menu";
+import { homepageEvents } from "@/lib/server/content-policy";
 import { getLoungeData } from "@/lib/server/lounge-data";
 
 export default async function LandingPage() {
   const [locale, data] = await Promise.all([getLocale(), getLoungeData()]);
-  const events = localizeEvents(locale as AppLocale, data.events);
+  const events = localizeEvents(locale as AppLocale, homepageEvents(data.events));
   return (
     <>
       <SiteHeader active="home" />

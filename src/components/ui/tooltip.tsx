@@ -4,6 +4,7 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import type { ComponentPropsWithRef } from "react";
 
 import { surfaceStyles, typographyStyles } from "@/lib/ui/styles";
+import { popupMotion } from "@/lib/ui/motion-styles";
 import { cn } from "@/lib/utils";
 
 export const TooltipProvider = TooltipPrimitive.Provider;
@@ -22,6 +23,7 @@ export function TooltipContent({
         className={cn(
           "z-[80] max-w-64 rounded-md px-3 py-2 shadow-lg",
           surfaceStyles.evening,
+          popupMotion,
           typographyStyles.small,
           className,
         )}

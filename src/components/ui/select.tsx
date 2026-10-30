@@ -9,6 +9,7 @@ import {
   surfaceStyles,
   typographyStyles,
 } from "@/lib/ui/styles";
+import { popupMotion } from "@/lib/ui/motion-styles";
 import { cn } from "@/lib/utils";
 
 export const Select = SelectPrimitive.Root;
@@ -52,6 +53,7 @@ export function SelectContent({
         className={cn(
           "relative z-[70] max-h-80 min-w-48 overflow-hidden rounded-md border border-[#15201C]/20 shadow-xl",
           surfaceStyles.paper,
+          popupMotion,
           className,
         )}
         {...props}

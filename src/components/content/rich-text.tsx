@@ -2,6 +2,8 @@ import { parseDocument } from "htmlparser2";
 import type { ReactNode } from "react";
 
 import { List, ListItem, Stack } from "@/components/ui/layout";
+import { ColoredText } from "@/components/ui/colored-text";
+import { normalizeTextColor } from "@/lib/content/text-color";
 import { Media } from "@/components/ui/media";
 import { AppLink } from "@/components/ui/link";
 import { Typography } from "@/components/ui/typography";
@@ -54,6 +56,8 @@ export function RichText({ content, tone = "ink" }: { content: string; tone?: "i
       );
     }
     if (node.name === "span") {
+      const customColor = normalizeTextColor(node.attribs["data-text-color"]);
+      if (customColor) return <ColoredText key={key} color={customColor}>{children}</ColoredText>;
       const sourceColor = node.attribs["data-color"] ?? node.attribs.style?.match(/(?:^|;)\s*color\s*:\s*(#[a-f\d]{3,6}|[a-z]+)\s*(?:;|$)/i)?.[1];
       const colorClass = sourceColor ? colors[sourceColor.trim().toLowerCase()] : undefined;
       return colorClass ? <Typography key={key} as="span" variant="inline" className={colorClass}>{children}</Typography> : children;
@@ -91,6 +95,7 @@ export function RichText({ content, tone = "ink" }: { content: string; tone?: "i
           {children}
         </Typography>
       );
+    if (node.name === "u") return <Typography key={key} as="span" variant="inline" className="underline">{children}</Typography>;
     if (node.name === "blockquote")
       return (
         <Typography

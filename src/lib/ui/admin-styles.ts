@@ -1,4 +1,5 @@
 export const adminStyles = {
+  drawer: "w-full gap-0 bg-white p-0 sm:w-[min(92vw,64rem)]",
   root: "min-h-dvh bg-[#F2F4EF] text-[#15201C] lg:grid lg:grid-cols-[224px_minmax(0,1fr)]",
   sidebar: "flex flex-col gap-4 px-5 py-4 lg:gap-7 lg:sticky lg:top-0 lg:h-dvh lg:py-8",
   nav: "flex-row gap-2 lg:flex-col lg:items-stretch",

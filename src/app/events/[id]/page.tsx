@@ -21,7 +21,7 @@ import { Typography } from "@/components/ui/typography";
 import { venue } from "@/data/trixie-content";
 import type { AppLocale } from "@/i18n/config";
 import { localizeEvent } from "@/lib/menu/map-menu";
-import { isEventEnded } from "@/lib/server/content-policy";
+import { isBookableEvent, isEventEnded } from "@/lib/server/content-policy";
 import { getEventById } from "@/lib/server/lounge-data";
 
 type Props = { params: Promise<{ id: string }> };
@@ -39,6 +39,7 @@ export default async function ShowPage({ params }: Props) {
   ]);
   if (!source) notFound();
   const ended = isEventEnded(source);
+  const canBook = isBookableEvent(source);
   const event = localizeEvent(locale as AppLocale, source);
   const date = new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-GB", {
     dateStyle: "full",
@@ -122,12 +123,12 @@ export default async function ShowPage({ params }: Props) {
                     <Typography variant="lead" tone="brand">
                       {t("ended")}
                     </Typography>
-                  ) : (
+                  ) : canBook ? (
                     <ReservationButton eventId={event.id} size="lg" className="w-fit">
                       <Icon name="calendar" />{t("book")}
                     </ReservationButton>
-                  )}
-                  {!ended ? (
+                  ) : null}
+                  {canBook ? (
                     <Typography variant="small" tone="muted">
                       {t("bookingNote")}
                     </Typography>

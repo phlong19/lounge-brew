@@ -19,6 +19,10 @@
     "@radix-ui/react-tooltip": "1.4.1",
     "@supabase/ssr": "0.7.0",
     "@supabase/supabase-js": "2.57.0",
+    "@tiptap/extension-image": "3.32.1",
+    "@tiptap/pm": "3.32.1",
+    "@tiptap/react": "3.32.1",
+    "@tiptap/starter-kit": "3.32.1",
     "clsx": "2.1.1",
     "embla-carousel-auto-scroll": "8.6.0",
     "embla-carousel-react": "8.6.0",
@@ -29,6 +33,7 @@
     "next-intl": "4.3.6",
     "react": "19.2.5",
     "react-dom": "19.2.5",
+    "react-dropzone": "14.3.8",
     "react-pageflip": "2.0.3",
     "tailwind-merge": "3.3.1"
   },

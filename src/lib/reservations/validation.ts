@@ -20,13 +20,19 @@ export function venueNow(now = new Date()) {
   return { date: `${part("year")}-${part("month")}-${part("day")}`, time: `${part("hour")}:${part("minute")}` };
 }
 
-export function validateReservation(values: ReservationValues, now = new Date(), events: readonly { id: string; date: string }[] = []): ReservationErrors {
+export type ReservationEventTime = { id: string; date: string; time?: string; startsAt?: string };
+export function isUpcomingChoice(event: ReservationEventTime, now = new Date()) {
+  const start = event.startsAt || (event.time ? `${event.date}T${event.time}:00+07:00` : null);
+  return start ? Number.isFinite(Date.parse(start)) && Date.parse(start) > now.getTime() : event.date >= venueNow(now).date;
+}
+
+export function validateReservation(values: ReservationValues, now = new Date(), events: readonly ReservationEventTime[] = []): ReservationErrors {
   const errors: ReservationErrors = {};
   const current = venueNow(now);
   const email = values.email?.trim() ?? "";
   if (email && (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) errors.email = "emailInvalid";
   const selectedEvent = values.event ? events.find(event => event.id === values.event) : undefined;
-  if (values.event && !selectedEvent) errors.event = "eventInvalid";
+  if (values.event && (!selectedEvent || !isUpcomingChoice(selectedEvent, now))) errors.event = "eventInvalid";
   if (!values.name.trim()) errors.name = "nameRequired";
   else if (values.name.trim().length > 120) errors.name = "nameLong";
   const digits = values.phone.replace(/\D/g, "");

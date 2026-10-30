@@ -3,6 +3,8 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import type { ComponentPropsWithRef } from "react";
 
+import { TransitionDialog, DialogPresence } from "@/components/ui/dialog-presence";
+import { overlayMotion, dialogMotion } from "@/lib/ui/motion-styles";
 import { Icon } from "@/components/ui/icon";
 import { Stack } from "@/components/ui/layout";
 import {
@@ -13,7 +15,7 @@ import {
 } from "@/lib/ui/styles";
 import { cn } from "@/lib/utils";
 
-export const Dialog = DialogPrimitive.Root;
+export const Dialog = TransitionDialog;
 export const DialogTrigger = DialogPrimitive.Trigger;
 export const DialogClose = DialogPrimitive.Close;
 export const DialogPortal = DialogPrimitive.Portal;
@@ -24,8 +26,9 @@ export function DialogOverlay({
 }: ComponentPropsWithRef<typeof DialogPrimitive.Overlay>) {
   return (
     <DialogPrimitive.Overlay
-      className={cn("fixed inset-0 z-50 bg-black/65", className)}
+      className={cn("fixed inset-0 z-50 bg-black/65", overlayMotion, className)}
       {...props}
+      forceMount
     />
   );
 }
@@ -45,17 +48,19 @@ export function DialogContent({
   ...props
 }: DialogContentProps) {
   return (
-    <DialogPortal>
+    <DialogPresence><DialogPortal forceMount>
       <DialogOverlay />
       <DialogPrimitive.Content
         className={cn(
           "fixed top-1/2 left-1/2 z-50 flex max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col gap-5 overflow-y-auto rounded-lg border border-[#15201C]/15 p-6 shadow-2xl",
           surfaceStyles.paper,
+          dialogMotion,
           focusStyles,
           className,
         )}
         {...props}
         asChild={false}
+        forceMount
       >
         {children}
         {showCloseButton ? (
@@ -70,7 +75,7 @@ export function DialogContent({
           </DialogPrimitive.Close>
         ) : null}
       </DialogPrimitive.Content>
-    </DialogPortal>
+    </DialogPortal></DialogPresence>
   );
 }
 export function DialogHeader({

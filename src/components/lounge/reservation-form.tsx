@@ -9,15 +9,17 @@ import { Grid, Stack, Surface } from "@/components/ui/layout";
 import { AppLink } from "@/components/ui/link";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Typography } from "@/components/ui/typography";
-import { validateReservation, type ReservationErrors, type ReservationField, type ReservationValues } from "@/lib/reservations/validation";
+import { isUpcomingChoice, validateReservation, type ReservationErrors, type ReservationField, type ReservationValues } from "@/lib/reservations/validation";
 
-export type EventChoice = { id: string; label: string; date: string; time: string };
+export type EventChoice = { id: string; label: string; date: string; time: string; startsAt?: string };
 const initialValues: ReservationValues = { event:"",name:"",phone:"",email:"",date:"",time:"",guests:"2",notes:"" };
 const order: ReservationField[] = ["event","name","phone","email","date","time","guests","notes"];
 
 export function ReservationForm({ today, events = [], initialEventId }: { today: string; events?: EventChoice[]; initialEventId?: string }) {
   const t = useTranslations("Reservation");
   const prefix = useId();
+  const [clock, setClock] = useState<Date | null>(null);
+  const availableEvents = clock ? events.filter(event => isUpcomingChoice(event, clock)) : events;
   const [ready, setReady] = useState(false);
   const [values, setValues] = useState(() => {
     const choice = events.find(event => event.id === initialEventId);
@@ -27,7 +29,7 @@ export function ReservationForm({ today, events = [], initialEventId }: { today:
   const [reviewed, setReviewed] = useState(false);
   const summary = useRef<HTMLElement | null>(null);
   const review = useRef<HTMLParagraphElement | null>(null);
-  useEffect(() => setReady(true), []);
+  useEffect(() => { setReady(true); setClock(new Date()); const timer = window.setInterval(() => setClock(new Date()), 1000); return () => window.clearInterval(timer); }, []);
   const id = (field: ReservationField) => `${prefix}-${field}`;
   const validate = () => validateReservation(values, new Date(), events);
   function change(field: ReservationField, value: string) {
@@ -35,7 +37,7 @@ export function ReservationForm({ today, events = [], initialEventId }: { today:
     if (errors[field]) setErrors(current => ({ ...current, [field]: undefined }));
   }
   function selectEvent(value: string) {
-    const choice = events.find(event => event.id === value);
+    const choice = availableEvents.find(event => event.id === value);
     setValues(current => ({ ...current,event:choice?.id ?? "",...(choice ? {date:choice.date,time:choice.time} : {}) }));
     setErrors(current => ({ ...current,event:undefined,date:undefined,time:undefined }));
   }
@@ -58,7 +60,7 @@ export function ReservationForm({ today, events = [], initialEventId }: { today:
         <Button variant="outline" className="w-fit" onClick={() => {setReviewed(false);requestAnimationFrame(() => document.getElementById(id("event"))?.focus());}}>{t("edit")}</Button>
       </Stack> : <Form noValidate onSubmit={submit} aria-label={t("title")}>
         {invalid.length ? <Surface ref={summary} role="alert" tabIndex={-1} aria-labelledby={`${prefix}-error-title`} className="bg-red-50 p-4 text-red-900 outline-none focus-visible:outline-2"><Typography id={`${prefix}-error-title`} variant="caption">{t("errorTitle")}</Typography><Stack gap="xs" className="mt-2">{invalid.map(field => <AppLink key={field} href={`#${id(field)}`} className="text-sm underline" onClick={event => {event.preventDefault();document.getElementById(id(field))?.focus();}}>{t(errors[field]!)}</AppLink>)}</Stack></Surface> : null}
-        <Field data-source-field="event"><Label htmlFor={id("event")} optionalLabel={t("optional")}>{t("event")}</Label><Select name="event" value={values.event || "general"} onValueChange={selectEvent}><SelectTrigger id={id("event")} aria-invalid={!!errors.event} aria-describedby={errors.event ? `${id("event")}-error` : undefined} onBlur={() => blur("event")} className="min-w-0 [&>span]:truncate"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="general">{t("generalVisit")}</SelectItem>{events.map(event => <SelectItem key={event.id} value={event.id}>{event.label}</SelectItem>)}</SelectContent></Select>{message("event")}</Field>
+        <Field data-source-field="event"><Label htmlFor={id("event")} optionalLabel={t("optional")}>{t("event")}</Label><Select name="event" value={values.event || "general"} onValueChange={selectEvent}><SelectTrigger id={id("event")} aria-invalid={!!errors.event} aria-describedby={errors.event ? `${id("event")}-error` : undefined} onBlur={() => blur("event")} className="min-w-0 [&>span]:truncate"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="general">{t("generalVisit")}</SelectItem>{availableEvents.map(event => <SelectItem key={event.id} value={event.id}>{event.label}</SelectItem>)}</SelectContent></Select>{message("event")}</Field>
         <Grid className="gap-5 sm:grid-cols-2">
           <Field data-source-field="name"><Label htmlFor={id("name")} required>{t("name")}</Label><Input id={id("name")} name="name" autoComplete="name" required maxLength={120} value={values.name} onChange={event => change("name",event.target.value)} onBlur={() => blur("name")} aria-invalid={!!errors.name} aria-describedby={errors.name ? `${id("name")}-error` : undefined} />{message("name")}</Field>
           <Field data-source-field="phone"><Label htmlFor={id("phone")} required>{t("phone")}</Label><Input id={id("phone")} name="phone" type="tel" autoComplete="tel" required maxLength={30} value={values.phone} onChange={event => change("phone",event.target.value)} onBlur={() => blur("phone")} aria-invalid={!!errors.phone} aria-describedby={errors.phone ? `${id("phone")}-error` : undefined} />{message("phone")}</Field>
