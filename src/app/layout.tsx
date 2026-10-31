@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro } from "next/font/google";
+import { Manrope } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 
+import {PublicQueryProvider} from "@/components/lounge/public-query-provider";
 import { ReservationProvider } from "@/components/lounge/reservation-provider";
 
 import { surfaceStyles } from "@/lib/ui/styles";
@@ -10,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 import "./globals.css";
 
-const sans = Be_Vietnam_Pro({
+const sans = Manrope({
   subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
@@ -45,7 +46,7 @@ export default async function RootLayout({
           locale={locale}
           messages={messages ?? undefined}
         >
-          <ReservationProvider>{children}</ReservationProvider>
+          <PublicQueryProvider><ReservationProvider>{children}</ReservationProvider></PublicQueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -21,7 +21,7 @@ export function HomeFood({ locale }: { locale: AppLocale }) {
   const [dismissKey, setDismissKey] = useState(0);
   const closeDetails = useCallback(() => { setActive(null); setDismissKey(key => key + 1); }, []);
   return <Section id="food" data-home-section="food" aria-labelledby="food-heading" className={foodStyles.section}><Container>
-    <Carousel label={t("foodTitle")} columns={4} rows={2} controlPosition="sides" step="responsive" showCounter={false} onNavigate={closeDetails}
+    <Carousel label={t("foodTitle")} columns={4} rows={2} autoplay paused={active !== null} controlPosition="sides" step="responsive" showCounter={false} onNavigate={closeDetails}
       heading={<Reveal><Stack gap="md"><Typography as="h2" variant="title" id="food-heading">{t("foodTitle")}</Typography><Typography variant="lead" className="max-w-2xl">{t("foodDescription")}</Typography></Stack></Reveal>}
       action={<Button asChild><AppLink href="/menu">{t("exploreMenu")}<Icon name="arrowUpRight" /></AppLink></Button>}>
       {source.products.map(item => <CarouselItem key={item.id} data-source-id={item.id}>

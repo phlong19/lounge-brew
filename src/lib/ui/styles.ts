@@ -1,7 +1,7 @@
 export const surfaceStyles = {
   paper: "bg-[#FFFAE7] text-[#15201C]",
   stone: "bg-[#F1EEE7] text-[#15201C]",
-  brand: "bg-[#006B57] text-[#FFFAE7]",
+  brand: "bg-[#2E7017] text-[#FFFAE7]",
   evening: "bg-[#15201C] text-[#FFFAE7]",
   white: "bg-white text-[#15201C]",
   transparent: "bg-transparent text-inherit",
@@ -28,7 +28,7 @@ export const textToneStyles = {
   muted: "text-stone-600",
   inverse: "text-[#FFFAE7]",
   inverseMuted: "text-stone-300",
-  brand: "text-[#006B57]",
+  brand: "text-[#2E7017]",
   danger: "text-red-800",
 } as const;
 
@@ -46,8 +46,8 @@ export const focusStyles =
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
 
 export const buttonStyles = {
-  primary: "border-transparent bg-[#006B57] text-[#FFFAE7] hover:bg-[#005343]",
-  secondary: "border-transparent bg-[#FFFAE7] text-[#006B57] hover:bg-white",
+  primary: "border-transparent bg-[#2E7017] text-[#FFFAE7] hover:bg-[#225B0B]",
+  secondary: "border-transparent bg-[#FFFAE7] text-[#2E7017] hover:bg-white",
   outline: "border-current bg-transparent text-inherit hover:bg-current/5",
   ghost: "border-transparent bg-transparent text-inherit hover:bg-current/10",
   inverse: "border-transparent bg-[#FFFAE7] text-[#15201C] hover:bg-white",
@@ -59,10 +59,11 @@ export const buttonSizeStyles = {
   sm: "min-h-11 gap-2 px-3 py-2 text-sm",
   lg: "min-h-12 gap-3 px-6 py-3 text-base",
   icon: "size-11 shrink-0 p-2.5",
+  iconSm: "size-8 shrink-0 p-1.5",
 } as const;
 
 export const controlStyles =
-  "w-full rounded-md border-2 border-[#15201C]/25 bg-white px-3 py-2.5 text-base text-[#15201C] shadow-none placeholder:text-stone-500 focus:border-[#006B57] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-red-800 aria-invalid:focus:border-red-800";
+  "w-full rounded-md border-2 border-[#15201C]/25 bg-white px-3 py-2.5 text-base text-[#15201C] shadow-none placeholder:text-stone-500 focus:border-[#2E7017] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-red-800 aria-invalid:focus:border-red-800";
 
 export const detailStyles = {
   eyebrow: "text-xs font-semibold uppercase tracking-[0.18em]",
@@ -93,5 +94,5 @@ export const inverseRichTextColorStyles: Record<string, string> = {
 };
 
 export const carouselControlStyles = {
-  side: "cursor-pointer border-[#006B57]/50 bg-white text-[#006B57] hover:border-[#006B57] hover:bg-[#006B57] hover:text-white focus-visible:border-[#006B57] focus-visible:bg-[#006B57] focus-visible:text-white disabled:cursor-default",
+  side: "cursor-pointer border-[#2E7017]/50 bg-white text-[#2E7017] hover:border-[#2E7017] hover:bg-[#2E7017] hover:text-white focus-visible:border-[#2E7017] focus-visible:bg-[#2E7017] focus-visible:text-white disabled:cursor-default",
 } as const;

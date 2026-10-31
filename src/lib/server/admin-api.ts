@@ -1,3 +1,4 @@
+import { isSameOrigin } from "@/lib/server/request-origin";
 import { canManageEvents } from "@/lib/admin/roles";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
@@ -6,8 +7,7 @@ import { EventInputError } from "@/lib/admin/event-validation";
 
 export class AdminApiError extends Error { constructor(message: string, public status = 400) { super(message); } }
 export function assertSameOrigin(request: Request) {
-  const origin = request.headers.get("origin");
-  if (origin && origin !== new URL(request.url).origin) throw new AdminApiError("Nguồn yêu cầu không hợp lệ.", 403);
+  if (!isSameOrigin(request)) throw new AdminApiError("Nguồn yêu cầu không hợp lệ.", 403);
 }
 export async function requireStaff(request?: Request) {
   const token = request?.headers.get("authorization")?.match(/^Bearer (.+)$/i)?.[1];
@@ -17,10 +17,10 @@ export async function requireStaff(request?: Request) {
   if (!supabase) throw new AdminApiError("Chưa cấu hình kết nối Supabase.",503);
   const { data: { user }, error } = await supabase.auth.getUser(token);
   if (error || !user) throw new AdminApiError("Vui lòng đăng nhập.",401);
-  const staff = await supabase.from("staff_members").select("role,is_active").eq("user_id",user.id).maybeSingle();
+  const staff = await supabase.from("staff_members").select("role,is_active,display_name").eq("user_id",user.id).maybeSingle();
   if (staff.error) throw new AdminApiError("Không thể kiểm tra quyền truy cập.",503);
   if (!canManageEvents(staff.data)) throw new AdminApiError("Tài khoản chưa có quyền quản lý nội dung.",403);
-  return { supabase, user, role: staff.data.role as "admin" | "editor" };
+  return { supabase, user, role: staff.data.role as "admin" | "editor", displayName: staff.data.display_name };
 }
 export async function readJson(request: Request) {
   const reader = request.body?.getReader();
@@ -53,4 +53,10 @@ export async function resolveEventCover(supabase: Awaited<ReturnType<typeof requ
   databaseFailure(asset.error);
   if (!asset.data) throw new AdminApiError("Vui lòng chọn ảnh bìa trong thư viện công khai.");
   payload.cover_image_url = supabase.storage.from("lounge-public").getPublicUrl(asset.data.object_path).data.publicUrl;
+}
+
+export async function requireAdmin(request?: Request) {
+  const staff = await requireStaff(request);
+  if (staff.role !== "admin") throw new AdminApiError("Chỉ quản trị viên được quản lý nhân viên.",403);
+  return staff;
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, eventId, readJson, resolveEventCover, requireStaff } from "@/lib/server/admin-api";
 import { eventPayload } from "@/lib/admin/event-validation";
 type Props = {params:Promise<{id:string}>};
@@ -33,7 +33,7 @@ async function mutate(request:Request, props:Props, remove:boolean) {
     const result = await query.select().maybeSingle();
     databaseFailure(result.error);
     if (!result.data) throw new AdminApiError("Sự kiện đã được chỉnh sửa. Vui lòng tải lại trước khi lưu.",409);
-    revalidatePath("/"); revalidatePath("/events"); revalidatePath(`/events/${current.data.public_id || id}`);
+    revalidateTag("upcoming-events",{expire:0}); revalidatePath("/"); revalidatePath("/events"); revalidatePath(`/events/${current.data.public_id || id}`);
     return NextResponse.json({item:result.data});
   } catch(error) { return apiFailure(error); }
 }

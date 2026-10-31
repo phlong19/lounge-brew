@@ -136,8 +136,8 @@ export type Database = {
           end_date: string | null
           event_date: string
           id: string
-          is_deleted: boolean
           is_active: boolean
+          is_deleted: boolean
           performer_name: string
           public_id: string
           source_id: string | null
@@ -160,8 +160,8 @@ export type Database = {
           end_date?: string | null
           event_date: string
           id?: string
-          is_deleted?: boolean
           is_active?: boolean
+          is_deleted?: boolean
           performer_name: string
           public_id?: string
           source_id?: string | null
@@ -184,8 +184,8 @@ export type Database = {
           end_date?: string | null
           event_date?: string
           id?: string
-          is_deleted?: boolean
           is_active?: boolean
+          is_deleted?: boolean
           performer_name?: string
           public_id?: string
           source_id?: string | null
@@ -409,25 +409,70 @@ export type Database = {
           },
         ]
       }
+      seating_settings: {
+        Row: {
+          id: string
+          is_visible: boolean
+          lower_asset_id: string | null
+          updated_at: string
+          updated_by: string | null
+          upper_asset_id: string | null
+        }
+        Insert: {
+          id?: string
+          is_visible?: boolean
+          lower_asset_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          upper_asset_id?: string | null
+        }
+        Update: {
+          id?: string
+          is_visible?: boolean
+          lower_asset_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          upper_asset_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seating_settings_lower_asset_id_fkey"
+            columns: ["lower_asset_id"]
+            isOneToOne: false
+            referencedRelation: "media_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seating_settings_upper_asset_id_fkey"
+            columns: ["upper_asset_id"]
+            isOneToOne: false
+            referencedRelation: "media_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       staff_members: {
         Row: {
           created_at: string
+          display_name: string
           is_active: boolean
-          role: "admin" | "editor"
+          role: string
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          display_name?: string
           is_active?: boolean
-          role: "admin" | "editor"
+          role: string
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          display_name?: string
           is_active?: boolean
-          role?: "admin" | "editor"
+          role?: string
           updated_at?: string
           user_id?: string
         }

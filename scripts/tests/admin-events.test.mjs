@@ -22,3 +22,12 @@ test("pagination keeps first, current and final pages accessible without excessi
   assert.deepEqual(paginationPages(6, 12), [1, "gap-left", 5, 6, 7, "gap-right", 12]);
   assert.deepEqual(paginationPages(12, 12), [1, "gap-left", 9, 10, 11, 12]);
 });
+
+test("upcoming and past scopes use the exact start boundary independently of visibility",()=>{
+ const now=Date.parse("2026-10-31T13:15:00Z");
+ const data=[item("old","2026-10-30T13:15:00Z"),item("boundary","2026-10-31T13:15:00Z"),item("future","2026-11-01T13:15:00Z",{is_active:false}),item("invalid","invalid")];
+ const base={search:"",month:"all",year:"all"};
+ assert.deepEqual(filterEvents(data,{...base,scope:"upcoming"},now).map(e=>e.id),["future"]);
+ assert.deepEqual(filterEvents(data,{...base,scope:"past"},now).map(e=>e.id),["boundary","old"]);
+ assert.deepEqual(filterEvents(data,{...base,scope:"upcoming",month:"11",year:"2026"},now).map(e=>e.id),["future"]);
+});

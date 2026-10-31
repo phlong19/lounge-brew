@@ -1,6 +1,12 @@
+"use client";
+import {PublicQueryState} from "@/components/lounge/public-query-state";
+import {useQuery} from "@tanstack/react-query";
+import {publicEventsOptions} from "@/lib/public/query";
+import {localizeEvents} from "@/lib/menu/map-menu";
+import {formatDate} from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import { eventCardStyles } from "@/lib/ui/home-styles";
-import { getTranslations } from "next-intl/server";
+import {useTranslations} from "next-intl";
 
 import { Icon } from "@/components/ui/icon";
 import { Article, Grid, Inline, Stack, Surface } from "@/components/ui/layout";
@@ -8,27 +14,20 @@ import { AppLink } from "@/components/ui/link";
 import { Media } from "@/components/ui/media";
 import { Typography } from "@/components/ui/typography";
 import type { AppLocale } from "@/i18n/config";
-import type { LocalizedEvent } from "@/types/domain";
 
-export function shortEventDate(value: string, locale: AppLocale) {
-  return new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-GB", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    timeZone: "Asia/Ho_Chi_Minh",
-  }).format(new Date(value));
-}
 
-export async function EventGrid({
-  events,
+
+export function EventGrid({
   locale,
   compact = false,
 }: {
-  events: LocalizedEvent[];
   locale: AppLocale;
   compact?: boolean;
 }) {
-  const t = await getTranslations("Shows");
+  const t=useTranslations("Shows");
+  const query=useQuery(publicEventsOptions());
+  const events=localizeEvents(locale,query.data??[]);
+  if(query.data===undefined)return <PublicQueryState error={query.isError} english={locale==="en"} retry={()=>void query.refetch()} />;
   if (!events.length)
     return (
       <Typography className="max-w-xl" tone="muted">
@@ -48,7 +47,7 @@ export async function EventGrid({
           <AppLink
             href={`/events/${event.id}`}
             className={cn(eventCardStyles.base,eventCardStyles.light)}
-            aria-label={`${event.performerName} · ${shortEventDate(event.eventDate, locale)}`}
+            aria-label={`${event.performerName} · ${formatDate(event.eventDate)}`}
           >
             <Surface
               className="relative aspect-[5/6] overflow-hidden"
@@ -83,7 +82,7 @@ export async function EventGrid({
                 dateTime={event.eventDate}
                 variant="caption"
               >
-                {shortEventDate(event.eventDate, locale)}
+                {formatDate(event.eventDate)}
               </Typography>
               <Icon name="arrowUpRight" className="size-4" />
             </Inline>

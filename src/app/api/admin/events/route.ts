@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { apiFailure, assertSameOrigin, databaseFailure, readJson, resolveEventCover, requireStaff } from "@/lib/server/admin-api";
 import { eventPayload } from "@/lib/admin/event-validation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function GET(request: Request) {
   try {
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     if (!payload.cover_asset_id && !payload.cover_image_url) return NextResponse.json({error:"Vui lòng chọn ảnh chương trình."},{status:400});
     const result = await supabase.from("events").insert({...payload,created_by:user.id,updated_by:user.id}).select().single();
     databaseFailure(result.error);
-    revalidatePath("/"); revalidatePath("/events");
+    revalidateTag("upcoming-events",{expire:0}); revalidatePath("/"); revalidatePath("/events");
     return NextResponse.json({item:result.data},{status:201});
   } catch(error) { return apiFailure(error); }
 }

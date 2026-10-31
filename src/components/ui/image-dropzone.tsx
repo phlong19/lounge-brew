@@ -40,8 +40,8 @@ export function ImageDropzone({ id, file, existingSrc, error, onChange }: { id: 
   return <div className="space-y-3">
     <div {...getRootProps({ id, role: "button", "aria-label": "Ảnh chương trình: kéo thả hoặc chọn ảnh", "aria-required": true, "aria-invalid": !!message, "aria-describedby": message ? `${id}-error` : `${id}-help` })} data-drag={isDragActive} aria-busy={busy} className={editorStyles.dropzone}>
       <input {...inputProps} className="sr-only" />
-      {file ? <FileImage file={file} alt="Ảnh chương trình đã chọn" className="h-64 w-auto max-w-full md:h-72" /> : existingSrc ? <Media src={existingSrc} alt="Ảnh chương trình hiện tại" width={600} height={800} fit="contain" className="h-64 w-auto max-w-full md:h-72" /> : <Icon name="upload" className="size-8 text-[#006B57]" />}
-      <Typography variant="small" className="font-semibold text-[#006B57]">{busy ? "Đang kiểm tra ảnh…" : isDragActive ? "Thả ảnh vào đây" : file || existingSrc ? "Kéo thả hoặc chọn ảnh để thay thế" : "Kéo thả hoặc bấm để chọn ảnh"}</Typography>
+      {file ? <FileImage file={file} alt="Ảnh chương trình đã chọn" className="h-64 w-auto max-w-full md:h-72" /> : existingSrc ? <Media src={existingSrc} alt="Ảnh chương trình hiện tại" width={600} height={800} fit="contain" className="h-64 w-auto max-w-full md:h-72" /> : <Icon name="upload" className="size-8 text-[#2E7017]" />}
+      <Typography variant="small" className="font-semibold text-[#2E7017]">{busy ? "Đang kiểm tra ảnh…" : isDragActive ? "Thả ảnh vào đây" : file || existingSrc ? "Kéo thả hoặc chọn ảnh để thay thế" : "Kéo thả hoặc bấm để chọn ảnh"}</Typography>
       {file ? <Typography variant="small" className="max-w-full break-all text-stone-600">{file.name}</Typography> : null}
     </div>
     <div className="flex flex-wrap items-center justify-between gap-2"><Typography id={`${id}-help`} variant="small" tone="muted">JPG, PNG, WebP · tối đa 10 MB</Typography>{file || existingSrc ? <Button variant="ghost" size="sm" onClick={() => { onChange(null); setFileError(""); }}><Icon name="trash" className="size-4" />Xóa ảnh</Button> : null}</div>

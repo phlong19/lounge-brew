@@ -14,8 +14,8 @@ import type { MenuPage } from "@/types/domain";
 const tabStyles = {
   entry:
     "relative h-auto min-h-8 w-full justify-start gap-2 rounded-l-none rounded-r-md border-l-2 px-2 py-1.5 text-left whitespace-normal transition-colors motion-reduce:transition-none",
-  active: "z-10 border-[#A18B47] bg-[#006B57] text-white",
-  idle: "border-[#006B57]/20 bg-[#E5EADD] text-[#15201C] hover:bg-[#D4DFCF]",
+  active: "z-10 border-[#A18B47] bg-[#2E7017] text-white",
+  idle: "border-[#2E7017]/20 bg-[#E5EADD] text-[#15201C] hover:bg-[#D4DFCF]",
 } as const;
 
 export function MenuIndex({
@@ -36,7 +36,7 @@ export function MenuIndex({
       <Select value={String(page)} onValueChange={(value) => onSelect(Number(value))}>
         <SelectTrigger
           aria-label={t("categories")}
-          className="border-[#006B57]/30 bg-white text-[#15201C]"
+          className="border-[#2E7017]/30 bg-white text-[#15201C]"
         >
           <SelectValue />
         </SelectTrigger>

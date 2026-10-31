@@ -11,15 +11,15 @@ export function localDateInput(value: string | null | undefined) {
   const parts = venueDateParts(value || "");
   return parts ? `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}` : "";
 }
-export function filterEvents(items: EditableEvent[], filters: EventFilters) {
+export function filterEvents(items: EditableEvent[], filters: EventFilters, now: number = Date.now()) {
   const query = filters.search.trim().toLocaleLowerCase("vi");
   return items.filter(item => {
     const date = venueDateParts(item.event_date);
     return (!query || `${item.title_vi} ${item.performer_name}`.toLocaleLowerCase("vi").includes(query))
-      && (filters.scope === "visible" ? item.is_active : filters.scope === "hidden" ? !item.is_active : true)
+      && (filters.scope === "visible" ? item.is_active : filters.scope === "hidden" ? !item.is_active : filters.scope === "upcoming" ? Date.parse(item.event_date) > now : filters.scope === "past" ? Date.parse(item.event_date) <= now : true)
       && (filters.month === "all" || date?.month === filters.month)
       && (filters.year === "all" || date?.year === filters.year);
-  }).sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
+  }).sort((a, b) => (filters.scope === "past" ? -1 : 1) * (new Date(a.event_date).getTime() - new Date(b.event_date).getTime()));
 }
 export function paginationPages(current: number, total: number): (number | "gap-left" | "gap-right")[] {
   if (total <= 7) return Array.from({ length: total }, (_, index) => index + 1);

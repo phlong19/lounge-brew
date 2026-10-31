@@ -6,7 +6,7 @@ import { ColoredText } from "@/components/ui/colored-text";
 import { normalizeTextColor } from "@/lib/content/text-color";
 import { Media } from "@/components/ui/media";
 import { AppLink } from "@/components/ui/link";
-import { Typography } from "@/components/ui/typography";
+import { Typography, TextBreak } from "@/components/ui/typography";
 import { richTextColorStyles, inverseRichTextColorStyles } from "@/lib/ui/styles";
 import { safeHref } from "@/lib/ui/href";
 
@@ -29,7 +29,7 @@ const blocked = new Set([
 const heading = new Set(["h2", "h3", "h4", "h5", "h6"]);
 
 /** Parse stored content into owned components; never forward source attributes. */
-export function RichText({ content, tone = "ink" }: { content: string; tone?: "ink" | "inverse" }) {
+export function RichText({ content, tone = "ink", imageSize = "article" }: { content: string; tone?: "ink" | "inverse"; imageSize?: "article" | "event" }) {
   const colors = tone === "inverse" ? inverseRichTextColorStyles : richTextColorStyles;
   function render(node: ContentNode, key: number): ReactNode {
     if (node.type === "text") return node.data;
@@ -49,9 +49,9 @@ export function RichText({ content, tone = "ink" }: { content: string; tone?: "i
           alt={node.attribs.alt ?? ""}
           width={dimension(node.attribs.width, 1200)}
           height={dimension(node.attribs.height, 800)}
-          sizes="(min-width: 768px) 720px, 100vw"
+          sizes={imageSize === "event" ? "(min-width:640px) 560px, 100vw" : "(min-width:768px) 720px, 100vw"}
           fit="contain"
-          className="my-6 h-auto w-full"
+          className={imageSize === "event" ? "mx-auto my-6 block h-auto max-h-[640px] w-auto max-w-[min(100%,560px)]" : "my-6 h-auto w-full"}
         />
       );
     }
@@ -128,14 +128,14 @@ export function RichText({ content, tone = "ink" }: { content: string; tone?: "i
     if (node.name === "a") {
       const href = node.attribs.href;
       return href && safeHref(href) ? (
-        <AppLink key={key} href={href} className="underline">
+        <AppLink key={key} href={href} className="break-all underline">
           {children}
         </AppLink>
       ) : (
         children
       );
     }
-    if (node.name === "br") return " ";
+    if (node.name === "br") return <TextBreak key={key} />;
     // Unsupported containers retain readable text without inheriting source markup.
     return children;
   }

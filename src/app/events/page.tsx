@@ -1,3 +1,4 @@
+import {PublicDataBoundary} from "@/components/lounge/public-data-boundary";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -8,22 +9,18 @@ import { VisitSection } from "@/components/lounge/visit-section";
 import { Container, Main, Section, Stack } from "@/components/ui/layout";
 import { Typography } from "@/components/ui/typography";
 import type { AppLocale } from "@/i18n/config";
-import { localizeEvents } from "@/lib/menu/map-menu";
-import { getLoungeData } from "@/lib/server/lounge-data";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Shows");
   return { title: t("title") };
 }
 export default async function EventsPage() {
-  const [locale, t, data] = await Promise.all([
+  const [locale, t] = await Promise.all([
     getLocale(),
     getTranslations("Shows"),
-    getLoungeData(),
   ]);
-  const events = localizeEvents(locale as AppLocale, data.events);
   return (
-    <>
+    <PublicDataBoundary>
       <SiteHeader active="events" />
       <Main id="main-content">
         <Section>
@@ -37,13 +34,13 @@ export default async function EventsPage() {
                   {t("description")}
                 </Typography>
               </Stack>
-              <EventGrid events={events} locale={locale as AppLocale} />
+              <EventGrid locale={locale as AppLocale} />
             </Stack>
           </Container>
         </Section>
         <VisitSection />
       </Main>
       <SiteFooter compact />
-    </>
+    </PublicDataBoundary>
   );
 }

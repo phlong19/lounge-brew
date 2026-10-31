@@ -1,4 +1,6 @@
 import {
+  Armchair,
+  UsersRound,
   Underline,
   Palette,
   CircleHelp,
@@ -47,6 +49,8 @@ import {
 import { cn } from "@/lib/utils";
 
 const icons = {
+  seat: Armchair,
+  users: UsersRound,
   underline: Underline,
   textColor: Palette,
   help: CircleHelp,

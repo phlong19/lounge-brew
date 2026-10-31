@@ -47,3 +47,31 @@ Import checks the unique source ID before uploading, skips existing records with
 - Live editor account: sign-in/out; anonymous rejection; origin rejection; invalid-image rejection; poster/body uploads; create/update/read after reload; stale edit conflict; soft-delete keeps the physical row; removed preview route returns 404.
 - Public rich-text article renders the actual stored poster and seating images. A separate ended test record was temporarily restored for this check and soft-deleted afterward; the imported event remains hidden.
 - Admin list and editor checked at 390/768/1440px, including body image loading and no page overflow. Green/orange badges distinguish upcoming/past shows. Preview header controls are removed.
+
+## Shared seating and revised event details — 30 October 2026
+
+Event headers use programme titles and Hanoi calendar dates. Article width is capped at 46rem. Posters remain in editorial content instead of the header.
+
+The sidebar uses a vertical Embla carousel of other visible, strictly future shows, nearest first, excluding the current event. It hides when empty and stacks after the article on narrow screens. Summary-only anonymous queries use a 60-second Next cache shared between detail URLs; event mutations expire the cache tag.
+
+Admin → Sơ đồ chỗ ngồi manages two public-bucket image references and shared visibility. GET/PATCH /api/admin/seating require active staff. Saves use timestamp conflict detection, public-image validation and database audits. The reusable SeatingPlan offers enlarged-image dialogs.
+
+Migration 20261030020000_seating_settings.sql is deployed and live types regenerated. The official images already existed in lounge-public; hosted copies were compared byte-for-byte with fresh official downloads before configuration. Duplicate map images and the exact seating heading were removed from the current event body, preserving the rest of the article and its edited date. Future event imports no longer embed maps.
+
+## Full upcoming-event import — 30 October 2026
+
+The live original listing had ten missing future shows across pages one and two, including Văn Mai Hương on 18 December and Nguyễn Kiều Oanh on 19 December. All ten were imported publicly with original Vietnamese article text, supported editorial structure, verified source start/end times, original posters and body images. Existing records were skipped, including the edited Phương Linh date and content.
+
+The importer checks normalized article text before and after persistence, uploads every available image to lounge-public using hash-based paths, and verifies hosted bytes against originals. Thirteen unique image assets were verified. Shared seating content is trimmed recursively at its original heading, including nested source containers. A broken blob image in Nguyên Hà's source was omitted with the user's acknowledgement; it can be added later through the editor. No English article or unverified price was invented.
+
+Run node scripts/import-trixie-upcoming.mjs for a dry run, or add --apply to insert missing records. The command scans live listing pages until no upcoming cards remain, filters started shows by verified schedules and never overwrites existing source IDs. It uses the existing project management token only server-side; the import key remains in memory. Reviewable source manifests are in supabase/imports/upcoming-2026-10-30.json.
+
+The public page now uses a read-only six-week month calendar with the event date highlighted, a 1440px container, original readable-width article text and a one-floor-at-a-time seating carousel. Seating autoplay respects hover, focus, visibility, reduced motion and enlarged-map modal pause. The public source link and synthetic pilot article heading are hidden; the stored pilot article stays unchanged.
+
+## Verified past-event import — 31 October 2026
+
+Archive mode scans original listing cards across pagination, including ended shows. Existing source IDs, including hidden or soft-deleted records, are preserved. Candidates are checked from newer title dates first. Original article dates must agree with titles; a start time must be explicitly present in the source. Unspecified end times stay null.
+
+The complete archive scan found nine fully verifiable missing past shows. Other entries were excluded because the original URLs were unavailable/redirecting, had conflicting dates, or lacked a verifiable date/start time. The review manifest records imported candidates and skipped-source reasons in supabase/imports/past-2026-10-31.json.
+
+Use node scripts/import-trixie-upcoming.mjs --past --limit=20 for a dry run. To apply the reviewed manifest without recrawling unavailable pages, use --past --from-manifest --apply. Actual saved rows preserve original article text and supported structure, upload original images to the public bucket, and verify hosted bytes. Ended shows remain publicly readable at their detail URLs and manageable in admin, but are excluded from booking choices and upcoming-event sections.
