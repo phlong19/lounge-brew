@@ -1,3 +1,4 @@
+import {formatDate} from "@/lib/dates";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -16,11 +17,7 @@ export function formatCurrency(value: number, locale: AppLocale) {
 }
 
 export function formatEventDate(value: string, locale: AppLocale) {
-  return new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-US", {
-    dateStyle: "full",
-    timeStyle: "short",
-    timeZone: "Asia/Ho_Chi_Minh",
-  }).format(new Date(value));
+  return formatDate(value)+" · "+new Intl.DateTimeFormat(locale==="vi"?"vi-VN":"en-GB",{hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"Asia/Ho_Chi_Minh"}).format(new Date(value));
 }
 
 export function isSupabaseConfigured() {

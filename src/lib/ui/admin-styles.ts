@@ -1,0 +1,22 @@
+import { buttonStyles } from "@/lib/ui/styles";
+export const adminStyles = {
+  upcomingBadge: "w-fit rounded px-2 py-0.5 text-xs font-medium bg-[#E5F4EA] text-[#205B3B]",
+  pastBadge: "w-fit rounded px-2 py-0.5 text-xs font-medium bg-[#FFF0DB] text-[#8B4B0B]",
+  drawer: "w-full gap-0 bg-white p-0 sm:w-[min(92vw,64rem)]",
+  root: "min-h-dvh bg-[#F2F4EF] text-[#15201C] lg:grid lg:grid-cols-[224px_minmax(0,1fr)]",
+  sidebar: "flex flex-col gap-4 px-5 py-4 lg:gap-7 lg:sticky lg:top-0 lg:h-dvh lg:py-8",
+  nav: "flex-row flex-wrap gap-2 lg:flex-col lg:items-stretch",
+  navButton: "justify-start rounded-md px-4 text-stone-600 hover:bg-white/70 aria-pressed:bg-white aria-pressed:text-[#15201C]",
+  sheet: "mb-2 min-w-0 rounded-2xl border border-[#E2E6DE] bg-white lg:mt-2 lg:mr-2",
+  topbar: "flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-[#E8EBE5] px-5 py-3 md:px-8",
+  canvas: "p-5 md:p-8",
+  panel: "rounded-lg border border-[#E2E6DE] bg-white",
+  row: "grid grid-cols-2 items-center gap-x-3 gap-y-3 border-t border-[#EDF0E9] py-4 md:grid-cols-[minmax(0,1fr)_110px_88px_98px_72px]",
+  headingRow: "hidden items-center gap-3 py-3 text-sm text-stone-600 md:grid md:grid-cols-[minmax(0,1fr)_110px_88px_98px_72px]",
+  poster: "relative h-16 w-12 shrink-0 overflow-hidden rounded-sm bg-[#F2F4EF]",
+  muted: "text-stone-600",
+  filter: "rounded-none border-0 border-b-2 border-transparent px-2 hover:bg-transparent aria-pressed:border-[#2E7017] aria-pressed:text-[#2E7017]",
+  preview: "rounded-lg bg-[#F2F4EF] p-5",
+  player: "relative aspect-video w-full overflow-hidden rounded-md bg-[#15201C]",
+  primary: buttonStyles.primary,
+} as const;

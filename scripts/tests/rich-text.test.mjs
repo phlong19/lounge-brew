@@ -84,3 +84,27 @@ test("evening editorial colors remain readable without forwarding source styles"
  assert.match(result, /text-\[#73D5F5\]/);
  assert.doesNotMatch(result, /style=|data-color=/);
 });
+
+
+test("saved underline and palette colours render through safe Tailwind primitives", () => {
+ const result = render('<p><u><span data-color="purple">Nội dung sự kiện</span></u></p>');
+ assert.match(result, /underline/);
+ assert.match(result, /text-purple-800/);
+ assert.match(result, /Nội dung sự kiện/);
+ assert.doesNotMatch(result, /style=|data-color=/);
+});
+
+
+test("custom picker colours render only a validated colour declaration", () => {
+ const result = render('<p><span data-text-color="#18af76" style="color:#18af76;position:fixed" onclick="alert(1)"><u>Màu tùy chọn</u></span></p>');
+ assert.match(result, /style="color:#18af76"/);
+ assert.match(result, /underline/);
+ assert.doesNotMatch(result, /position|onclick|alert|data-text-color=/);
+});
+test("malicious and unsupported custom colour values are discarded", () => {
+ for (const color of ["constructor", "__proto__", "expression(alert(1))", "#fff;background:red", "url(javascript:alert(1))"]) {
+  const result = render(`<span data-text-color="${color}">Safe text</span>`);
+  assert.match(result, /Safe text/);
+  assert.doesNotMatch(result, /style=|onclick|background:|javascript:/);
+ }
+});

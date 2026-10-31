@@ -37,3 +37,12 @@ test("reservation validates optional email and selected programme identity/date"
   assert.equal(validateReservation({...valid,event:"stale"},now,events).event,"eventInvalid");
   assert.equal(validateReservation({...valid,event:"verified-show",date:"2026-10-28"},now,events).date,"eventDateMismatch");
 });
+
+
+test("an event that starts while the booking form is open is no longer selectable", async () => {
+  const { isUpcomingChoice } = await import("../../src/lib/reservations/validation.ts");
+  const choice = { id: "live", date: "2026-11-07", time: "20:15", startsAt: "2026-11-07T20:15:30+07:00" };
+  assert.equal(isUpcomingChoice(choice, new Date("2026-11-07T20:15:29+07:00")), true);
+  assert.equal(isUpcomingChoice(choice, new Date("2026-11-07T20:15:30+07:00")), false);
+  assert.equal(isUpcomingChoice({ ...choice, startsAt: "invalid" }, new Date("2026-11-07T20:00:00+07:00")), false);
+});

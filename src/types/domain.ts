@@ -25,6 +25,14 @@ export type MenuItemRow = {
 };
 
 export type EventRow = {
+  public_id?: string;
+  source_id?: string | null;
+  content_vi?: string;
+  content_en?: string | null;
+  additional_fee?: number | null;
+  cover_asset_id?: string | null;
+  is_deleted?: boolean;
+  updated_at?: string;
   id: string;
   title_vi: string;
   title_en: string | null;
@@ -57,6 +65,7 @@ export type HomePageData = {
 };
 
 export type LocalizedEvent = {
+  content?: string | null;
   id: string;
   title: string;
   performerName: string;

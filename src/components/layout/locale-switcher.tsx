@@ -1,5 +1,6 @@
 "use client";
 
+import {useMutation} from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState, useTransition } from "react";
@@ -16,8 +17,13 @@ export function LocaleSwitcher({ side = "bottom" }: { side?: "top" | "bottom" })
   const locale = useLocale();
   const t = useTranslations("Navigation");
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState(false);
+  const [refreshing,startTransition]=useTransition();
+  const changeLocale=useMutation({mutationFn:async(next:(typeof locales)[number])=>{
+    const response=await fetch("/api/locale",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({locale:next})});
+    if(!response.ok)throw new Error("Locale change failed");
+  },retry:false});
+  const pending=refreshing||changeLocale.isPending;
+  const error=changeLocale.isError;
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -32,13 +38,12 @@ export function LocaleSwitcher({ side = "bottom" }: { side?: "top" | "bottom" })
     if (pending) return;
     setOpen(false); trigger.current?.focus();
     if (next === locale) return;
-    setError(false);
+    changeLocale.reset();
     startTransition(async () => {
       try {
-        const response = await fetch("/api/locale", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ locale: next }) });
-        if (!response.ok) throw new Error("Locale change failed");
+        await changeLocale.mutateAsync(next);
         router.refresh();
-      } catch { setError(true); }
+      } catch { /* Mutation state exposes the translated error. */ }
     });
   }
   return <Surface data-language-switcher ref={root} className="relative" aria-busy={pending}

@@ -1,0 +1,15 @@
+begin;
+alter table public.events add column if not exists is_deleted boolean not null default false;
+alter table public.staff_members drop constraint if exists staff_members_role_check;
+alter table public.staff_members add constraint staff_members_role_check check (role in ('admin','editor'));
+drop policy if exists events_public_read on public.events;
+create policy events_public_read on public.events for select to anon,authenticated using (is_active and not is_deleted);
+drop policy if exists events_staff_manage on public.events;
+create policy events_staff_read on public.events for select to authenticated using ((select private.has_staff_role(array['admin','editor'])));
+create policy events_staff_insert on public.events for insert to authenticated with check ((select private.has_staff_role(array['admin','editor'])));
+create policy events_staff_update on public.events for update to authenticated using ((select private.has_staff_role(array['admin','editor']))) with check ((select private.has_staff_role(array['admin','editor'])));
+revoke delete on public.events from authenticated;
+grant select,insert,update on public.events to authenticated;
+create index if not exists events_not_deleted_date_idx on public.events(event_date) where not is_deleted;
+comment on column public.events.is_deleted is 'Soft deletion only. Excluded from public pages and normal admin lists.';
+commit;

@@ -1,3 +1,4 @@
+import {formatDate} from "@/lib/dates";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -67,10 +68,7 @@ export default async function JournalArticlePage({ params }: Props) {
                         variant="small"
                         tone="muted"
                       >
-                        {new Intl.DateTimeFormat(
-                          locale === "vi" ? "vi-VN" : "en-GB",
-                          { dateStyle: "long", timeZone: "Asia/Ho_Chi_Minh" },
-                        ).format(new Date(article.publishedAt))}
+                        {formatDate(article.publishedAt)}
                       </Typography>
                     ) : null}
                   </Stack>

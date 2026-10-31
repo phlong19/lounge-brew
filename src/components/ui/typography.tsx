@@ -42,3 +42,5 @@ export function Typography({
     className: cn(typographyStyles[variant], textToneStyles[tone], className),
   });
 }
+
+export function TextBreak() { return <br />; }

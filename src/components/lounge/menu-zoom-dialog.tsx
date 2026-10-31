@@ -145,7 +145,7 @@ export function MenuZoomDialog({
         <Surface
           tabIndex={0}
           aria-label={t("zoomDescription")}
-          className="min-h-0 flex-1 overflow-auto overscroll-contain rounded-md bg-[#15201C] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#006B57]"
+          className="min-h-0 flex-1 overflow-auto overscroll-contain rounded-md bg-[#15201C] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2E7017]"
         >
           <Surface className={cn("mx-auto", zoomWidths[zoom])}>
             <MenuArtwork key={artwork.id} page={artwork} eager original />

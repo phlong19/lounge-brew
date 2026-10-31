@@ -4,16 +4,19 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import type { ComponentPropsWithRef } from "react";
 
 import {
+  Dialog,
   DialogDescription,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { DialogPresence } from "@/components/ui/dialog-presence";
+import { sheetMotion } from "@/lib/ui/motion-styles";
 import { Icon } from "@/components/ui/icon";
 import { focusStyles, surfaceStyles } from "@/lib/ui/styles";
 import { cn } from "@/lib/utils";
 
-export const Sheet = DialogPrimitive.Root;
+export const Sheet = Dialog;
 export const SheetTrigger = DialogPrimitive.Trigger;
 export const SheetClose = DialogPrimitive.Close;
 export const SheetTitle = DialogTitle;
@@ -37,17 +40,19 @@ export function SheetContent({
   closeLabel?: string;
 }) {
   return (
-    <DialogPrimitive.Portal>
+    <DialogPresence><DialogPrimitive.Portal forceMount>
       <DialogOverlay />
       <DialogPrimitive.Content
         className={cn(
           "fixed z-50 flex flex-col gap-6 overflow-y-auto border-[#15201C]/15 p-6 shadow-2xl",
           surfaceStyles.paper,
           sideStyles[side],
+          sheetMotion[side],
           className,
         )}
         {...props}
         asChild={false}
+        forceMount
       >
         {children}
         <DialogPrimitive.Close
@@ -60,6 +65,6 @@ export function SheetContent({
           <Icon name="x" />
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>
-    </DialogPrimitive.Portal>
+    </DialogPrimitive.Portal></DialogPresence>
   );
 }

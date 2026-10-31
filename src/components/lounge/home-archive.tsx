@@ -1,4 +1,5 @@
 "use client";
+import {formatDate} from "@/lib/dates";
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -28,7 +29,7 @@ export function HomeArchive({ locale }: { locale: AppLocale }) {
           <Media src={item.image.src} alt={item.sourceTitle || item.title} fill sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw" className={archiveStyles.image} />
           <Icon name="maximize" className={archiveStyles.expand} />
         </Button> : <Surface className={cn("relative aspect-[4/3] overflow-hidden", surfaceStyles.evening)}><Stack className="h-full items-center justify-center p-5 text-center"><Icon name="music" className="size-8" /><Typography variant="small">{t("unavailableAlbum")}</Typography></Stack></Surface>}
-        <Stack gap="sm" className="pt-5"><Typography as="h3" variant="subheading">{item.title}</Typography>{item.date ? <Typography as="time" dateTime={item.date} variant="small">{new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-GB", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(`${item.date}T12:00:00+07:00`))}</Typography> : null}</Stack>
+        <Stack gap="sm" className="pt-5"><Typography as="h3" variant="subheading">{item.title}</Typography>{item.date ? <Typography as="time" dateTime={item.date} variant="small">{formatDate(item.date)}</Typography> : null}</Stack>
       </Article></CarouselItem>)}
     </Carousel></Container>
     <Dialog open={selected !== null} onOpenChange={open => { if (!open) setSelected(null); }}>

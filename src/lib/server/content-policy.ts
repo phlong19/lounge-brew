@@ -22,6 +22,7 @@ export function isPublicEvent(event: EventRow): boolean {
   const end = Date.parse(event.end_date ?? event.event_date);
   return (
     event.is_active === true &&
+    event.is_deleted !== true &&
     Number.isFinite(start) &&
     Number.isFinite(end) &&
     end >= start
@@ -47,6 +48,18 @@ export function upcomingEvents(
       (left, right) =>
         Date.parse(left.event_date) - Date.parse(right.event_date),
     );
+}
+
+/** Automatic booking eligibility: visible and strictly before its start time. */
+export function isBookableEvent(event: EventRow, now: Date = new Date()): boolean {
+  return isPublicEvent(event) && Date.parse(event.event_date) > now.getTime();
+}
+export function bookableEvents(events: EventRow[], now: Date = new Date()): EventRow[] {
+  return events.filter(event => isBookableEvent(event, now)).sort((left, right) => Date.parse(left.event_date) - Date.parse(right.event_date));
+}
+/** Eight nearest future shows, earliest date first. */
+export function homepageEvents(events: EventRow[], now: Date = new Date()): EventRow[] {
+  return bookableEvents(events, now).slice(0, 8);
 }
 
 export function publishedArticles(

@@ -22,6 +22,16 @@ export function inspectSource(file, source) {
       rule,
     });
   const native = (name) => /^[a-z]/.test(name);
+  const approvedTextColor = (node) => {
+    if (path !== "src/components/ui/colored-text.tsx" || node.name.getText(ast) !== "style") return false;
+    const element = node.parent.parent;
+    if ((!ts.isJsxOpeningElement(element) && !ts.isJsxSelfClosingElement(element)) || element.tagName.getText(ast) !== "span") return false;
+    const expression = node.initializer && ts.isJsxExpression(node.initializer) ? node.initializer.expression : null;
+    if (!expression || !ts.isObjectLiteralExpression(expression) || expression.properties.length !== 1) return false;
+    const property = expression.properties[0];
+    return ts.isPropertyAssignment(property) && property.name.getText(ast) === "color" && ts.isIdentifier(property.initializer) && property.initializer.text === "safeColor";
+  };
+
   const visit = (node) => {
     if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
       const name = node.tagName;
@@ -37,7 +47,7 @@ export function inspectSource(file, source) {
     }
     if (
       ts.isJsxAttribute(node) &&
-      ["style", "dangerouslySetInnerHTML"].includes(node.name.getText(ast))
+      ["style", "dangerouslySetInnerHTML"].includes(node.name.getText(ast)) && !approvedTextColor(node)
     ) {
       report("authored-style-or-html", node);
     }

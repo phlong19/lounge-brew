@@ -9,6 +9,7 @@ import {
   surfaceStyles,
   typographyStyles,
 } from "@/lib/ui/styles";
+import { popupMotion } from "@/lib/ui/motion-styles";
 import { cn } from "@/lib/utils";
 
 export const Select = SelectPrimitive.Root;
@@ -52,6 +53,7 @@ export function SelectContent({
         className={cn(
           "relative z-[70] max-h-80 min-w-48 overflow-hidden rounded-md border border-[#15201C]/20 shadow-xl",
           surfaceStyles.paper,
+          popupMotion,
           className,
         )}
         {...props}
@@ -78,7 +80,7 @@ export function SelectItem({
   return (
     <SelectPrimitive.Item
       className={cn(
-        "relative flex min-h-11 cursor-default items-center rounded-sm py-2 pr-9 pl-3 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-[#006B57] data-[highlighted]:text-[#FFFAE7]",
+        "relative flex min-h-11 cursor-default items-center rounded-sm py-2 pr-9 pl-3 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-[#2E7017] data-[highlighted]:text-[#FFFAE7]",
         className,
       )}
       {...props}

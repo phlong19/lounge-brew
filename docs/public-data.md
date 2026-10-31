@@ -1,0 +1,11 @@
+# Public data fetching
+
+Public event summaries and shared seating settings use TanStack React Query. A public-only query client sits above route content; the admin layout keeps its own client and namespace. Browser requests use credentials: omit, and the public API reads Supabase anonymously using only the publishable key, so an administrator visiting the site cannot seed private data into the public cache.
+
+Server components prefetch the shared bilingual event summary key and dehydrate it into HydrationBoundary. The homepage, schedule, related sidebar and booking choices select from the same cache. Event detail boundaries also hydrate seating settings. Successful empty results are authoritative; network errors reject and preserve previously loaded data. Initial HTML still contains event cards. Detail articles, metadata, original menu artwork and static editorial sections stay server-rendered.
+
+Event queries are fresh for one minute and poll once per minute only while observed in a visible tab. Closed booking dialogs disable their observer. Seating refreshes on a stale mount, focus or reconnect. Unused queries expire after five minutes. Upcoming/booking policies are reapplied when rendered; the booking form also validates the start boundary immediately before review. English and Vietnamese titles share raw data and localize at render time.
+
+The API exposes selected public summary columns, never full event articles, membership records or credentials. Hidden, deleted, invalid and ended shows are filtered on the server. API failures return 503 with a generic message; browser loaders propagate cancellation. Reads have at most one retry. Language-cookie updates use a React Query mutation with no automatic retries and refresh the server-rendered locale after success. No booking submission or confirmation is introduced.
+
+Verification: lint, TypeScript, UI rules, 21 test suites and the production build passed. Browser checks covered server-rendered cards, no duplicate hydration fetches, shared cache across routes, booking choices, language mutation, seating hydration, deduplicated timed refresh, retaining cards after a failed refresh, and VI/EN layouts at 390/768/1440px. No browser runtime errors were observed.
