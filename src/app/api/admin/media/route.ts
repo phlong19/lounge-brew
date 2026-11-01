@@ -1,13 +1,13 @@
 import { createHash } from "node:crypto";
 import sharp from "sharp";
 import { NextResponse } from "next/server";
-import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, requireStaff } from "@/lib/server/admin-api";
+import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, requireContentStaff } from "@/lib/server/admin-api";
 import { posterFileError } from "@/lib/admin/poster";
 export const runtime = "nodejs";
 export async function POST(request:Request) {
   try {
     assertSameOrigin(request);
-    const {supabase,user} = await requireStaff(request);
+    const {supabase,user} = await requireContentStaff(request);
     if (Number(request.headers.get("content-length")) > 11*1024*1024) throw new AdminApiError("Ảnh không được vượt quá 10 MB.",413);
     const reader = request.body?.getReader();
     if (!reader) throw new AdminApiError("Thiếu tệp ảnh.");

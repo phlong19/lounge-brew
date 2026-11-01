@@ -26,25 +26,25 @@ export function isUpcomingChoice(event: ReservationEventTime, now = new Date()) 
   return start ? Number.isFinite(Date.parse(start)) && Date.parse(start) > now.getTime() : event.date >= venueNow(now).date;
 }
 
-export function validateReservation(values: ReservationValues, now = new Date(), events: readonly ReservationEventTime[] = []): ReservationErrors {
+export function validateReservation(values: ReservationValues, now = new Date(), events: readonly ReservationEventTime[] = [], options:{deferVisitChecks?:boolean}={}): ReservationErrors {
   const errors: ReservationErrors = {};
   const current = venueNow(now);
   const email = values.email?.trim() ?? "";
   if (email && (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) errors.email = "emailInvalid";
   const selectedEvent = values.event ? events.find(event => event.id === values.event) : undefined;
-  if (values.event && (!selectedEvent || !isUpcomingChoice(selectedEvent, now))) errors.event = "eventInvalid";
+  if (values.event && (!selectedEvent || (!options.deferVisitChecks&&!isUpcomingChoice(selectedEvent, now)))) errors.event = "eventInvalid";
   if (!values.name.trim()) errors.name = "nameRequired";
   else if (values.name.trim().length > 120) errors.name = "nameLong";
   const digits = values.phone.replace(/\D/g, "");
-  if (!/^[+\d\s().-]+$/.test(values.phone) || digits.length < 7 || digits.length > 15) errors.phone = "phoneInvalid";
+  if (!/^[+\d ().-]+$/.test(values.phone) || digits.length < 7 || digits.length > 15) errors.phone = "phoneInvalid";
   const parsedDate = new Date(`${values.date}T00:00:00Z`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(values.date) || !Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== values.date) errors.date = "dateRequired";
-  else if (values.date < current.date) errors.date = "datePast";
-  if (selectedEvent && !errors.date && values.date !== selectedEvent.date) errors.date = "eventDateMismatch";
+  else if (!options.deferVisitChecks&&values.date < current.date) errors.date = "datePast";
+  if (!options.deferVisitChecks&&selectedEvent && !errors.date && values.date !== selectedEvent.date) errors.date = "eventDateMismatch";
   if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(values.time)) errors.time = "timeRequired";
   else if (values.time < "07:00" || values.time > "23:00") errors.time = "timeHours";
-  else if (values.date === current.date && values.time <= current.time) errors.time = "timePast";
-  if (!/^\d+$/.test(values.guests) || !Number.isSafeInteger(Number(values.guests)) || Number(values.guests) < 1) errors.guests = "guestsInvalid";
+  else if (!options.deferVisitChecks&&values.date === current.date && values.time <= current.time) errors.time = "timePast";
+  if (!/^\d+$/.test(values.guests) || !Number.isSafeInteger(Number(values.guests)) || Number(values.guests) < 1 || Number(values.guests)>2147483647) errors.guests = "guestsInvalid";
   if (values.notes.length > 1000) errors.notes = "notesLong";
   return errors;
 }

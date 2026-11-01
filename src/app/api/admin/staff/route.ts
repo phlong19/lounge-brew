@@ -9,10 +9,11 @@ export async function GET(request:Request) {
   const {supabase}=await requireAdmin(request);
   const params=new URL(request.url).searchParams;
   const page=Math.min(10000,Math.max(1,Math.floor(Number(params.get("page"))||1)));
-  const limit=20;
-  const result=await supabase.from("staff_members").select(fields,{count:"exact"}).neq("role","admin").order("created_at",{ascending:false}).order("user_id").range((page-1)*limit,page*limit-1);
+  const search=(params.get("search")??"").trim().slice(0,120),status=params.get("status")??"all";
+  if(!["all","active","inactive"].includes(status))throw new AdminApiError("Trạng thái không hợp lệ.");
+  const result=await supabase.rpc("admin_staff_directory",{p_search:search,p_status:status,p_page:page});
   databaseFailure(result.error);
-  return NextResponse.json({items:result.data,total:result.count,page,limit},{headers:{"Cache-Control":"no-store"}});
+  return NextResponse.json(result.data,{headers:{"Cache-Control":"no-store"}});
  }catch(error){return apiFailure(error);}
 }
 export async function POST(request:Request) {

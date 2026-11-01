@@ -88,7 +88,7 @@ export default async function ShowPage({ params }: Props) {
                     <Typography>{venue.address}</Typography>
                   </Inline>
                 </Stack>
-                {source.additional_fee != null ? <Typography className="col-span-2">{locale === "vi" ? "Phụ thu: " : "Additional fee: "}{new Intl.NumberFormat(locale === "vi" ? "vi-VN" : "en-GB",{style:"currency",currency:"VND",maximumFractionDigits:0}).format(source.additional_fee)}</Typography> : null}
+                {<Typography className="col-span-2">{locale === "vi" ? "Phụ thu: " : "Additional fee: "}{new Intl.NumberFormat(locale === "vi" ? "vi-VN" : "en-GB",{style:"currency",currency:"VND",maximumFractionDigits:0}).format(source.additional_fee??0)}</Typography>}
                 <Stack gap="md" className="col-span-2">
                   {ended ? (
                     <Typography variant="lead" tone="brand">

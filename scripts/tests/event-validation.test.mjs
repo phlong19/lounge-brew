@@ -10,6 +10,7 @@ test('event fields preserve venue time and map VND / soft delete without accepti
  const row=eventPayload({...valid,additionalFee:125000,isDeleted:true});assert.equal(row.event_date,'2026-10-30T13:15:00.000Z');assert.equal(row.additional_fee,125000);assert.equal(row.is_deleted,true);assert.equal(row.is_active,false);
  for(const key of ['created_by','updated_by','role','id','is_deleted'])assert.throws(()=>eventPayload({...valid,[key]:'arbitrary'}));
  assert.throws(()=>eventPayload({...valid,title_vi:' '}));assert.throws(()=>eventPayload({...valid,event_date:'2026-10-30T20:15'}));assert.throws(()=>eventPayload({...valid,end_date:'2026-10-29T20:15:00+07:00'}));
+ assert.equal(eventPayload({...valid,additionalFee:null}).additional_fee,0);
  for(const fee of [-1,1.5,Infinity,'100'])assert.throws(()=>eventPayload({...valid,additionalFee:fee}));
  assert.throws(()=>eventPayload({...valid,source_id:'../admin'}));
  assert.deepEqual(eventPayload({title_vi:'Chỉnh sửa'},true),{title_vi:'Chỉnh sửa'});

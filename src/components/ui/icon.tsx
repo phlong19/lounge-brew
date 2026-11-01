@@ -1,4 +1,12 @@
 import {
+  EllipsisVertical,
+  KeyRound,
+  ShieldOff,
+  ShieldCheck,
+  CircleAlert,
+  CircleX,
+  Info,
+  CircleCheck,
   Armchair,
   UsersRound,
   Underline,
@@ -49,6 +57,14 @@ import {
 import { cn } from "@/lib/utils";
 
 const icons = {
+  more: EllipsisVertical,
+  key: KeyRound,
+  lock: ShieldOff,
+  unlock: ShieldCheck,
+  warning: CircleAlert,
+  error: CircleX,
+  info: Info,
+  success: CircleCheck,
   seat: Armchair,
   users: UsersRound,
   underline: Underline,

@@ -6,7 +6,7 @@ export const adminStyles = {
   root: "min-h-dvh bg-[#F2F4EF] text-[#15201C] lg:grid lg:grid-cols-[224px_minmax(0,1fr)]",
   sidebar: "flex flex-col gap-4 px-5 py-4 lg:gap-7 lg:sticky lg:top-0 lg:h-dvh lg:py-8",
   nav: "flex-row flex-wrap gap-2 lg:flex-col lg:items-stretch",
-  navButton: "justify-start rounded-md px-4 text-stone-600 hover:bg-white/70 aria-pressed:bg-white aria-pressed:text-[#15201C]",
+  navButton: "justify-start rounded-md px-4 text-stone-600 hover:bg-white/70 aria-[current=page]:bg-white aria-[current=page]:text-[#15201C]",
   sheet: "mb-2 min-w-0 rounded-2xl border border-[#E2E6DE] bg-white lg:mt-2 lg:mr-2",
   topbar: "flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-[#E8EBE5] px-5 py-3 md:px-8",
   canvas: "p-5 md:p-8",

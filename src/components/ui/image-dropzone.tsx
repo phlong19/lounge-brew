@@ -44,7 +44,7 @@ export function ImageDropzone({ id, file, existingSrc, error, onChange }: { id: 
       <Typography variant="small" className="font-semibold text-[#2E7017]">{busy ? "Đang kiểm tra ảnh…" : isDragActive ? "Thả ảnh vào đây" : file || existingSrc ? "Kéo thả hoặc chọn ảnh để thay thế" : "Kéo thả hoặc bấm để chọn ảnh"}</Typography>
       {file ? <Typography variant="small" className="max-w-full break-all text-stone-600">{file.name}</Typography> : null}
     </div>
-    <div className="flex flex-wrap items-center justify-between gap-2"><Typography id={`${id}-help`} variant="small" tone="muted">JPG, PNG, WebP · tối đa 10 MB</Typography>{file || existingSrc ? <Button variant="ghost" size="sm" onClick={() => { onChange(null); setFileError(""); }}><Icon name="trash" className="size-4" />Xóa ảnh</Button> : null}</div>
+    <div className="flex flex-wrap items-center justify-between gap-2"><Typography id={`${id}-help`} variant="small" tone="muted">JPG, PNG, WebP · tối đa 10 MB</Typography>{file || existingSrc ? <Button variant="destructive" size="sm" onClick={() => { onChange(null); setFileError(""); }}><Icon name="trash" className="size-4" />Xóa ảnh</Button> : null}</div>
     {message ? <Typography id={`${id}-error`} role="alert" variant="small" tone="danger">{message}</Typography> : null}
   </div>;
 }

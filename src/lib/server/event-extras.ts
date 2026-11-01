@@ -1,3 +1,4 @@
+import {defaultVideoSettings,parseVideo,videoSelect,type VideoSettings} from "@/lib/video";
 import { cache } from "react";
 import { verifiedEvents } from "@/data/trixie-content";
 import { seatingSelect, type SeatingSettings } from "@/lib/seating";
@@ -47,3 +48,12 @@ export const getPublicEvents = cache(async ():Promise<EventRow[]>=>{
 /** Transport failures must reject so React Query can retain its previous data. */
 export const readPublicSeating = cache(async ():Promise<SeatingSettings|null>=>
  (await publicRows<SeatingSettings>("seating_settings",`select=${encodeURIComponent(seatingSelect)}&id=eq.home&is_visible=eq.true`,"seating-settings"))[0]??null);
+
+/** Only published settings are exposed; a hidden/missing row must not resurrect the fallback. */
+export const readPublicVideo=cache(async():Promise<VideoSettings|null>=>{
+ if(!process.env.NEXT_PUBLIC_SUPABASE_URL)return defaultVideoSettings;
+ const item=(await publicRows<VideoSettings>("video_settings",`select=${encodeURIComponent(videoSelect)}&id=eq.home&is_visible=eq.true`,"video-settings"))[0]??null;
+ if(!item||!item.is_visible)return null;
+ const parsed=parseVideo(item.source_url);
+ return parsed&&parsed.provider===item.provider?item:null;
+});

@@ -21,17 +21,17 @@ export async function SiteHeader({ active }: Props) {
     { key:"home", href:"/", label:t("home") },
     { key:"menu", href:"/menu", label:t("menu") },
     { key:"services", href:"/#introduction", label:t("services"), children:[
-      {key:"musicLounge",label:t("musicLounge"),href:"https://trixie.com.vn/phong-tra-ha-noi.html"},
-      {key:"privateEvents",label:t("privateEvents"),href:"https://trixie.com.vn/to-chuc-su-kien.html"},
+      {key:"musicLounge",label:t("musicLounge"),href:"#"},
+      {key:"privateEvents",label:t("privateEvents"),href:"#"},
     ]},
     { key:"events", href:"/events", label:t("events"), children:[
       {key:"minishows",label:t("minishows"),href:"/events"},
-      {key:"offers",label:t("offers"),href:"https://trixie.com.vn/uu-dai.html"},
+      {key:"offers",label:t("offers"),href:"#"},
     ]},
-    { key:"albums", href:"https://trixie.com.vn/album-anh.html", label:t("albums") },
-    { key:"video", href:"https://trixie.com.vn/video.html", label:t("video") },
-    { key:"contact", href:"https://trixie.com.vn/lien-he.html", label:t("contact") },
-    { key:"news", href:"https://trixie.com.vn/tin-tuc.html", label:t("news") },
+    { key:"albums", href:"#", label:t("albums") },
+    { key:"video", href:"#", label:t("video") },
+    { key:"contact", href:"#", label:t("contact") },
+    { key:"news", href:"#", label:t("news") },
   ];
   return <>
     <Surface tone="paper" data-announcement-bar>

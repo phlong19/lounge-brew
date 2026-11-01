@@ -294,7 +294,16 @@
     "emailInvalid": "Enter a valid email address.",
     "eventInvalid": "Choose an available programme or a general visit.",
     "eventDateMismatch": "Choose the date of the selected programme.",
-    "close": "Close reservations"
+    "close": "Close reservations",
+    "submit": "Send request",
+    "submitting": "Sending…",
+    "receivedTitle": "Request received",
+    "receivedMessage": "Our staff will review and confirm your booking. Your table is not confirmed yet.",
+    "submitUnavailable": "Unable to send your request. Please try again.",
+    "rateLimited": "Too many requests. Please try again later or call Trixie.",
+    "requestChanged": "The request changed. Please edit and send it again.",
+    "visitChanged": "The visit date or show is no longer available. Please review your details.",
+    "inputInvalid": "Please check your details."
   },
   "Carousel": {
     "carousel": "carousel",

@@ -62,7 +62,7 @@ export function RichText({ content, tone = "ink", imageSize = "article" }: { con
       const colorClass = sourceColor ? colors[sourceColor.trim().toLowerCase()] : undefined;
       return colorClass ? <Typography key={key} as="span" variant="inline" className={colorClass}>{children}</Typography> : children;
     }
-    if (node.name === "p") return <Typography key={key}>{children}</Typography>;
+    if (node.name === "p") return <Typography key={key} className="text-wrap">{children}</Typography>;
     if (node.name === "h1" || heading.has(node.name))
       return (
         <Typography
@@ -73,7 +73,7 @@ export function RichText({ content, tone = "ink", imageSize = "article" }: { con
               : (node.name as "h2" | "h3" | "h4" | "h5" | "h6")
           }
           variant="subheading"
-          className="pt-6"
+          className="pt-6 text-wrap"
         >
           {children}
         </Typography>
@@ -102,7 +102,7 @@ export function RichText({ content, tone = "ink", imageSize = "article" }: { con
           key={key}
           as="blockquote"
           variant="lead"
-          className="my-4 pl-5"
+          className="my-4 pl-5 text-wrap"
         >
           {children}
         </Typography>

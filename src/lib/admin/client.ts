@@ -15,7 +15,7 @@ export async function loadAdminEvents(signal?:AbortSignal):Promise<EditableEvent
   let page = 1;
   do {
     const result = await adminRequest(`/api/admin/events?page=${page}&limit=100`,{signal});
-    rows.push(...result.items.map((item:EditableEvent)=>({...item,additionalFee:item.additional_fee ?? null})));
+    rows.push(...result.items.map((item:EditableEvent)=>({...item,additionalFee:item.additional_fee ?? 0})));
     if (rows.length >= result.total || !result.items.length) break;
     page++;
   } while(page<=100);
@@ -24,7 +24,7 @@ export async function loadAdminEvents(signal?:AbortSignal):Promise<EditableEvent
 export async function saveAdminEvent(event:EditableEvent,isNew:boolean):Promise<EditableEvent> {
   let coverUrl = event.cover_image_url, coverId = event.cover_asset_id;
   if (event.cover_file) { const image = await uploadAdminImage(event.cover_file); coverUrl=image.url;coverId=image.asset.id; }
-  const payload = {title_vi:event.title_vi,title_en:event.title_en,performer_name:event.performer_name,event_date:event.event_date,end_date:event.end_date || null,description_vi:event.description_vi,description_en:event.description_en,content_vi:event.content_vi || "",content_en:event.content_en || null,cover_image_url:coverUrl,cover_asset_id:coverId || null,is_active:event.is_active,additionalFee:event.additionalFee ?? null,...(!isNew && event.updated_at ? {expectedUpdatedAt:event.updated_at} : {})};
+  const payload = {title_vi:event.title_vi,title_en:event.title_en,performer_name:event.performer_name,event_date:event.event_date,end_date:event.end_date || null,description_vi:event.description_vi,description_en:event.description_en,content_vi:event.content_vi || "",content_en:event.content_en || null,cover_image_url:coverUrl,cover_asset_id:coverId || null,is_active:event.is_active,additionalFee:event.additionalFee ?? 0,...(!isNew && event.updated_at ? {expectedUpdatedAt:event.updated_at} : {})};
   const result = await adminRequest(isNew ? "/api/admin/events" : `/api/admin/events/${event.id}`,{method:isNew?"POST":"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-  return {...result.item,additionalFee:result.item.additional_fee ?? null};
+  return {...result.item,additionalFee:result.item.additional_fee ?? 0};
 }

@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { apiFailure, assertSameOrigin, databaseFailure, readJson, resolveEventCover, requireStaff } from "@/lib/server/admin-api";
+import { apiFailure, assertSameOrigin, databaseFailure, readJson, resolveEventCover, requireContentStaff } from "@/lib/server/admin-api";
 import { eventPayload } from "@/lib/admin/event-validation";
 import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function GET(request: Request) {
   try {
-    const {supabase} = await requireStaff(request);
+    const {supabase} = await requireContentStaff(request);
     const params = new URL(request.url).searchParams;
     const page = Math.max(1, Math.min(10000, Number(params.get("page")) || 1));
     const limit = Math.max(1, Math.min(100, Number(params.get("limit")) || 100));
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
-    const {supabase,user} = await requireStaff(request);
+    const {supabase,user} = await requireContentStaff(request);
     const payload = eventPayload(await readJson(request));
     await resolveEventCover(supabase,payload);
     if (!payload.cover_asset_id && !payload.cover_image_url) return NextResponse.json({error:"Vui lòng chọn ảnh chương trình."},{status:400});

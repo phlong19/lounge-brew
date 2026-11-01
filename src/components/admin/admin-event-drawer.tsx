@@ -1,4 +1,5 @@
 "use client";
+import {AlertMessage} from "@/components/ui/alert";
 
 import { useState } from "react";
 import {Controller,useForm,useWatch} from "react-hook-form";
@@ -23,7 +24,7 @@ function FormError({message,id}:{message?:string;id:string}) {
 }
 function EventForm({event,onApply,uploading,saving,onUploadStateChange}:{saving:boolean;uploading:boolean;onUploadStateChange:(busy:boolean)=>void;event:EditableEvent;onApply:Props["onApply"]}) {
  const [english,setEnglish]=useState(false);
- const {control,handleSubmit,getValues,setValue,setError,clearErrors,formState:{errors}}=useForm<EditableEvent>({defaultValues:{...event,title_en:event.title_en??"",content_vi:event.content_vi??"",additionalFee:event.additionalFee??null},mode:"onSubmit"});
+ const {control,handleSubmit,getValues,setValue,setError,clearErrors,formState:{errors}}=useForm<EditableEvent>({defaultValues:{...event,title_en:event.title_en??"",content_vi:event.content_vi??"",additionalFee:event.additionalFee??0},mode:"onSubmit"});
  const [start,coverFile,coverUrl]=useWatch({control,name:["event_date","cover_file","cover_image_url"]});
  return <Form noValidate inert={saving} aria-busy={saving} id="event-editor" className="min-h-0 flex-1 overflow-y-auto p-6" onSubmit={handleSubmit(async values=>{
   if(uploading||saving)return;
@@ -50,7 +51,7 @@ export function AdminEventDrawer({ event, isNew, onClose, onApply, onReturnFocus
   const [uploading,setUploading] = useState(false);
   return <Sheet open={!!event} onOpenChange={open => { if (!open && !saving && !uploading) onClose(); }}><SheetContent onCloseAutoFocus={event => { event.preventDefault(); onReturnFocus(); }} lang="vi" closeLabel="Đóng" aria-describedby={undefined} className={s.drawer} data-event-editor>
     <SheetHeader className="shrink-0 border-b border-[#E2E6DE] px-6 py-5 pr-16"><SheetTitle>{isNew ? "Thêm sự kiện" : "Chỉnh sửa sự kiện"}</SheetTitle></SheetHeader>
-    {error ? <Typography role="alert" tone="danger" className="px-6 pt-4">{error}</Typography> : null}
-    {event ? <><EventForm saving={saving} uploading={uploading} onUploadStateChange={setUploading} key={event.id} event={event} onApply={onApply} /><Inline className="shrink-0 justify-end border-t border-[#E2E6DE] bg-white px-6 py-4">{!isNew && onDelete ? <Button variant="ghost" disabled={saving || uploading} className="mr-auto text-red-700 hover:bg-red-50" onClick={()=>onDelete(event)}><Icon name="trash" />Xóa sự kiện</Button> : null}<Button disabled={saving || uploading} variant="outline" onClick={onClose}>Hủy</Button><Button disabled={saving || uploading} type="submit" form="event-editor" className={s.primary}><Icon name="check" />{saving ? "Đang lưu…" : uploading ? "Đang tải ảnh…" : "Lưu"}</Button></Inline></> : null}
+    {error ? <AlertMessage variant="destructive">{error}</AlertMessage> : null}
+    {event ? <><EventForm saving={saving} uploading={uploading} onUploadStateChange={setUploading} key={event.id} event={event} onApply={onApply} /><Inline className="shrink-0 justify-end border-t border-[#E2E6DE] bg-white px-6 py-4">{!isNew && onDelete ? <Button variant="destructive" disabled={saving || uploading} className="mr-auto" onClick={()=>onDelete(event)}><Icon name="trash" />Xóa sự kiện</Button> : null}<Button disabled={saving || uploading} variant="outline" onClick={onClose}>Hủy</Button><Button disabled={saving || uploading} type="submit" form="event-editor" className={s.primary}><Icon name="check" />{saving ? "Đang lưu…" : uploading ? "Đang tải ảnh…" : "Lưu"}</Button></Inline></> : null}
   </SheetContent></Sheet>;
 }

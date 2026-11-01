@@ -45,8 +45,8 @@ export function DateTimeInput({value,onValueChange,min,disabled,onBlur,ref,...pr
  const [state,setState]=useState({source:value,date:value.slice(0,10),time:value.slice(11,16)});
  const draft=state.source===value?state:{source:value,date:value.slice(0,10),time:value.slice(11,16)};
  function update(date:string,time:string){const source=date&&time?date+"T"+time:"";setState({source,date,time});onValueChange(source);}
- return <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_110px] gap-2">
+ return <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_9rem] gap-2">
   <DateInput {...props} ref={ref} disabled={disabled} onBlur={onBlur} value={draft.date} min={min?.slice(0,10)} onValueChange={date=>update(date,draft.time)} />
-  <Input type="time" aria-label={english?"Time (Hanoi)":"Giờ (Hà Nội)"} disabled={disabled} value={draft.time} onBlur={onBlur} onChange={event=>update(draft.date,event.target.value)} />
+  <Input type="time" className="min-w-0 px-2 tabular-nums" aria-label={english?"Time (Hanoi)":"Giờ (Hà Nội)"} disabled={disabled} value={draft.time} onBlur={onBlur} onChange={event=>update(draft.date,event.target.value)} />
  </div>;
 }

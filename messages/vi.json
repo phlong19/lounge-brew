@@ -294,7 +294,16 @@
     "emailInvalid": "Vui lòng nhập email hợp lệ.",
     "eventInvalid": "Vui lòng chọn chương trình hoặc đặt bàn thông thường.",
     "eventDateMismatch": "Vui lòng chọn đúng ngày của chương trình.",
-    "close": "Đóng đặt bàn"
+    "close": "Đóng đặt bàn",
+    "submit": "Gửi yêu cầu",
+    "submitting": "Đang gửi…",
+    "receivedTitle": "Đã nhận yêu cầu",
+    "receivedMessage": "Nhân viên Trixie sẽ kiểm tra và xác nhận đặt bàn của bạn. Yêu cầu này chưa phải là đặt bàn đã được xác nhận.",
+    "submitUnavailable": "Chưa thể gửi yêu cầu. Vui lòng thử lại.",
+    "rateLimited": "Bạn đã gửi nhiều yêu cầu. Vui lòng thử lại sau hoặc gọi Trixie.",
+    "requestChanged": "Nội dung yêu cầu đã thay đổi. Vui lòng chỉnh sửa và gửi lại.",
+    "visitChanged": "Ngày đến hoặc chương trình không còn phù hợp. Vui lòng kiểm tra lại.",
+    "inputInvalid": "Vui lòng kiểm tra lại thông tin."
   },
   "Carousel": {
     "carousel": "băng chuyền",

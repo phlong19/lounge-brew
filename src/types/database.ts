@@ -53,6 +53,51 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_type: string
+          changed_fields: string[]
+          created_at: string
+          id: number
+          metadata: Json
+          new_data: Json | null
+          old_data: Json | null
+          operation: string
+          record_id: string
+          table_name: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_type?: string
+          changed_fields?: string[]
+          created_at?: string
+          id?: never
+          metadata?: Json
+          new_data?: Json | null
+          old_data?: Json | null
+          operation: string
+          record_id: string
+          table_name: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_type?: string
+          changed_fields?: string[]
+          created_at?: string
+          id?: never
+          metadata?: Json
+          new_data?: Json | null
+          old_data?: Json | null
+          operation?: string
+          record_id?: string
+          table_name?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -86,39 +131,6 @@ export type Database = {
           tab_label_en?: string | null
           tab_label_vi?: string
           updated_at?: string
-        }
-        Relationships: []
-      }
-      content_audit_log: {
-        Row: {
-          actor_id: string | null
-          created_at: string
-          id: number
-          new_data: Json | null
-          old_data: Json | null
-          operation: string
-          record_id: string
-          table_name: string
-        }
-        Insert: {
-          actor_id?: string | null
-          created_at?: string
-          id?: never
-          new_data?: Json | null
-          old_data?: Json | null
-          operation: string
-          record_id: string
-          table_name: string
-        }
-        Update: {
-          actor_id?: string | null
-          created_at?: string
-          id?: never
-          new_data?: Json | null
-          old_data?: Json | null
-          operation?: string
-          record_id?: string
-          table_name?: string
         }
         Relationships: []
       }
@@ -306,44 +318,8 @@ export type Database = {
           },
         ]
       }
-      reservation_activity: {
-        Row: {
-          actor_id: string | null
-          created_at: string
-          id: number
-          new_status: string
-          previous_status: string | null
-          reservation_id: string
-        }
-        Insert: {
-          actor_id?: string | null
-          created_at?: string
-          id?: never
-          new_status: string
-          previous_status?: string | null
-          reservation_id: string
-        }
-        Update: {
-          actor_id?: string | null
-          created_at?: string
-          id?: never
-          new_status?: string
-          previous_status?: string | null
-          reservation_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reservation_activity_reservation_id_fkey"
-            columns: ["reservation_id"]
-            isOneToOne: false
-            referencedRelation: "reservations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       reservations: {
         Row: {
-          assigned_to: string | null
           created_at: string
           email: string | null
           event_id: string | null
@@ -353,16 +329,16 @@ export type Database = {
           name: string
           notes: string
           phone: string
+          phone_normalized: string | null
           reference: string
+          source: string
           status: string
           updated_at: string
           updated_by: string | null
-          venue_timezone: string
           visit_date: string
           visit_time: string
         }
         Insert: {
-          assigned_to?: string | null
           created_at?: string
           email?: string | null
           event_id?: string | null
@@ -372,16 +348,16 @@ export type Database = {
           name: string
           notes?: string
           phone: string
+          phone_normalized?: string | null
           reference?: string
+          source?: string
           status?: string
           updated_at?: string
           updated_by?: string | null
-          venue_timezone?: string
           visit_date: string
           visit_time: string
         }
         Update: {
-          assigned_to?: string | null
           created_at?: string
           email?: string | null
           event_id?: string | null
@@ -391,11 +367,12 @@ export type Database = {
           name?: string
           notes?: string
           phone?: string
+          phone_normalized?: string | null
           reference?: string
+          source?: string
           status?: string
           updated_at?: string
           updated_by?: string | null
-          venue_timezone?: string
           visit_date?: string
           visit_time?: string
         }
@@ -457,6 +434,7 @@ export type Database = {
           display_name: string
           is_active: boolean
           role: string
+          tokens_valid_after: string | null
           updated_at: string
           user_id: string
         }
@@ -465,6 +443,7 @@ export type Database = {
           display_name?: string
           is_active?: boolean
           role: string
+          tokens_valid_after?: string | null
           updated_at?: string
           user_id: string
         }
@@ -473,6 +452,7 @@ export type Database = {
           display_name?: string
           is_active?: boolean
           role?: string
+          tokens_valid_after?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -519,7 +499,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_staff_directory: {
+        Args: { p_page?: number; p_search?: string; p_status?: string }
+        Returns: Json
+      }
+      finish_staff_security_action: {
+        Args: { p_action: string; p_actor: string; p_target: string }
+        Returns: number
+      }
+      staff_access_allowed: { Args: never; Returns: boolean }
+      submit_reservation_request: {
+        Args: {
+          p_email: string
+          p_event_id: string
+          p_fingerprint: string
+          p_guests: number
+          p_ip_hash: string
+          p_key: string
+          p_name: string
+          p_notes: string
+          p_phone: string
+          p_phone_hash: string
+          p_shared_ip: boolean
+          p_visit_date: string
+          p_visit_time: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
