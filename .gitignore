@@ -10,7 +10,6 @@ dist
 .env.test.local
 .env.production.local
 coverage
-pnpm-lock.yaml
 yarn.lock
 package-lock.json
 .codex

@@ -17,8 +17,8 @@ test("public request whitelists fields and never accepts status, source or actor
 test("phone canonicalization agrees across local and international formats",()=>{
  for(const phone of ["0977 165 165","+84 977165165","0084 977165165","+84 (0)977165165"])assert.equal(normalizePhone(phone),"84977165165");
 });
-test("booking staff can handle requests without gaining content rights",()=>{
- assert.equal(canAccessAdmin({role:"booking",is_active:true}),true);assert.equal(canManageEvents({role:"booking",is_active:true}),false);
+test("retired booking role and unknown roles cannot gain staff access",()=>{
+ assert.equal(canAccessAdmin({role:"booking",is_active:true}),false);assert.equal(canManageEvents({role:"booking",is_active:true}),false);
  assert.equal(canAccessAdmin({role:"booking",is_active:false}),false);assert.equal(canAccessAdmin({role:"visitor",is_active:true}),false);
 });
 test("confirmation is a staff transition, and closed requests reopen through pending",()=>{

@@ -8,6 +8,7 @@ const { hasRemoteMatch } = require("next/dist/shared/lib/match-remote-pattern");
 const { getImgProps } = require("next/dist/shared/lib/get-img-props");
 const { imageConfigDefault } = require("next/dist/shared/lib/image-config");
 const { default: defaultLoader } = require("next/dist/shared/lib/image-loader");
+const resolvedImageDefaults={...imageConfigDefault,allSizes:[...imageConfigDefault.deviceSizes,...imageConfigDefault.imageSizes].sort((a,b)=>a-b)};
 const allowed = (patterns, source) =>
   hasRemoteMatch([], patterns, new URL(source));
 
@@ -38,7 +39,7 @@ test("configured Supabase origin allows only public storage images including tra
       { src: source, alt: "Trixie show", width: 800, height: 1200 },
       {
         defaultLoader,
-        imgConf: { ...imageConfigDefault, remotePatterns: patterns },
+        imgConf: { ...resolvedImageDefaults, remotePatterns: patterns },
       },
     );
     assert.match(props.src, /^\/_next\/image\?url=/);
@@ -130,7 +131,7 @@ test("Next config passes the trusted patterns to its image optimizer", async () 
   const source = "https://trixie.com.vn/media/images/show.jpg";
   const { props } = getImgProps(
     { src: source, alt: "Trixie show", width: 800, height: 1200 },
-    { defaultLoader, imgConf: { ...imageConfigDefault, ...config.images } },
+    { defaultLoader, imgConf: { ...resolvedImageDefaults, ...config.images } },
   );
   assert.equal(
     new URL(props.src, "https://trixie.invalid").searchParams.get("url"),

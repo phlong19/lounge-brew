@@ -1,3 +1,4 @@
+import {cache} from "react";
 import { isSameOrigin } from "@/lib/server/request-origin";
 import { canAccessAdmin,canManageEvents,type StaffRole } from "@/lib/admin/roles";
 import { createClient } from "@supabase/supabase-js";
@@ -9,7 +10,7 @@ export class AdminApiError extends Error { constructor(message: string, public s
 export function assertSameOrigin(request: Request) {
   if (!isSameOrigin(request)) throw new AdminApiError("Nguồn yêu cầu không hợp lệ.", 403);
 }
-export async function requireStaff(request?: Request) {
+async function verifyStaff(request?: Request) {
   const token = request?.headers.get("authorization")?.match(/^Bearer (.+)$/i)?.[1];
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -25,6 +26,9 @@ export async function requireStaff(request?: Request) {
   if(!access.data)throw new AdminApiError("Phiên đăng nhập đã kết thúc. Vui lòng đăng nhập lại.",401);
   return { supabase, user, role: staff.data.role as StaffRole, displayName: staff.data.display_name };
 }
+// React cache is request-scoped: share layout/page verification, never cache roles across users/requests.
+const currentStaff=cache(()=>verifyStaff());
+export function requireStaff(request?:Request){return request?verifyStaff(request):currentStaff();}
 export async function readJson(request: Request, maxBytes=4*1024*1024) {
   const reader = request.body?.getReader();
   if (!reader) throw new AdminApiError("Thiếu nội dung yêu cầu.");

@@ -1,4 +1,8 @@
 "use client";
+import {useQuery} from "@tanstack/react-query";
+import {adminKeys} from "@/lib/admin/query";
+import {adminRequest} from "@/lib/admin/client";
+import {ContentSkeleton} from "@/components/ui/loading-state";
 import {AlertMessage} from "@/components/ui/alert";
 
 import { useState } from "react";
@@ -49,9 +53,14 @@ function EventForm({event,onApply,uploading,saving,onUploadStateChange}:{saving:
 }
 export function AdminEventDrawer({ event, isNew, onClose, onApply, onReturnFocus, saving = false, error = "", onDelete }: Props) {
   const [uploading,setUploading] = useState(false);
+  const detail=useQuery<EditableEvent>({queryKey:[...adminKeys.events,"detail",event?.id,event?.updated_at],enabled:!!event&&!isNew,staleTime:0,queryFn:async({signal})=>{const {item}=await adminRequest("/api/admin/events/"+event!.id,{signal});return {...item,additionalFee:item.additional_fee??0};}});
+  const readyEvent=isNew?event:detail.data;
+
   return <Sheet open={!!event} onOpenChange={open => { if (!open && !saving && !uploading) onClose(); }}><SheetContent onCloseAutoFocus={event => { event.preventDefault(); onReturnFocus(); }} lang="vi" closeLabel="Đóng" aria-describedby={undefined} className={s.drawer} data-event-editor>
     <SheetHeader className="shrink-0 border-b border-[#E2E6DE] px-6 py-5 pr-16"><SheetTitle>{isNew ? "Thêm sự kiện" : "Chỉnh sửa sự kiện"}</SheetTitle></SheetHeader>
     {error ? <AlertMessage variant="destructive">{error}</AlertMessage> : null}
-    {event ? <><EventForm saving={saving} uploading={uploading} onUploadStateChange={setUploading} key={event.id} event={event} onApply={onApply} /><Inline className="shrink-0 justify-end border-t border-[#E2E6DE] bg-white px-6 py-4">{!isNew && onDelete ? <Button variant="destructive" disabled={saving || uploading} className="mr-auto" onClick={()=>onDelete(event)}><Icon name="trash" />Xóa sự kiện</Button> : null}<Button disabled={saving || uploading} variant="outline" onClick={onClose}>Hủy</Button><Button disabled={saving || uploading} type="submit" form="event-editor" className={s.primary}><Icon name="check" />{saving ? "Đang lưu…" : uploading ? "Đang tải ảnh…" : "Lưu"}</Button></Inline></> : null}
+    {event&&!isNew&&detail.isPending?<ContentSkeleton label="Đang tải nội dung sự kiện…" />:null}
+    {event&&!isNew&&detail.isError?<Stack className="p-6"><AlertMessage variant="destructive">{detail.error.message}</AlertMessage><Button variant="outline" onClick={()=>void detail.refetch()}>Thử lại</Button></Stack>:null}
+    {readyEvent ? <><EventForm saving={saving} uploading={uploading} onUploadStateChange={setUploading} key={readyEvent.id} event={readyEvent} onApply={onApply} /><Inline className="shrink-0 justify-end border-t border-[#E2E6DE] bg-white px-6 py-4">{!isNew && onDelete ? <Button variant="destructive" disabled={saving || uploading} className="mr-auto" onClick={()=>onDelete(readyEvent)}><Icon name="trash" />Xóa sự kiện</Button> : null}<Button disabled={saving || uploading} variant="outline" onClick={onClose}>Hủy</Button><Button disabled={saving || uploading} type="submit" form="event-editor" className={s.primary}><Icon name="check" />{saving ? "Đang lưu…" : uploading ? "Đang tải ảnh…" : "Lưu"}</Button></Inline></> : null}
   </SheetContent></Sheet>;
 }

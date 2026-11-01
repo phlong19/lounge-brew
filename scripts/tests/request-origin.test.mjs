@@ -17,3 +17,7 @@ test("cross-origin, wrong port, wrong protocol and malformed origins remain bloc
   forwarded.headers.set("x-forwarded-host", "evil.test");
   assert.equal(isSameOrigin(forwarded), false);
 });
+
+test("cross-site Fetch Metadata cannot bypass origin checks by omitting Origin",()=>{
+ const req=request(undefined);req.headers.set("sec-fetch-site","cross-site");assert.equal(isSameOrigin(req),false);
+});

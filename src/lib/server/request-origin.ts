@@ -1,5 +1,7 @@
 /** Next may expose its bind address in request.url; Host retains the browser authority. */
 export function isSameOrigin(request: Request): boolean {
+  // Browser Fetch Metadata also covers requests that omit Origin.
+  if (request.headers.get("sec-fetch-site") === "cross-site") return false;
   const origin = request.headers.get("origin");
   if (!origin) return true;
   try {

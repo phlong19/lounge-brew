@@ -44,7 +44,7 @@ export function AdminDesign({
   const client = useQueryClient();
   const toast = useToast();
   const [error, setError] = useState("");
-  const tab = staff?.role === "booking" ? "reservations" : initialSection;
+  const tab = initialSection;
   const [videoState, setVideoState] = useState<VideoFormState>({
     dirty: false,
     busy: false,

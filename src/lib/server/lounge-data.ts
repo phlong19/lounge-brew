@@ -165,11 +165,11 @@ export async function getArticleBySlug(slug: string): Promise<{
 }
 
 /** A show's URL remains useful after it leaves the upcoming schedule. */
-export async function getEventById(id: string): Promise<{
+export const getEventById = cache(async (id: string): Promise<{
   event: EventRow | null;
   usingMockData: boolean;
   contentSource: ContentSource;
-}> {
+}> => {
   const fallback =
     verifiedEvents.find((event) => event.id === id && isPublicEvent(event)) ??
     null;
@@ -200,4 +200,4 @@ export async function getEventById(id: string): Promise<{
     usingMockData: false,
     contentSource: result.source,
   };
-}
+});

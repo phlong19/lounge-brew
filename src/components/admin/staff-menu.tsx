@@ -16,7 +16,7 @@ export function StaffMenu({ staff }: { staff?: StaffInfo }) {
   const logout=useMutation({mutationFn:()=>adminRequest("/api/admin/session",{method:"DELETE"}),onSuccess:()=>{client.clear();window.location.assign("/admin");}});
   const busy=logout.isPending;
   const error=logout.error?"Không thể đăng xuất. Vui lòng thử lại.":"";
-  const role = staff?.role === "admin" ? "Quản trị viên" : staff?.role==="booking"?"Nhân viên đặt bàn":"Biên tập viên";
+  const role = staff?.role === "admin" ? "Quản trị viên" : "Biên tập viên";
   return <Popover><PopoverTrigger asChild><Button variant="ghost" className="w-full justify-between" aria-label="Tài khoản nhân viên"><Typography as="span" variant="small" className="truncate">{staff?.name || staff?.email || "Nhân viên"}</Typography><Icon name="chevronUp" /></Button></PopoverTrigger>
     <PopoverContent side="right" align="end"><Stack gap="md"><Stack gap="xs"><Typography variant="body" className="font-semibold">{staff?.name}</Typography><Typography variant="small" tone="muted">{role}</Typography><Typography variant="small" tone="muted" className="break-all">{staff?.email}</Typography></Stack>
       <Button variant="destructive" disabled={busy} onClick={() => logout.mutate()}>{busy ? "Đang đăng xuất…" : "Đăng xuất"}</Button>

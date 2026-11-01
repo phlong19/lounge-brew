@@ -36,7 +36,7 @@ TanStack React Query owns admin event/staff/seating reads and save/delete/sessio
 
 ## Staff actions — 1 November 2026
 
-The directory, search and action endpoints require an active admin. Editors/booking staff have no staff navigation link; `/admin/staff` returns not found to those roles, and staff APIs return 403. Admin accounts are excluded from the directory and cannot be targeted by its actions. Self-management is also rejected.
+The directory, search and action endpoints require an active admin. Editors have no staff navigation link; `/admin/staff` returns not found to those roles, and staff APIs return 403. Admin accounts are excluded from the directory and cannot be targeted by its actions. Self-management is also rejected.
 
 The directory searches names and canonical Auth email addresses and filters by access status. Email is joined from `auth.users` by an admin-guarded, bounded SQL function; no second editable email copy is stored on `staff_members`. Row menus provide access lock/unlock and a password dialog using the same 8–22 character strength requirements as account creation. Delete is a disabled destructive placeholder; no DELETE endpoint exists.
 

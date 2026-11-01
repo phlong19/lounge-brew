@@ -45,7 +45,7 @@ Migration `20261101010000_reservation_workflow.sql` activates the service-only a
 
 ## Access and shared audit
 
-`staff_members` grants active roles. Active admin/editor/booking staff can handle the booking queue. The booking role has no content-management permissions. Ordinary signed-in users cannot read requests. Inactive staff lose access. Existing admin/editor content authorization is unchanged.
+`staff_members` grants active roles. Active admin/editor staff can handle the booking queue. The legacy booking-only role is retired; the two-role constraint matches the current staff form. Ordinary signed-in users cannot read requests. Inactive staff lose access. Existing admin/editor content authorization is unchanged.
 
 One application-owned `audit_log` now stores content, media, seating, staff and reservation changes. It preserves the previous content audit IDs/payloads and imports any old reservation activity. Each row includes entity table/record, action/operation, actor/type, time, changed field names, old/new snapshots and metadata. All nine business tables use the shared trigger. Contact names, phone numbers, emails, notes and idempotency keys are excluded from reservation snapshots. Staff can read reservation history; only admins can read the other application history. Browser clients cannot insert, update or delete audit rows. Supabase's platform-managed Auth logs remain provider-owned; later password/account actions should add a redacted application audit event after success, never a password/hash/key.
 
@@ -55,7 +55,7 @@ Privileged Auth operations use the server-only `SUPABASE_SECRET_KEY` (`sb_secret
 
 - Keep `0001_initial_schema.sql`; apply `20261030000000_admin_persistence.sql` afterward. The new migration removes the scaffold's permissive authenticated-write policies without dropping legacy data.
 - Initial remote deployment applied both exact files atomically using the Management SQL API and recorded matching `version`, `name`, and `statements` in `supabase_migrations.schema_migrations`. Future CLI migration checks can match these local versions.
-- `supabase/tests/schema_contract.sql` runs inside a rolled-back transaction. It checks required posters, integer fees, valid times, source IDs, duplicate-request protection, audits, anonymous/ordinary/editor/booking/admin permissions and private-data isolation. Test fixtures must never be committed.
+- `supabase/tests/schema_contract.sql` runs inside a rolled-back transaction. It checks required posters, integer fees, valid times, source IDs, duplicate-request protection, audits, anonymous/ordinary/active-editor/inactive-editor/admin permissions and private-data isolation. Test fixtures must never be committed.
 - `src/types/database.ts` is generated from the deployed public schema, not hand-authored guesses.
 
 ## Current integration state
