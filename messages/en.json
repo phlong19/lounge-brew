@@ -334,5 +334,18 @@
     "venueImage": "Tea at Trixie",
     "eventNameEn": "English programme title",
     "active": "Active event"
+  },
+  "TicketShows": {
+    "eyebrow": "TRIXIE · LIVE MUSIC",
+    "title": "An evening to look forward to",
+    "description": "Pick a performance and make a date at Trixie.",
+    "all": "The full line-up",
+    "series": "MINISHOW",
+    "date": "Show date",
+    "time": "Show time",
+    "venue": "165 Thai Ha · Hanoi",
+    "details": "Explore the show",
+    "stub": "Café & Lounge",
+    "empty": "New minishows will be announced here."
   }
 }

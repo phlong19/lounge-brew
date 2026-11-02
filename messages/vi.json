@@ -334,5 +334,18 @@
     "venueImage": "Trà tại Trixie",
     "eventNameEn": "Tên chương trình tiếng Anh",
     "active": "Đang hoạt động"
+  },
+  "TicketShows": {
+    "eyebrow": "TRIXIE · LIVE MUSIC",
+    "title": "Hẹn nhau trong tiếng nhạc",
+    "description": "Chọn đêm nhạc, giữ một cuộc hẹn tại Trixie.",
+    "all": "Tất cả lịch diễn",
+    "series": "MINISHOW",
+    "date": "Ngày diễn",
+    "time": "Giờ diễn",
+    "venue": "165 Thái Hà · Hà Nội",
+    "details": "Khám phá đêm nhạc",
+    "stub": "Café & Lounge",
+    "empty": "Lịch minishow mới sẽ được cập nhật tại đây."
   }
 }

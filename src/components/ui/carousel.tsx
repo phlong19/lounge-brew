@@ -24,6 +24,7 @@ type Props = ComponentPropsWithRef<"div"> & {
   autoplay?: boolean;
   showCounter?: boolean;
   indicators?: boolean;
+  indicatorTone?: "brand" | "inverse";
   paused?: boolean;
   pauseOnHover?: boolean;
   headerClassName?: string;
@@ -35,7 +36,7 @@ type Props = ComponentPropsWithRef<"div"> & {
 };
 
 /** Embla owns continuous movement. Interaction and motion preferences gate it. */
-export function Carousel({ label, orientation = "horizontal", visibleSlides = 2, columns = 3, heading, action, controls = true, autoScroll = false, autoplay = false, showCounter = true, indicators = false, paused = false, pauseOnHover = true, headerClassName, compactControls = false, rows = 1, controlPosition = "header", step = "page", onNavigate, className, children, ref, ...props }: Props) {
+export function Carousel({ label, orientation = "horizontal", visibleSlides = 2, columns = 3, heading, action, controls = true, autoScroll = false, autoplay = false, showCounter = true, indicators = false, indicatorTone = "brand", paused = false, pauseOnHover = true, headerClassName, compactControls = false, rows = 1, controlPosition = "header", step = "page", onNavigate, className, children, ref, ...props }: Props) {
   const t = useTranslations("Carousel");
   const id = useId();
   const root = useRef<HTMLDivElement | null>(null);
@@ -136,7 +137,7 @@ export function Carousel({ label, orientation = "horizontal", visibleSlides = 2,
     {sideControls ? nextButton : null}
     </div>
     {indicators && state.ready && state.pages > 1 ? <div className="mt-5 flex flex-wrap items-center justify-center gap-0 sm:gap-1" role="group" aria-label={label}>
-      {Array.from({ length: state.pages }, (_, index) => <Button key={index} variant="ghost" size="iconSm" className="size-7 rounded-full hover:bg-[#2E7017]/10 sm:size-8" aria-label={t("page", { current: index + 1, total: state.pages })} aria-controls={id} aria-current={state.selected === index ? "page" : undefined} onClick={() => { onNavigate?.(); api?.scrollTo(index); }}><span aria-hidden="true" className={cn("h-2 rounded-full transition-all motion-reduce:transition-none", state.selected === index ? "w-5 bg-[#2E7017]" : "w-2 bg-[#2E7017]/25")} /></Button>)}
+      {Array.from({ length: state.pages }, (_, index) => <Button key={index} variant="ghost" size="iconSm" className="size-7 rounded-full hover:bg-[#2E7017]/10 sm:size-8" aria-label={t("page", { current: index + 1, total: state.pages })} aria-controls={id} aria-current={state.selected === index ? "page" : undefined} onClick={() => { onNavigate?.(); api?.scrollTo(index); }}><span aria-hidden="true" className={cn("h-2 rounded-full transition-all motion-reduce:transition-none", state.selected === index ? cn("w-5", indicatorTone === "inverse" ? "bg-[#FFFAE7]" : "bg-[#2E7017]") : cn("w-2", indicatorTone === "inverse" ? "bg-[#FFFAE7]/40" : "bg-[#2E7017]/25"))} /></Button>)}
     </div> : null}
   </div>;
 }

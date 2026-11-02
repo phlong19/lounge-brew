@@ -1,4 +1,5 @@
 "use client";
+import { HomeTicketShows } from "@/components/lounge/home-ticket-shows";
 import {PublicQueryState} from "@/components/lounge/public-query-state";
 import {useQuery} from "@tanstack/react-query";
 import {publicEventsOptions} from "@/lib/public/query";
@@ -23,7 +24,7 @@ export function HomeShows({locale}:{locale:AppLocale}) {
   const t=useTranslations("PreservedHome"),shows=useTranslations("Shows");
   const query=useQuery(publicEventsOptions());
   const events=localizeEvents(locale,homepageEvents(query.data??[]));
-  return <Section id="shows" data-home-section="shows" aria-labelledby="shows-heading" className={surfaceStyles.evening}>
+  return <><Section id="shows" data-home-section="shows" aria-labelledby="shows-heading" className={surfaceStyles.evening}>
     <Container><Stack gap="xl">
 
       {query.data===undefined?<PublicQueryState error={query.isError} english={locale==="en"} retry={()=>void query.refetch()} />:events.length ? <Carousel label={t("showsTitle")} columns={4} autoplay showCounter={false} heading={<Reveal><Stack gap="sm"><Typography as="h2" variant="title" id="shows-heading">{t("showsTitle")}</Typography><Typography variant="lead">{t("showsDescription")}</Typography></Stack></Reveal>} action={<AppLink href="/events" className="inline-flex min-h-11 items-center gap-3 font-medium hover:underline">{t("allShows")}<Icon name="arrowUpRight" /></AppLink>}>
@@ -33,5 +34,5 @@ export function HomeShows({locale}:{locale:AppLocale}) {
         </AppLink></Article></CarouselItem>)}
       </Carousel> : <Stack><Typography as="h2" variant="title" id="shows-heading">{t("showsTitle")}</Typography><Typography variant="lead">{shows("empty")}</Typography></Stack>}
     </Stack></Container>
-  </Section>;
+  </Section><HomeTicketShows events={events} locale={locale} loading={query.data===undefined} error={query.isError} retry={()=>void query.refetch()} /></>;
 }
