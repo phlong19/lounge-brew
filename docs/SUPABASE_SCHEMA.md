@@ -19,7 +19,7 @@ Deployed 30 October 2026 to `brew` (`zcftrbvrfiypqtwhmxxj`). This document cover
 | Provenance | `source_url` | Optional HTTPS source reference |
 | Ownership / timestamps | `created_by`, `updated_by`, `created_at`, `updated_at` | Auth-user references and timestamps; audit actor is recorded separately |
 
-The original `description_vi` / `description_en` columns remain for compatibility. The new editor writes full page content instead. The homepage's four nearest future visible events and booking eligibility are derived from start time and visibility, so there are no manual homepage or reservation-allow flags to persist.
+The original `description_vi` / `description_en` columns remain for compatibility. The new editor writes full page content instead. The homepage's nearest future visible events and booking eligibility are derived from start time and visibility, so there are no manual homepage or reservation-allow flags to persist.
 
 ## Video editor → `public.video_settings`
 
@@ -47,15 +47,15 @@ Migration `20261101010000_reservation_workflow.sql` activates the service-only a
 
 `staff_members` grants active roles. Active admin/editor staff can handle the booking queue. The legacy booking-only role is retired; the two-role constraint matches the current staff form. Ordinary signed-in users cannot read requests. Inactive staff lose access. Existing admin/editor content authorization is unchanged.
 
-One application-owned `audit_log` now stores content, media, seating, staff and reservation changes. It preserves the previous content audit IDs/payloads and imports any old reservation activity. Each row includes entity table/record, action/operation, actor/type, time, changed field names, old/new snapshots and metadata. All nine business tables use the shared trigger. Contact names, phone numbers, emails, notes and idempotency keys are excluded from reservation snapshots. Staff can read reservation history; only admins can read the other application history. Browser clients cannot insert, update or delete audit rows. Supabase's platform-managed Auth logs remain provider-owned; later password/account actions should add a redacted application audit event after success, never a password/hash/key.
+One application-owned `audit_log` now stores content, media, seating, staff and reservation changes. It preserves the previous content audit IDs/payloads and imports any old reservation activity. Each row includes entity table/record, action/operation, actor/type, time, changed field names, old/new snapshots and metadata. All nine business tables use the shared trigger. Contact names, phone numbers, emails, notes and idempotency keys are excluded from reservation snapshots. Staff can read reservation history; only admins can read the other application history. Browser clients cannot insert, update or delete audit rows. Supabase's platform-managed Auth logs remain provider-owned; password/account actions add a redacted application audit event after success, never a password/hash/key.
 
 Privileged Auth operations use the server-only `SUPABASE_SECRET_KEY` (`sb_secret_…`) client. Authenticated database writes continue to use the user's session and RLS so audit actors remain correct. The Postgres role is still named `service_role`; SQL grants to that role are not legacy API-key usage.
 
 ## Migration and verification
 
-- Keep `0001_initial_schema.sql`; apply `20261030000000_admin_persistence.sql` afterward. The new migration removes the scaffold's permissive authenticated-write policies without dropping legacy data.
-- Initial remote deployment applied both exact files atomically using the Management SQL API and recorded matching `version`, `name`, and `statements` in `supabase_migrations.schema_migrations`. Future CLI migration checks can match these local versions.
-- `supabase/tests/schema_contract.sql` runs inside a rolled-back transaction. It checks required posters, integer fees, valid times, source IDs, duplicate-request protection, audits, anonymous/ordinary/active-editor/inactive-editor/admin permissions and private-data isolation. Test fixtures must never be committed.
+- Fresh projects apply only `20261102010000_app_baseline.sql` and `20261102010100_app_initialization.sql`. Existing projects must reconcile migration history instead of replaying baseline DDL; see `supabase/README.md`.
+- The existing project now records the two baseline versions in `supabase_migrations.schema_migrations`. Historical migration references below describe development history and are archived under `supabase/history/pre-baseline-20261102`; they are not current deployment instructions.
+- `supabase/tests/schema_contract.sql` runs inside a rolled-back transaction. It checks required posters, integer fees, valid times, source IDs, duplicate-request protection, audits, anonymous/ordinary/active-editor/inactive-editor/admin permissions and private-data isolation. Test fixture rows must never persist in the live database; SQL fixture definitions are versioned.
 - `src/types/database.ts` is generated from the deployed public schema, not hand-authored guesses.
 
 ## Current integration state
@@ -73,3 +73,7 @@ React Hook Form owns the editor and live preview; React Query loads/saves the co
 The homepage hydrates a shared public video query from anonymous, 60-second tagged reads. API responses contain only the public configuration, never staff fields. Hidden/missing configured records return null and do not resurrect a fallback video. Transport errors remain errors so the client can retry/retain prior data. A static verified default is used only without Supabase configuration. English uses `heading_en` when supplied, otherwise `heading_vi`. Saves immediately invalidate the `video-settings` tag and homepage path; open tabs recheck on focus or every minute.
 
 Validation includes pure URL/input tests, rolled-back SQL checks for editor/ordinary permissions and audit attribution, live API save/reload/hide/stale-save/cache tests, and browser form/public rendering checks. Live test changes are restored through authenticated updates; audit history is retained.
+
+## Two-file installation baseline — 2 November 2026
+
+Active migrations now consist of app_baseline and app_initialization. Archived historical SQL is under supabase/history. The existing project migration history was reconciled without replaying schema creation or initialization; application row counts stayed unchanged. See supabase/README.md for fresh setup, one-time history transition and local verification.

@@ -1,0 +1,42 @@
+[
+  {
+    "file": "0001_initial_schema.sql",
+    "sha256": "b39d39bd59677fe5d49571ccb62eb47ac59cc16c5027c22335bdced60615c49f"
+  },
+  {
+    "file": "20261030000000_admin_persistence.sql",
+    "sha256": "5f1e7cdeb63de9374637e03e9b5772eef95fc7c6fad01262cdcec688c9f9c959"
+  },
+  {
+    "file": "20261030010000_event_crud.sql",
+    "sha256": "bb1f5c8e01fb911b98cfa4f94cddb85c6dc5e5e38b88d5fc48bb50ba46e35aef"
+  },
+  {
+    "file": "20261030020000_seating_settings.sql",
+    "sha256": "71bbb5255d5ddea54ec86def5a5ec8d4fd288787b0e5eb855f9b7f62666eba81"
+  },
+  {
+    "file": "20261031000000_staff_display_names.sql",
+    "sha256": "e3dd8b8b4ff35a728c2d6885c3d6775d7e6d5d4ec8fd983c5898595e3fc8b79b"
+  },
+  {
+    "file": "20261101000000_reservation_foundation.sql",
+    "sha256": "56e11e119ebef7da51b71ad6bcb3e4dec1290e17f53a0919a539c9fef09d6da4"
+  },
+  {
+    "file": "20261101010000_reservation_workflow.sql",
+    "sha256": "7c31b9c5d9d4b24c8cda0ab3ee26f424258ac95549ad6c37e1cc05dc4b6d910c"
+  },
+  {
+    "file": "20261101020000_staff_security.sql",
+    "sha256": "c4a0a92d5973fadf6c8017afd80fd9035fdecc0b8e00d5d93575d54a1bac35ca"
+  },
+  {
+    "file": "20261101030000_home_video_config.sql",
+    "sha256": "3e0a637efbcfd93a5fc564f3d5c8c84887603b08b1c4c4e41151e201e283a1e6"
+  },
+  {
+    "file": "20261102000000_staff_role_alignment.sql",
+    "sha256": "b1b3093f00b54719bde20accc93703a214a5c2e57b16b716ae27b83a17448b7e"
+  }
+]

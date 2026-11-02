@@ -1,4 +1,4 @@
-import {Great_Vibes} from "next/font/google";
+import {scriptHeadingFont as headingFont} from "@/lib/fonts";
 import {eventHeadingTitle} from "@/lib/events/title";
 import {eventStyles} from "@/lib/ui/event-styles";
 import {cn} from "@/lib/utils";
@@ -32,7 +32,6 @@ import { localizeEvent } from "@/lib/menu/map-menu";
 import { isBookableEvent, isEventEnded } from "@/lib/server/content-policy";
 import { getEventById } from "@/lib/server/lounge-data";
 
-const headingFont=Great_Vibes({subsets:["latin","vietnamese"],weight:"400",display:"swap"});
 
 type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

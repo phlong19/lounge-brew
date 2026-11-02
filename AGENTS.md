@@ -38,7 +38,7 @@ These rules apply to all work in this repository. Explicit user instructions tak
 
 - Preserve the real Trixie logo/identity and use authentic venue/artist imagery.
 - Keep the flipbook as the primary menu experience. Use the latest 18 original menu pages from `trixie.com.vn`, preserving their artwork and complete proportions.
-- Desktop supports a book spread; mobile supports readable single pages. Provide category/page navigation, zoom, expand, button/keyboard operation, and reduced-motion behavior.
+- Desktop supports a book spread with a centered closed cover, constant page dimensions and simultaneous cover/centering motion; mobile supports readable single pages. Keep category bookmarks, side arrows, keyboard operation and reduced-motion behavior. Per the user's 2 November 2026 revision, do not restore the menu zoom/expand dialog or visible page counter.
 - Translate navigation and viewer controls through the existing `next-intl` setup. The preserved bilingual menu artwork does not change with the interface language.
 - Use verified show information and venue-local time formatting. Do not invent dates, prices, artists, capacity, availability, or successful bookings.
 - Keep admin authorization/persistence separate from the public visual redesign.

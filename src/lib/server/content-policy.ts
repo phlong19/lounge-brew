@@ -57,9 +57,9 @@ export function isBookableEvent(event: EventRow, now: Date = new Date()): boolea
 export function bookableEvents(events: EventRow[], now: Date = new Date()): EventRow[] {
   return events.filter(event => isBookableEvent(event, now)).sort((left, right) => Date.parse(left.event_date) - Date.parse(right.event_date));
 }
-/** Eight nearest future shows, earliest date first. */
+/** All visible future shows, earliest date first. */
 export function homepageEvents(events: EventRow[], now: Date = new Date()): EventRow[] {
-  return bookableEvents(events, now).slice(0, 8);
+  return bookableEvents(events, now);
 }
 
 export function publishedArticles(

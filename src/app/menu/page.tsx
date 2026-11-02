@@ -1,3 +1,6 @@
+import { scriptHeadingFont as headingFont } from "@/lib/fonts";
+import { eventStyles } from "@/lib/ui/event-styles";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -18,28 +21,23 @@ export default async function MenuPage() {
   return (
     <>
       <SiteHeader active="menu" />
-      <Main id="main-content">
+      <Main id="main-content" className="min-h-0">
         <Section className="py-6 md:py-8">
           <Container>
             <Stack gap="sm">
-              <Typography as="h1" variant="title" tone="brand">
+              <Typography
+                as="h1"
+                variant="title"
+                tone="ink"
+                className={cn(headingFont.className, eventStyles.detailHeading)}
+              >
                 {t("title")}
-              </Typography>
-              <Typography tone="muted" className="max-w-2xl">
-                {t("description")}
               </Typography>
             </Stack>
           </Container>
         </Section>
-        <Container className="pb-16">
+        <Container className="max-w-[1440px] pb-16">
           <FlipbookMenu pages={buildImageMenuPages(locale as AppLocale)} />
-          <Typography
-            variant="small"
-            tone="muted"
-            className="mx-auto mt-8 max-w-3xl text-center"
-          >
-            {t("artworkNote")}
-          </Typography>
         </Container>
       </Main>
       <SiteFooter />

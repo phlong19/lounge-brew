@@ -1,5 +1,9 @@
+-- Caller wraps this fixture-only contract in BEGIN ... ROLLBACK.
+insert into public.media_assets(id,bucket_id,object_path,original_filename,mime_type,size_bytes,width,height)
+values ('70000000-0000-4000-8000-000000000001','lounge-public','tests/lower.jpg','lower.jpg','image/jpeg',100,10,10),
+ ('70000000-0000-4000-8000-000000000002','lounge-public','tests/upper.jpg','upper.jpg','image/jpeg',100,10,10);
+update public.seating_settings set lower_asset_id='70000000-0000-4000-8000-000000000001',upper_asset_id='70000000-0000-4000-8000-000000000002',is_visible=true where id='home';
 
-begin;
 do $$ begin
  if (select count(*) from public.seating_settings where id='home') <> 1 then raise exception 'Missing singleton'; end if;
  begin
@@ -31,4 +35,3 @@ do $$ begin
  if exists(select 1 from public.seating_settings) then raise exception 'Hidden maps exposed'; end if;
 end $$;
 reset role;
-rollback;

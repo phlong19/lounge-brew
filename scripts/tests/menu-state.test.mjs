@@ -31,3 +31,17 @@ test("page links preserve other query values and anchors without adding empty pa
   );
   assert.equal(updateMenuUrl("/menu?page=3#book", 0), "/menu#book");
 });
+
+test("grouped bookmarks retain every original page and select both pages of each paired section",async()=>{
+ const {menuBookmarks}=await import("../../src/lib/menu/menu-bookmarks.ts");
+ const {buildImageMenuPages}=await import("../../src/lib/menu/build-menu-pages.ts");
+ const pages=buildImageMenuPages("vi"),before=JSON.stringify(pages),bookmarks=menuBookmarks(pages);
+ assert.equal(bookmarks.length,10);
+ for(const [id,label,indices]of [["wine","Rượu",[7,8]],["snacks","Đồ ăn nhẹ",[9,10]],["appetisers","Khai vị & salad",[11,12]],["meat","Thịt",[13,14]]]){
+  const group=bookmarks.find(item=>item.id===id);assert.equal(group.label,label);assert.equal(group.page,indices[0]);assert.deepEqual(group.pages,indices);
+  for(const page of indices)assert.equal(bookmarks.find(item=>item.pages.includes(page))?.id,id);
+ }
+ assert.deepEqual(menuBookmarks(pages,false,true).flatMap(item=>item.pages).sort((a,b)=>a-b),Array.from({length:18},(_,i)=>i));
+ assert.equal(menuBookmarks(buildImageMenuPages("en"),true).find(item=>item.id==="meat").label,"Meat");
+ assert.equal(JSON.stringify(pages),before);
+});

@@ -15,6 +15,7 @@ import {
 import HTMLFlipBook from "react-pageflip";
 
 import { Surface } from "@/components/ui/layout";
+import { menuStep } from "./use-menu-navigation";
 import { visibleMenuPages } from "@/lib/menu/menu-state";
 import type { MenuPage } from "@/types/domain";
 import { MenuArtwork } from "./menu-artwork";
@@ -59,6 +60,8 @@ export type MenuBookProps = {
   spread: boolean;
   onPageChange: (page: number) => void;
   onReady: () => void;
+  onMotionTarget: (page: number | null) => void;
+  onTurningChange: (turning: boolean) => void;
 };
 
 /** Measure owned layout without writing styles; engine sizing stays in its API. */
@@ -100,8 +103,14 @@ function MenuBookEngine({
   onPageChange,
   onReady,
   minimumWidth,
+  onMotionTarget,
+  onTurningChange,
 }: MenuBookProps & { minimumWidth: number }) {
   const engine = useRef<EngineRef>(null);
+  const pointer = useRef<{ active: boolean; direction: -1 | 1 }>({
+    active: false,
+    direction: 1,
+  });
   const instance = useRef<EngineApi | null>(null);
   const requested = useRef(page);
   const callback = useRef(onPageChange);
@@ -141,47 +150,87 @@ function MenuBookEngine({
   );
   return (
     <BookContext.Provider value={{ page, visible }}>
-      <BookEngine
-        ref={engine}
-        startPage={page}
-        width={440}
-        height={612}
-        size="stretch"
-        minWidth={minimumWidth}
-        maxWidth={560}
-        minHeight={390}
-        maxHeight={780}
-        showCover
-        usePortrait={!spread}
-        drawShadow
-        maxShadowOpacity={0.25}
-        autoSize
-        mobileScrollSupport
-        clickEventForward
-        useMouseEvents
-        swipeDistance={35}
-        showPageCorners={false}
-        disableFlipByClick
-        flippingTime={650}
-        startZIndex={1}
-        className="mx-auto"
-        onInit={() => {
-          instance.current = engine.current?.pageFlip() ?? null;
-          setReady(true);
-          readyCallback.current();
+      <Surface
+        className="h-full w-full"
+        onPointerDownCapture={(event) => {
+          pointer.current = {
+            active: true,
+            direction:
+              event.clientX <
+              event.currentTarget.getBoundingClientRect().left +
+                event.currentTarget.getBoundingClientRect().width / 2
+                ? -1
+                : 1,
+          };
         }}
-        onFlip={(event: { data: number }) => {
-          // A right-hand category stays selected when the engine reports its left page.
-          if (
-            !visibleMenuPages(event.data, pages.length, spread).includes(
-              requested.current,
-            )
-          )
-            callback.current(event.data);
+        onPointerUpCapture={() => {
+          pointer.current.active = false;
         }}
       >
-        {children}
-      </BookEngine>
+        <BookEngine
+          ref={engine}
+          startPage={page}
+          width={440}
+          height={612}
+          size="stretch"
+          minWidth={minimumWidth}
+          maxWidth={560}
+          minHeight={160}
+          maxHeight={780}
+          showCover
+          usePortrait={!spread}
+          drawShadow
+          maxShadowOpacity={0.25}
+          autoSize
+          mobileScrollSupport
+          clickEventForward
+          useMouseEvents
+          swipeDistance={35}
+          showPageCorners={false}
+          disableFlipByClick
+          flippingTime={650}
+          startZIndex={1}
+          className="mx-auto"
+          onInit={() => {
+            instance.current = engine.current?.pageFlip() ?? null;
+            setReady(true);
+            readyCallback.current();
+          }}
+          onChangeState={(event: { data: string }) => {
+            onTurningChange(
+              event.data === "flipping" || event.data === "user_fold",
+            );
+            if (event.data === "user_fold" && pointer.current.active) {
+              const current =
+                engine.current?.pageFlip()?.getCurrentPageIndex() ?? page;
+              onMotionTarget(
+                menuStep(
+                  current,
+                  pages.length,
+                  spread,
+                  pointer.current.direction,
+                ),
+              );
+            }
+            if (event.data === "read") {
+              pointer.current.active = false;
+              onMotionTarget(null);
+            }
+          }}
+          onFlip={(event: { data: number }) => {
+            onMotionTarget(null);
+            // A right-hand category stays selected when the engine reports its left page.
+            if (
+              !visibleMenuPages(event.data, pages.length, spread).includes(
+                requested.current,
+              )
+            )
+              callback.current(event.data);
+          }}
+        >
+          {children}
+        </BookEngine>
+      </Surface>
     </BookContext.Provider>
   );
 }
