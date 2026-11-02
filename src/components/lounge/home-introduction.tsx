@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { Button } from "@/components/ui/button";
 import { RichText } from "@/components/content/rich-text";
 import { Icon } from "@/components/ui/icon";
 import { Article, Container, Grid, Section, Stack, Surface } from "@/components/ui/layout";
@@ -28,7 +29,7 @@ export async function HomeIntroduction({ locale }: { locale: AppLocale }) {
           <Stack gap="lg">
             <Typography as="h3" variant="subheading" id={`${item.id}-heading`}>{item.title[locale]}</Typography>
             <RichText content={item.content[locale]} tone={index === 2 ? "inverse" : "ink"} />
-            {index < 2 ? <AppLink href={item.localHref} className={dayStyles.action}>{t(index === 0 ? "exploreMenu" : "seeProgramme")}<Icon name="arrowUpRight" /></AppLink> : null}
+            {index < 2 ? <Button asChild variant={index === 0 ? "primary" : "outline"} className="w-fit"><AppLink href={item.localHref}>{t(index === 0 ? "exploreMenu" : "seeProgramme")}<Icon name="arrowUpRight" /></AppLink></Button> : null}
           </Stack>
         </Reveal>
       </Grid></Container>

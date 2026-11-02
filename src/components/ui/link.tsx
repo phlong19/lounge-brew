@@ -53,7 +53,7 @@ export function AppLink({
           new Set(`${rel ?? ""} noopener noreferrer`.trim().split(/\s+/)),
         ).join(" ")
       : rel;
-  const classes = cn("rounded-sm underline-offset-4", focusStyles, className);
+  const classes = cn("cursor-pointer rounded-sm underline-offset-4", disabled && "cursor-default", focusStyles, className);
   if (disabled) {
     return (
       <a

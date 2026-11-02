@@ -9,12 +9,21 @@ import {
 } from "react";
 
 import {
+  availableMenuPage,
+  compactMenuStep,
   readMenuPage,
   updateMenuUrl,
   visibleMenuPages,
 } from "@/lib/menu/menu-state";
 import { menuKeyDirection, menuStep } from "./use-menu-navigation";
 
+const phoneQuery = "(max-width: 639px)";
+function subscribePhone(callback: () => void) {
+  const query = window.matchMedia(phoneQuery);
+  query.addEventListener("change", callback);
+  return () => query.removeEventListener("change", callback);
+}
+const phoneSnapshot = () => window.matchMedia(phoneQuery).matches;
 const desktopQuery = "(min-width: 1024px)";
 const reducedQuery = "(prefers-reduced-motion: reduce)";
 function subscribeDesktop(callback: () => void) {
@@ -33,46 +42,47 @@ const serverDesktop = () => false;
 const serverMotion = () => true;
 
 export function useMenuViewer(total: number) {
-  const [page, setPage] = useState(0);
+  const [storedPage, setPage] = useState(0);
+  const phone = useSyncExternalStore(subscribePhone, phoneSnapshot, serverDesktop);
   const spread = useSyncExternalStore(
     subscribeDesktop,
     desktopSnapshot,
     serverDesktop,
   );
+  const page = availableMenuPage(storedPage, total, !spread);
   const reducedMotion = useSyncExternalStore(
     subscribeMotion,
     motionSnapshot,
     serverMotion,
   );
   useEffect(() => {
-    const readLocation = () =>
-      setPage(
-        readMenuPage(
-          new URL(window.location.href).searchParams.get("page"),
-          total,
-        ),
-      );
+    const readLocation = () => {
+      const raw = readMenuPage(new URL(window.location.href).searchParams.get("page"), total);
+      const next = availableMenuPage(raw, total, !spread);
+      setPage(next);
+      if (raw !== next) window.history.replaceState(null, "", updateMenuUrl(window.location.href, next));
+    };
     readLocation();
     window.addEventListener("popstate", readLocation);
     return () => window.removeEventListener("popstate", readLocation);
-  }, [total]);
+  }, [total, spread]);
 
   const goTo = useCallback(
     (target: number) => {
-      const next = Math.max(0, Math.min(total - 1, target));
+      const next = availableMenuPage(target, total, !spread);
       setPage(next);
       const href = updateMenuUrl(window.location.href, next);
       if (
         `${window.location.pathname}${window.location.search}${window.location.hash}` !==
         href
       ) {
-        window.history.pushState(window.history.state, "", href);
+        window.history.pushState(null, "", href);
       }
     },
-    [total],
+    [total, spread],
   );
   const step = (direction: -1 | 1) =>
-    goTo(menuStep(page, total, spread, direction));
+    goTo(!spread ? compactMenuStep(page, total, direction) : menuStep(page, total, spread, direction));
   function onKeyDown(event: KeyboardEvent<HTMLElement>) {
     const target = event.target;
     if (
@@ -99,5 +109,5 @@ export function useMenuViewer(total: number) {
     }
   }
   const visible = visibleMenuPages(page, total, spread);
-  return { page, spread, reducedMotion, visible, goTo, step, onKeyDown };
+  return { page, phone, spread, reducedMotion, visible, goTo, step, onKeyDown };
 }

@@ -15,6 +15,7 @@ import {
 import HTMLFlipBook from "react-pageflip";
 
 import { Surface } from "@/components/ui/layout";
+import { menuStep } from "./use-menu-navigation";
 import { visibleMenuPages } from "@/lib/menu/menu-state";
 import type { MenuPage } from "@/types/domain";
 import { MenuArtwork } from "./menu-artwork";
@@ -23,7 +24,8 @@ import { MenuArtwork } from "./menu-artwork";
 // Keep that third-party implementation detail in this adapter; owned UI uses classes.
 type EngineProps = Omit<ComponentProps<typeof HTMLFlipBook>, "style" | "ref">;
 type EngineApi = {
-  flip: (page: number) => void;
+  flipNext: () => void;
+  flipPrev: () => void;
   turnToPage: (page: number) => void;
   getCurrentPageIndex: () => number;
   destroy: () => void;
@@ -59,6 +61,7 @@ export type MenuBookProps = {
   spread: boolean;
   onPageChange: (page: number) => void;
   onReady: () => void;
+  onMotionTarget: (page: number | null) => void;
 };
 
 /** Measure owned layout without writing styles; engine sizing stays in its API. */
@@ -100,17 +103,25 @@ function MenuBookEngine({
   onPageChange,
   onReady,
   minimumWidth,
+  onMotionTarget,
 }: MenuBookProps & { minimumWidth: number }) {
   const engine = useRef<EngineRef>(null);
+  const pointer = useRef<{ active: boolean; direction: -1 | 1 }>({
+    active: false,
+    direction: 1,
+  });
   const instance = useRef<EngineApi | null>(null);
   const requested = useRef(page);
+  const pendingTarget = useRef<number | null>(null);
+  const engineState = useRef("read");
+  const [displayedPage, setDisplayedPage] = useState(page);
   const callback = useRef(onPageChange);
   const readyCallback = useRef(onReady);
   const [ready, setReady] = useState(false);
   requested.current = page;
   callback.current = onPageChange;
   readyCallback.current = onReady;
-  const visible = visibleMenuPages(page, pages.length, spread);
+  const visible = visibleMenuPages(displayedPage, pages.length, spread);
 
   useEffect(
     () => () => {
@@ -122,15 +133,17 @@ function MenuBookEngine({
   useEffect(() => {
     if (!ready) return;
     const api = engine.current?.pageFlip();
-    if (
-      api &&
-      !visibleMenuPages(
-        api.getCurrentPageIndex(),
-        pages.length,
-        spread,
-      ).includes(page)
-    )
-      api.flip(page);
+    if (!api) return;
+    // Keep controls live. A request made during a turn/drag is settled when it ends.
+    if (pendingTarget.current !== null || engineState.current !== "read") {
+      pendingTarget.current = page;
+      return;
+    }
+    const current = api.getCurrentPageIndex();
+    if (!visibleMenuPages(current, pages.length, spread).includes(page)) {
+      pendingTarget.current = page;
+      if (page > current) api.flipNext(); else api.flipPrev();
+    }
   }, [page, pages.length, ready, spread]);
 
   // Stable child elements prevent react-pageflip from rebuilding its HTML pages on
@@ -140,48 +153,99 @@ function MenuBookEngine({
     [pages],
   );
   return (
-    <BookContext.Provider value={{ page, visible }}>
-      <BookEngine
-        ref={engine}
-        startPage={page}
-        width={440}
-        height={612}
-        size="stretch"
-        minWidth={minimumWidth}
-        maxWidth={560}
-        minHeight={390}
-        maxHeight={780}
-        showCover
-        usePortrait={!spread}
-        drawShadow
-        maxShadowOpacity={0.25}
-        autoSize
-        mobileScrollSupport
-        clickEventForward
-        useMouseEvents
-        swipeDistance={35}
-        showPageCorners={false}
-        disableFlipByClick
-        flippingTime={650}
-        startZIndex={1}
-        className="mx-auto"
-        onInit={() => {
-          instance.current = engine.current?.pageFlip() ?? null;
-          setReady(true);
-          readyCallback.current();
+    <BookContext.Provider value={{ page: displayedPage, visible }}>
+      <Surface
+        className="h-full w-full"
+        onPointerDownCapture={(event) => {
+          pointer.current = {
+            active: true,
+            direction:
+              event.clientX <
+              event.currentTarget.getBoundingClientRect().left +
+                event.currentTarget.getBoundingClientRect().width / 2
+                ? -1
+                : 1,
+          };
         }}
-        onFlip={(event: { data: number }) => {
-          // A right-hand category stays selected when the engine reports its left page.
-          if (
-            !visibleMenuPages(event.data, pages.length, spread).includes(
-              requested.current,
-            )
-          )
-            callback.current(event.data);
+        onPointerUpCapture={() => {
+          pointer.current.active = false;
         }}
       >
-        {children}
-      </BookEngine>
+        <BookEngine
+          ref={engine}
+          startPage={page}
+          width={440}
+          height={612}
+          size="stretch"
+          minWidth={minimumWidth}
+          maxWidth={560}
+          minHeight={160}
+          maxHeight={780}
+          showCover
+          usePortrait={!spread}
+          drawShadow
+          maxShadowOpacity={0.25}
+          autoSize
+          mobileScrollSupport
+          clickEventForward
+          useMouseEvents
+          swipeDistance={35}
+          showPageCorners={false}
+          disableFlipByClick={spread}
+          flippingTime={650}
+          startZIndex={1}
+          className="mx-auto"
+          onInit={() => {
+            instance.current = engine.current?.pageFlip() ?? null;
+            setReady(true);
+            readyCallback.current();
+          }}
+          onChangeState={(event: { data: string }) => {
+            engineState.current = event.data;
+            if (event.data === "user_fold" && pointer.current.active) {
+              const current =
+                engine.current?.pageFlip()?.getCurrentPageIndex() ?? page;
+              onMotionTarget(
+                menuStep(
+                  current,
+                  pages.length,
+                  spread,
+                  pointer.current.direction,
+                ),
+              );
+            }
+            if (event.data === "read") {
+              pointer.current.active = false;
+              onMotionTarget(null);
+              if (pendingTarget.current !== null) {
+                queueMicrotask(() => {
+                  const api = engine.current?.pageFlip();
+                  if (!api) return;
+                  // Read the latest request, including changes made while the page was held.
+                  const destination = requested.current;
+                  if (!visibleMenuPages(api.getCurrentPageIndex(), pages.length, spread).includes(destination)) api.turnToPage(destination);
+                  pendingTarget.current = null;
+                  setDisplayedPage(destination);
+                });
+              }
+            }
+          }}
+          onFlip={(event: { data: number }) => {
+            onMotionTarget(null);
+            if (pendingTarget.current !== null) return;
+            setDisplayedPage(event.data);
+            // A right-hand category stays selected when the engine reports its left page.
+            if (
+              !visibleMenuPages(event.data, pages.length, spread).includes(
+                requested.current,
+              )
+            )
+              callback.current(event.data);
+          }}
+        >
+          {children}
+        </BookEngine>
+      </Surface>
     </BookContext.Provider>
   );
 }

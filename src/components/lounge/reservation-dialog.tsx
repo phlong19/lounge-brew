@@ -42,7 +42,7 @@ export function ReservationDialog({ today }: { today: string }) {
       else Array.from(document.querySelectorAll<HTMLElement>("[data-reservation-focus-fallback]")).find(node => node.getClientRects().length)?.focus();
     }}>
       <DialogHeader className={reservationStyles.header}><DialogTitle>{t("reviewTitle")}</DialogTitle></DialogHeader>
-      <Surface className={reservationStyles.body}>{query.data===undefined?<PublicQueryState error={query.isError} english={locale==="en"} retry={()=>void query.refetch()} />:null}<ReservationForm key={eventId ?? "general"} today={today} events={events} initialEventId={eventId} /></Surface>
+      <Surface className={reservationStyles.body}>{query.data===undefined?<PublicQueryState error={query.isError} english={locale==="en"} retry={()=>void query.refetch()} />:<ReservationForm key={eventId ?? "general"} today={today} events={events} initialEventId={eventId} />}</Surface>
     </DialogContent>
   </Dialog>;
 }

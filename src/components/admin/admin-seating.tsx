@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import {ContentSkeleton} from "@/components/ui/loading-state";
+import {useToast} from "@/components/ui/toast";
+import {AlertMessage} from "@/components/ui/alert";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { adminKeys } from "@/lib/admin/query";
@@ -28,21 +30,21 @@ function SeatingForm({item,onSaved}:{item:SeatingSettings;onSaved:()=>void}) {
   await client.invalidateQueries({queryKey:adminKeys.seating});
  }});
  return <Form noValidate inert={save.isPending} aria-busy={save.isPending} onSubmit={handleSubmit(draft=>save.mutate(draft))}>
-  {save.error?<Typography role="alert" tone="danger">{save.error.message}</Typography>:null}
+  {isDirty?<AlertMessage variant="warning">Có thay đổi chưa lưu</AlertMessage>:null}
+  {save.error?<AlertMessage variant="destructive">{save.error.message}</AlertMessage>:null}
   <Grid className="md:grid-cols-2">{(["lower","upper"] as const).map((key,index)=><Stack key={key}>
    <Typography as="h2" variant="subheading">Tầng {index+1}</Typography>
    <ImageDropzone id={"seating-"+key} file={values[key+"File" as "lowerFile"|"upperFile"]??undefined} existingSrc={values[key+"_asset_id" as "lower_asset_id"|"upper_asset_id"]?seatingImageUrl(item[key]):null} onChange={file=>{setValue(key+"File" as "lowerFile"|"upperFile",file,{shouldDirty:true});setValue(key+"_asset_id" as "lower_asset_id"|"upper_asset_id",null,{shouldDirty:true});}} />
   </Stack>)}</Grid>
   <Controller control={control} name="is_visible" render={({field})=><CheckboxField label="Hiển thị sơ đồ trên trang sự kiện" checked={field.value} disabled={save.isPending} onChange={event=>field.onChange(event.target.checked)} />} />
-  <Button type="submit" className="w-fit" disabled={save.isPending||!isDirty}>{save.isPending?"Đang lưu…":"Lưu sơ đồ"}</Button>
+  <Button type="submit" className="ml-auto w-fit" disabled={save.isPending||!isDirty}>{save.isPending?"Đang lưu…":"Lưu"}</Button>
  </Form>;
 }
 export function AdminSeating() {
- const [notice,setNotice]=useState("");
+ const toast=useToast();
  const query=useQuery({queryKey:adminKeys.seating,queryFn:async ({signal})=>{const data=await adminRequest("/api/admin/seating",{signal});return data.item as SeatingSettings;}});
  return <Stack gap="lg">
-  <Typography tone="muted">Sơ đồ dùng chung cho tất cả sự kiện. Thay đổi tại đây sẽ cập nhật trên mọi trang sự kiện.</Typography>
-  {notice?<Typography role="status">{notice}</Typography>:null}
-  {query.isPending?<Typography role="status">Đang tải sơ đồ…</Typography>:query.error?<Stack><Typography role="alert" tone="danger">{query.error.message}</Typography><Button variant="outline" className="w-fit" onClick={()=>void query.refetch()}>Tải lại cấu hình</Button></Stack>:<SeatingForm key={query.data.updated_at} item={query.data} onSaved={()=>setNotice("Đã lưu sơ đồ cho tất cả trang sự kiện.")} />}
+  <AlertMessage>Sơ đồ dùng chung cho tất cả sự kiện. Thay đổi tại đây sẽ cập nhật trên mọi trang sự kiện.</AlertMessage>
+  {query.isPending?<Grid className="md:grid-cols-2"><ContentSkeleton image label="Đang tải sơ đồ…" /><ContentSkeleton image label="Đang tải sơ đồ…" /></Grid>:query.error?<Stack><AlertMessage variant="destructive">{query.error.message}</AlertMessage><Button variant="outline" className="w-fit" onClick={()=>void query.refetch()}>Tải lại cấu hình</Button></Stack>:<SeatingForm key={query.data.updated_at} item={query.data} onSaved={()=>toast("Đã lưu sơ đồ cho tất cả trang sự kiện.")} />}
  </Stack>;
 }

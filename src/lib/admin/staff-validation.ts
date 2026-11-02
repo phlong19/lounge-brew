@@ -1,5 +1,5 @@
-import type {StaffRole} from "@/lib/admin/roles";
-export type NewStaff = {display_name:string;email:string;password:string;role:StaffRole};
+import type {ContentRole} from "@/lib/admin/roles";
+export type NewStaff = {display_name:string;email:string;password:string;role:ContentRole};
 export class StaffInputError extends Error {}
 export const staffPasswordPattern = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\\s])\\S{8,22}";
 export const staffPasswordHint = "8–22 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt; không chứa khoảng trắng.";

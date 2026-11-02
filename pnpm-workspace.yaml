@@ -1,4 +1,10 @@
 allowBuilds:
-  '@tailwindcss/oxide': set this to true or false
-  sharp: set this to true or false
-  unrs-resolver: set this to true or false
+  '@parcel/watcher': false
+  '@swc/core': false
+  '@tailwindcss/oxide': true
+  sharp: true
+  unrs-resolver: true
+
+# v10 consumers use the same named API; v3 consumers retain their callable API.
+overrides:
+  'minimatch@>=10.0.0 <11.0.1': 11.0.1

@@ -52,7 +52,7 @@ export function eventPayload(input: unknown, partial = false): Record<string, un
   const fee = raw.additional_fee ?? raw.additionalFee;
   if ("additional_fee" in raw || "additionalFee" in raw) {
     if (fee != null && (!Number.isSafeInteger(fee) || Number(fee) < 0)) throw new EventInputError("Phụ thu phải là số nguyên VNĐ không âm.");
-    result.additional_fee = fee ?? null;
+    result.additional_fee = fee ?? 0;
   }
   if (result.is_deleted) result.is_active = false;
   return result;

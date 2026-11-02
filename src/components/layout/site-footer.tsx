@@ -38,7 +38,7 @@ export async function SiteFooter({ compact = false }: { compact?: boolean }) {
       </Grid> : null}
       <Inline className={cn("justify-between gap-y-2", !compact && "mt-8")} gap="lg">
         <Typography variant="small" tone="muted">© {new Date().getFullYear()} {t("copyright")}</Typography>
-        <Inline gap="lg" className="text-sm"><AppLink href="/menu" className={footerStyles.navLink}>{nav("menu")}</AppLink><AppLink href="/events" className={footerStyles.navLink}>{nav("events")}</AppLink><AppLink href="https://trixie.com.vn/video.html" className={footerStyles.navLink}>{nav("video")}</AppLink><AppLink href="https://trixie.com.vn/tin-tuc.html" className={footerStyles.navLink}>{nav("news")}</AppLink></Inline>
+        <Inline gap="lg" className="text-sm"><AppLink href="/menu" className={footerStyles.navLink}>{nav("menu")}</AppLink><AppLink href="/events" className={footerStyles.navLink}>{nav("events")}</AppLink><AppLink href="#" className={footerStyles.navLink}>{nav("video")}</AppLink><AppLink href="#" className={footerStyles.navLink}>{nav("news")}</AppLink></Inline>
       </Inline>
     </Container>
   </SiteFooterFrame>;

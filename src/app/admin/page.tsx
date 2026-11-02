@@ -4,5 +4,5 @@ export default async function AdminPage({searchParams}:{searchParams:Promise<{se
  const {user,role,displayName}=await requireStaff();
  const section=(await searchParams).section;
  const initialSection=section==="video"||section==="seating"?section:"events";
- return <AdminDesign events={[]} initialSection={initialSection} staff={{email:user.email??"",name:displayName,role}} />;
+ return <AdminDesign events={[]} key={initialSection} initialSection={initialSection} staff={{email:user.email??"",name:displayName,role}} />;
 }

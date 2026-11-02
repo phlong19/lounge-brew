@@ -67,7 +67,7 @@ export function DialogContent({
           <DialogPrimitive.Close
             aria-label={closeLabel}
             className={cn(
-              "absolute top-3 right-3 inline-flex size-11 items-center justify-center rounded-md bg-[#FFFAE7] text-[#15201C] hover:bg-stone-200",
+              "absolute top-3 right-3 inline-flex cursor-pointer size-11 items-center justify-center rounded-md bg-[#FFFAE7] text-[#15201C] hover:bg-stone-200",
               focusStyles,
             )}
           >

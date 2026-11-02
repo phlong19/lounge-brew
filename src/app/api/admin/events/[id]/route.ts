@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, eventId, readJson, resolveEventCover, requireStaff } from "@/lib/server/admin-api";
+import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, eventId, readJson, resolveEventCover, requireContentStaff } from "@/lib/server/admin-api";
 import { eventPayload } from "@/lib/admin/event-validation";
 type Props = {params:Promise<{id:string}>};
 export async function GET(request: Request, {params}:Props) {
   try {
-    const {supabase} = await requireStaff(request);
+    const {supabase} = await requireContentStaff(request);
     const id = eventId((await params).id);
     const result = await supabase.from("events").select("*").eq("id",id).eq("is_deleted",false).maybeSingle();
     databaseFailure(result.error);
@@ -16,7 +16,7 @@ export async function GET(request: Request, {params}:Props) {
 async function mutate(request:Request, props:Props, remove:boolean) {
   try {
     assertSameOrigin(request);
-    const {supabase,user} = await requireStaff(request);
+    const {supabase,user} = await requireContentStaff(request);
     const id = eventId((await props.params).id);
     const raw = remove ? {isDeleted:true} : await readJson(request);
     const payload = eventPayload(raw,true);

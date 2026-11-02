@@ -135,7 +135,7 @@ test('show end status uses the verified end time with an exact ended boundary', 
 });
 
 
-test("homepage automatically selects the eight nearest future visible shows, earliest first", () => {
+test("homepage includes every future visible show without an eight-show cap, earliest first", () => {
   const at = new Date("2026-11-01T12:00:00+07:00");
   const rows = [
     event("december", "2026-12-02T20:15:00+07:00"),
@@ -152,7 +152,7 @@ test("homepage automatically selects the eight nearest future visible shows, ear
     event("past", "2026-10-30T20:15:00+07:00"),
   ];
   const before = rows.map(row => row.id);
-  assert.deepEqual(policy.homepageEvents(rows, at).map(row => row.id), ["november-7", "november-9", "december", "december-8", "december-10", "december-11", "december-12", "december-13"]);
+  assert.deepEqual(policy.homepageEvents(rows, at).map(row => row.id), ["november-7", "november-9", "december", "december-8", "december-10", "december-11", "december-12", "december-13", "december-14"]);
   assert.deepEqual(rows.map(row => row.id), before);
   assert.equal(policy.bookableEvents(rows, at).length, 9);
 });

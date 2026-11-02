@@ -1,5 +1,6 @@
+import {cache} from "react";
 import { isSameOrigin } from "@/lib/server/request-origin";
-import { canManageEvents } from "@/lib/admin/roles";
+import { canAccessAdmin,canManageEvents,type StaffRole } from "@/lib/admin/roles";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -9,7 +10,7 @@ export class AdminApiError extends Error { constructor(message: string, public s
 export function assertSameOrigin(request: Request) {
   if (!isSameOrigin(request)) throw new AdminApiError("Nguồn yêu cầu không hợp lệ.", 403);
 }
-export async function requireStaff(request?: Request) {
+async function verifyStaff(request?: Request) {
   const token = request?.headers.get("authorization")?.match(/^Bearer (.+)$/i)?.[1];
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -19,16 +20,22 @@ export async function requireStaff(request?: Request) {
   if (error || !user) throw new AdminApiError("Vui lòng đăng nhập.",401);
   const staff = await supabase.from("staff_members").select("role,is_active,display_name").eq("user_id",user.id).maybeSingle();
   if (staff.error) throw new AdminApiError("Không thể kiểm tra quyền truy cập.",503);
-  if (!canManageEvents(staff.data)) throw new AdminApiError("Tài khoản chưa có quyền quản lý nội dung.",403);
-  return { supabase, user, role: staff.data.role as "admin" | "editor", displayName: staff.data.display_name };
+  if (!canAccessAdmin(staff.data)) throw new AdminApiError("Tài khoản chưa có quyền quản lý nội dung.",403);
+  const access=await supabase.rpc("staff_access_allowed");
+  if(access.error)throw new AdminApiError("Không thể kiểm tra phiên đăng nhập.",503);
+  if(!access.data)throw new AdminApiError("Phiên đăng nhập đã kết thúc. Vui lòng đăng nhập lại.",401);
+  return { supabase, user, role: staff.data.role as StaffRole, displayName: staff.data.display_name };
 }
-export async function readJson(request: Request) {
+// React cache is request-scoped: share layout/page verification, never cache roles across users/requests.
+const currentStaff=cache(()=>verifyStaff());
+export function requireStaff(request?:Request){return request?verifyStaff(request):currentStaff();}
+export async function readJson(request: Request, maxBytes=4*1024*1024) {
   const reader = request.body?.getReader();
   if (!reader) throw new AdminApiError("Thiếu nội dung yêu cầu.");
   let size = 0;
   const decoder = new TextDecoder();
   let text = "";
-  try { while (true) { const part = await reader.read(); if (part.done) break; size += part.value.byteLength; if (size > 4*1024*1024) { await reader.cancel(); throw new AdminApiError("Nội dung quá lớn.",413); } text += decoder.decode(part.value,{stream:true}); } text += decoder.decode(); }
+  try { while (true) { const part = await reader.read(); if (part.done) break; size += part.value.byteLength; if (size > maxBytes) { await reader.cancel(); throw new AdminApiError("Nội dung quá lớn.",413); } text += decoder.decode(part.value,{stream:true}); } text += decoder.decode(); }
   finally { reader.releaseLock(); }
   try { return JSON.parse(text); } catch { throw new AdminApiError("Dữ liệu JSON không hợp lệ."); }
 }
@@ -60,3 +67,5 @@ export async function requireAdmin(request?: Request) {
   if (staff.role !== "admin") throw new AdminApiError("Chỉ quản trị viên được quản lý nhân viên.",403);
   return staff;
 }
+
+export async function requireContentStaff(request?:Request){const staff=await requireStaff(request);if(!canManageEvents({role:staff.role,is_active:true}))throw new AdminApiError("Không có quyền quản lý nội dung.",403);return staff;}

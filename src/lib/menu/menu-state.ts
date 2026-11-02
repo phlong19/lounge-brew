@@ -21,3 +21,20 @@ export function updateMenuUrl(value: string, page: number): string {
   else url.searchParams.delete("page");
   return `${url.pathname}${url.search}${url.hash}`;
 }
+
+/** Phone/tablet sequence retains original physical page numbers in URLs/bookmarks. */
+export function compactMenuPages(total: number): number[] {
+  return Array.from({ length: total }, (_, index) => index)
+    .filter(index => index !== 0 && index !== total - 2);
+}
+export function availableMenuPage(page: number, total: number, compact: boolean): number {
+  const safe = Math.max(0, Math.min(total - 1, page));
+  if (!compact) return safe;
+  const available = compactMenuPages(total);
+  return available.find(index => index >= safe) ?? available.at(-1) ?? 0;
+}
+export function compactMenuStep(page: number, total: number, direction: -1 | 1): number {
+  const available = compactMenuPages(total);
+  const current = available.indexOf(availableMenuPage(page, total, true));
+  return available[Math.max(0, Math.min(available.length - 1, current + direction))] ?? 0;
+}

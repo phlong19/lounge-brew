@@ -22,7 +22,9 @@ export function ReservationProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (previousPath.current !== pathname) {
       previousPath.current = pathname;
-      setOpen(false);
+      const requested=window.location.hash === "#reservation";
+      if(requested)setEventId(undefined);
+      setOpen(requested);
     }
   }, [pathname]);
   const openReservation = useCallback((id?: string, trigger?: HTMLElement) => {

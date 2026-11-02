@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
-import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, readJson, requireStaff } from "@/lib/server/admin-api";
+import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, readJson, requireContentStaff } from "@/lib/server/admin-api";
 import { seatingSelect } from "@/lib/seating";
 export async function GET(request: Request) {
  try {
-  const { supabase } = await requireStaff(request);
+  const { supabase } = await requireContentStaff(request);
   const result = await supabase.from("seating_settings").select(seatingSelect).eq("id","home").single();
   databaseFailure(result.error);
   return NextResponse.json({item:result.data},{headers:{"Cache-Control":"no-store"}});
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 export async function PATCH(request: Request) {
  try {
   assertSameOrigin(request);
-  const { supabase, user } = await requireStaff(request);
+  const { supabase, user } = await requireContentStaff(request);
   const body = await readJson(request);
   if (!body || typeof body !== "object" || typeof body.is_visible !== "boolean" || typeof body.expectedUpdatedAt !== "string") throw new AdminApiError("Cấu hình không hợp lệ.");
   for (const key of ["lower_asset_id","upper_asset_id"] as const) {

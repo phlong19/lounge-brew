@@ -1,4 +1,4 @@
-import {Great_Vibes} from "next/font/google";
+import {scriptHeadingFont as headingFont} from "@/lib/fonts";
 import {eventHeadingTitle} from "@/lib/events/title";
 import {eventStyles} from "@/lib/ui/event-styles";
 import {cn} from "@/lib/utils";
@@ -32,7 +32,6 @@ import { localizeEvent } from "@/lib/menu/map-menu";
 import { isBookableEvent, isEventEnded } from "@/lib/server/content-policy";
 import { getEventById } from "@/lib/server/lounge-data";
 
-const headingFont=Great_Vibes({subsets:["latin","vietnamese"],weight:"400",display:"swap"});
 
 type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -85,10 +84,10 @@ export default async function ShowPage({ params }: Props) {
                   </Inline>
                   <Inline>
                     <Icon name="mapPin" />
-                    <Typography>{venue.address}</Typography>
+                    <Typography>{locale === "en" ? venue.addressEn : venue.address}</Typography>
                   </Inline>
                 </Stack>
-                {source.additional_fee != null ? <Typography className="col-span-2">{locale === "vi" ? "Phụ thu: " : "Additional fee: "}{new Intl.NumberFormat(locale === "vi" ? "vi-VN" : "en-GB",{style:"currency",currency:"VND",maximumFractionDigits:0}).format(source.additional_fee)}</Typography> : null}
+                {<Typography className="col-span-2">{locale === "vi" ? "Phụ thu: " : "Additional fee: "}{new Intl.NumberFormat(locale === "vi" ? "vi-VN" : "en-GB",{style:"currency",currency:"VND",maximumFractionDigits:0}).format(source.additional_fee??0)}</Typography>}
                 <Stack gap="md" className="col-span-2">
                   {ended ? (
                     <Typography variant="lead" tone="brand">

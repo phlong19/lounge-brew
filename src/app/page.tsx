@@ -15,7 +15,7 @@ import type { AppLocale } from "@/i18n/config";
 export default async function LandingPage() {
   const locale=await getLocale();
   return (
-    <PublicDataBoundary>
+    <PublicDataBoundary video>
       <SiteHeader active="home" />
       <Main id="main-content">
         <HeroCarousel />

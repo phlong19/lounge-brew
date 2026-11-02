@@ -94,7 +94,7 @@ export function HeroCarousel() {
           </Typography>
           <Inline gap="sm" className="pt-2">
             <ReservationButton variant="secondary" size="lg">{t("book")}<Icon name="arrowUpRight" /></ReservationButton>
-            <AppLink href="/events" className={heroStyles.textLink}>{t("lineup")}<Icon name="arrowRight" /></AppLink>
+            <Button asChild variant="outline" size="lg"><AppLink href="/events">{t("lineup")}<Icon name="arrowRight" /></AppLink></Button>
           </Inline>
         </Stack>
       </Container>
