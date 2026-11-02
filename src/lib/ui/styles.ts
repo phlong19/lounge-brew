@@ -12,11 +12,11 @@ export const typographyStyles = {
   display:
     "text-4xl font-semibold leading-[1.15] tracking-tight text-balance md:text-6xl",
   title:
-    "text-3xl font-semibold leading-tight tracking-tight text-balance md:text-5xl",
+    "text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl lg:text-5xl",
   heading:
     "text-2xl font-semibold leading-snug tracking-tight text-balance md:text-4xl",
   subheading: "text-xl font-semibold leading-snug text-balance md:text-2xl",
-  lead: "text-lg leading-relaxed text-pretty md:text-xl",
+  lead: "text-lg leading-relaxed text-pretty lg:text-xl",
   body: "text-base leading-relaxed text-pretty",
   small: "text-sm leading-relaxed",
   caption: "text-sm font-medium leading-normal",

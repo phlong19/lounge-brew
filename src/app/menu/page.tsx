@@ -36,7 +36,7 @@ export default async function MenuPage() {
             </Stack>
           </Container>
         </Section>
-        <Container className="max-w-[1440px] pb-16">
+        <Container className="max-w-[1440px] px-2 pb-16 sm:px-8 lg:px-12">
           <FlipbookMenu pages={buildImageMenuPages(locale as AppLocale)} />
         </Container>
       </Main>

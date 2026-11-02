@@ -75,7 +75,7 @@ export function MobileNavigation({
           ))}
         </Navigation>
         <Stack className="mt-auto pb-[env(safe-area-inset-bottom)]">
-          <LocaleSwitcher side="top" />
+          <LocaleSwitcher side="top" align="start" openOnHover={false} />
           <Button size="lg" aria-haspopup="dialog" onClick={() => {
             setOpen(false);
             requestAnimationFrame(() => openReservation());

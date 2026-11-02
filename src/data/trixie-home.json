@@ -440,7 +440,7 @@
       "order": 1,
       "sourceTitle": "Quán cafe đẹp nhất Hà Nội",
       "title": {
-        "vi": "Quán cafe đẹp nhất Hà Nội",
+        "vi": "Không gian cà phê giữa khoảng xanh",
         "en": "A garden café in Hanoi"
       },
       "description": {
@@ -517,10 +517,10 @@
         "available": true
       },
       "sourceUrl": "https://trixie.com.vn/phong-tra-ha-noi.html",
-      "localHref": "https://trixie.com.vn/phong-tra-ha-noi.html",
+      "localHref": "#",
       "content": {
-        "vi": "<p><span data-color=\"#29abe2\"><strong>Buổi tối </strong></span><strong>-</strong><span data-color=\"#29abe2\"><strong> </strong></span>Kết thúc một ngày làm việc vất vả là thời gian bạn dành riêng cho mình và những người thân yêu. Phòng trà Trixie - không gian của những đêm ca nhạc tuyệt vời ở Hà Nội. Không chỉ thưởng thức nhạc sống và <span data-color=\"#29abe2\"><strong>chụp ảnh cùng thần tượng</strong></span>, đến với <strong>Phòng trà TRIXIE</strong> bạn còn có cơ hội <span data-color=\"#29abe2\"><strong>lên sân khấu thể hiện mình</strong></span>. Hãy mạnh dạn thể hiện tài năng, ca hát theo cách của cách của bạn. Thật tuyệt vời khi vừa thưởng thức những tách cafe, tách trà, những ly rượu vang và hòa mình vào không gian âm nhạc đặc sắc đúng không? Hãy đến và cảm nhận <strong><a href=\"https://trixie.com.vn/phong-tra-ha-noi.html\"><span data-color=\"#29abe2\">phòng trà ca nhạc</span></a><span data-color=\"#29abe2\"> </span>TRIXIE</strong> - 165 Thái Hà, Đống Đa, Hà Nội.</p>",
-        "en": "<p><span data-color=\"#29abe2\"><strong>Evening</strong></span> — after a hard day’s work, it is time for yourself and the people you love. Trixie music lounge is a place for wonderful musical evenings in Hanoi. Alongside live music and <span data-color=\"#29abe2\"><strong>photographs with your favourite artists</strong></span>, <strong>Trixie music lounge</strong> offers the chance to <span data-color=\"#29abe2\"><strong>step onto the stage and express yourself</strong></span>. Share your talent and sing in your own way. Enjoy coffee, tea or wine as you immerse yourself in the music. Come and experience <strong><a href=\"https://trixie.com.vn/phong-tra-ha-noi.html\"><span data-color=\"#29abe2\">Trixie music lounge</span></a></strong> at 165 Thái Hà, Đống Đa, Hanoi.</p>"
+        "vi": "<p><span data-color=\"#29abe2\"><strong>Buổi tối </strong></span><strong>-</strong><span data-color=\"#29abe2\"><strong> </strong></span>Kết thúc một ngày làm việc vất vả là thời gian bạn dành riêng cho mình và những người thân yêu. Phòng trà Trixie - không gian của những đêm ca nhạc tuyệt vời ở Hà Nội. Không chỉ thưởng thức nhạc sống và <span data-color=\"#29abe2\"><strong>chụp ảnh cùng thần tượng</strong></span>, đến với <strong>Phòng trà TRIXIE</strong> bạn còn có cơ hội <span data-color=\"#29abe2\"><strong>lên sân khấu thể hiện mình</strong></span>. Hãy mạnh dạn thể hiện tài năng, ca hát theo cách của cách của bạn. Thật tuyệt vời khi vừa thưởng thức những tách cafe, tách trà, những ly rượu vang và hòa mình vào không gian âm nhạc đặc sắc đúng không? Hãy đến và cảm nhận <strong><a href=\"#\"><span data-color=\"#29abe2\">phòng trà ca nhạc</span></a><span data-color=\"#29abe2\"> </span>TRIXIE</strong> - 165 Thái Hà, Đống Đa, Hà Nội.</p>",
+        "en": "<p><span data-color=\"#29abe2\"><strong>Evening</strong></span> — after a hard day’s work, it is time for yourself and the people you love. Trixie music lounge is a place for wonderful musical evenings in Hanoi. Alongside live music and <span data-color=\"#29abe2\"><strong>photographs with your favourite artists</strong></span>, <strong>Trixie music lounge</strong> offers the chance to <span data-color=\"#29abe2\"><strong>step onto the stage and express yourself</strong></span>. Share your talent and sing in your own way. Enjoy coffee, tea or wine as you immerse yourself in the music. Come and experience <strong><a href=\"#\"><span data-color=\"#29abe2\">Trixie music lounge</span></a></strong> at 165 Thái Hà, Đống Đa, Hanoi.</p>"
       },
       "copyProvenance": {
         "source": "https://trixie.com.vn/",

@@ -24,7 +24,8 @@ import { MenuArtwork } from "./menu-artwork";
 // Keep that third-party implementation detail in this adapter; owned UI uses classes.
 type EngineProps = Omit<ComponentProps<typeof HTMLFlipBook>, "style" | "ref">;
 type EngineApi = {
-  flip: (page: number) => void;
+  flipNext: () => void;
+  flipPrev: () => void;
   turnToPage: (page: number) => void;
   getCurrentPageIndex: () => number;
   destroy: () => void;
@@ -61,7 +62,6 @@ export type MenuBookProps = {
   onPageChange: (page: number) => void;
   onReady: () => void;
   onMotionTarget: (page: number | null) => void;
-  onTurningChange: (turning: boolean) => void;
 };
 
 /** Measure owned layout without writing styles; engine sizing stays in its API. */
@@ -104,7 +104,6 @@ function MenuBookEngine({
   onReady,
   minimumWidth,
   onMotionTarget,
-  onTurningChange,
 }: MenuBookProps & { minimumWidth: number }) {
   const engine = useRef<EngineRef>(null);
   const pointer = useRef<{ active: boolean; direction: -1 | 1 }>({
@@ -113,13 +112,16 @@ function MenuBookEngine({
   });
   const instance = useRef<EngineApi | null>(null);
   const requested = useRef(page);
+  const pendingTarget = useRef<number | null>(null);
+  const engineState = useRef("read");
+  const [displayedPage, setDisplayedPage] = useState(page);
   const callback = useRef(onPageChange);
   const readyCallback = useRef(onReady);
   const [ready, setReady] = useState(false);
   requested.current = page;
   callback.current = onPageChange;
   readyCallback.current = onReady;
-  const visible = visibleMenuPages(page, pages.length, spread);
+  const visible = visibleMenuPages(displayedPage, pages.length, spread);
 
   useEffect(
     () => () => {
@@ -131,15 +133,17 @@ function MenuBookEngine({
   useEffect(() => {
     if (!ready) return;
     const api = engine.current?.pageFlip();
-    if (
-      api &&
-      !visibleMenuPages(
-        api.getCurrentPageIndex(),
-        pages.length,
-        spread,
-      ).includes(page)
-    )
-      api.flip(page);
+    if (!api) return;
+    // Keep controls live. A request made during a turn/drag is settled when it ends.
+    if (pendingTarget.current !== null || engineState.current !== "read") {
+      pendingTarget.current = page;
+      return;
+    }
+    const current = api.getCurrentPageIndex();
+    if (!visibleMenuPages(current, pages.length, spread).includes(page)) {
+      pendingTarget.current = page;
+      if (page > current) api.flipNext(); else api.flipPrev();
+    }
   }, [page, pages.length, ready, spread]);
 
   // Stable child elements prevent react-pageflip from rebuilding its HTML pages on
@@ -149,7 +153,7 @@ function MenuBookEngine({
     [pages],
   );
   return (
-    <BookContext.Provider value={{ page, visible }}>
+    <BookContext.Provider value={{ page: displayedPage, visible }}>
       <Surface
         className="h-full w-full"
         onPointerDownCapture={(event) => {
@@ -187,7 +191,7 @@ function MenuBookEngine({
           useMouseEvents
           swipeDistance={35}
           showPageCorners={false}
-          disableFlipByClick
+          disableFlipByClick={spread}
           flippingTime={650}
           startZIndex={1}
           className="mx-auto"
@@ -197,9 +201,7 @@ function MenuBookEngine({
             readyCallback.current();
           }}
           onChangeState={(event: { data: string }) => {
-            onTurningChange(
-              event.data === "flipping" || event.data === "user_fold",
-            );
+            engineState.current = event.data;
             if (event.data === "user_fold" && pointer.current.active) {
               const current =
                 engine.current?.pageFlip()?.getCurrentPageIndex() ?? page;
@@ -215,10 +217,23 @@ function MenuBookEngine({
             if (event.data === "read") {
               pointer.current.active = false;
               onMotionTarget(null);
+              if (pendingTarget.current !== null) {
+                queueMicrotask(() => {
+                  const api = engine.current?.pageFlip();
+                  if (!api) return;
+                  // Read the latest request, including changes made while the page was held.
+                  const destination = requested.current;
+                  if (!visibleMenuPages(api.getCurrentPageIndex(), pages.length, spread).includes(destination)) api.turnToPage(destination);
+                  pendingTarget.current = null;
+                  setDisplayedPage(destination);
+                });
+              }
             }
           }}
           onFlip={(event: { data: number }) => {
             onMotionTarget(null);
+            if (pendingTarget.current !== null) return;
+            setDisplayedPage(event.data);
             // A right-hand category stays selected when the engine reports its left page.
             if (
               !visibleMenuPages(event.data, pages.length, spread).includes(

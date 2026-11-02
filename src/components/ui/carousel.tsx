@@ -23,6 +23,7 @@ type Props = ComponentPropsWithRef<"div"> & {
   autoScroll?: boolean;
   autoplay?: boolean;
   showCounter?: boolean;
+  indicators?: boolean;
   paused?: boolean;
   pauseOnHover?: boolean;
   headerClassName?: string;
@@ -34,7 +35,7 @@ type Props = ComponentPropsWithRef<"div"> & {
 };
 
 /** Embla owns continuous movement. Interaction and motion preferences gate it. */
-export function Carousel({ label, orientation = "horizontal", visibleSlides = 2, columns = 3, heading, action, controls = true, autoScroll = false, autoplay = false, showCounter = true, paused = false, pauseOnHover = true, headerClassName, compactControls = false, rows = 1, controlPosition = "header", step = "page", onNavigate, className, children, ref, ...props }: Props) {
+export function Carousel({ label, orientation = "horizontal", visibleSlides = 2, columns = 3, heading, action, controls = true, autoScroll = false, autoplay = false, showCounter = true, indicators = false, paused = false, pauseOnHover = true, headerClassName, compactControls = false, rows = 1, controlPosition = "header", step = "page", onNavigate, className, children, ref, ...props }: Props) {
   const t = useTranslations("Carousel");
   const id = useId();
   const root = useRef<HTMLDivElement | null>(null);
@@ -134,9 +135,47 @@ export function Carousel({ label, orientation = "horizontal", visibleSlides = 2,
     </div>
     {sideControls ? nextButton : null}
     </div>
+    {indicators && state.ready && state.pages > 1 ? <div className="mt-5 flex flex-wrap items-center justify-center gap-0 sm:gap-1" role="group" aria-label={label}>
+      {Array.from({ length: state.pages }, (_, index) => <Button key={index} variant="ghost" size="iconSm" className="size-7 rounded-full hover:bg-[#2E7017]/10 sm:size-8" aria-label={t("page", { current: index + 1, total: state.pages })} aria-controls={id} aria-current={state.selected === index ? "page" : undefined} onClick={() => { onNavigate?.(); api?.scrollTo(index); }}><span aria-hidden="true" className={cn("h-2 rounded-full transition-all motion-reduce:transition-none", state.selected === index ? "w-5 bg-[#2E7017]" : "w-2 bg-[#2E7017]/25")} /></Button>)}
+    </div> : null}
   </div>;
 }
 
 export function CarouselItem({ className, ...props }: ComponentPropsWithRef<"div">) {
   return <div className={cn("min-w-0", className)} {...props} />;
+}
+
+/** Controlled single-page Embla adapter. No autoplay or continuous-scroll plugins. */
+export function PagedCarousel({ index, onIndexChange, label, children, className }: {
+  index: number; onIndexChange: (index: number) => void; label: string;
+  children: ReactNode; className?: string;
+}) {
+  const t = useTranslations("Carousel");
+  const initialIndex = useRef(index);
+  const [viewport, api] = useEmblaCarousel({ align: "start", containScroll: "trimSnaps", loop: false, startIndex: initialIndex.current,
+    breakpoints: { "(prefers-reduced-motion: reduce)": { duration: 0 } } });
+  const dragging = useRef(false);
+  const current = useRef(index), changed = useRef(onIndexChange);
+  current.current = index; changed.current = onIndexChange;
+  useEffect(() => {
+    if (!api) return;
+    const selected = () => { const next = api.selectedScrollSnap(); if (dragging.current && next !== current.current) changed.current(next); };
+    const pointerDown = () => { dragging.current = true; };
+    const settled = () => { dragging.current = false; };
+    const resized = () => { dragging.current = false; api.scrollTo(current.current, true); };
+    api.on("select", selected).on("reInit", resized).on("pointerDown", pointerDown).on("settle", settled);
+    return () => { api.off("select", selected).off("reInit", resized).off("pointerDown", pointerDown).off("settle", settled); };
+  }, [api]);
+  useEffect(() => { if (api && api.selectedScrollSnap() !== index) api.scrollTo(index); }, [api, index]);
+  return <div ref={viewport} role="region" aria-label={label} aria-roledescription={t("carousel")} data-carousel-engine="embla" data-carousel-index={index}
+    tabIndex={0} className={cn("min-w-0 overflow-hidden touch-pan-y touch-pinch-zoom focus-visible:outline-2 focus-visible:outline-inset", className)}
+    onKeyDown={event => {
+      if ((event.target as HTMLElement).closest("button,input,textarea,select,[contenteditable=true]") || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      if (event.key === "ArrowRight" || event.key === "ArrowLeft") { event.preventDefault(); changed.current(Math.max(0, Math.min(Children.count(children) - 1, current.current + (event.key === "ArrowRight" ? 1 : -1)))); }
+      if (event.key === "Home" || event.key === "End") { event.preventDefault(); changed.current(event.key === "Home" ? 0 : Children.count(children) - 1); }
+    }}>
+    <div className="flex h-full">
+      {Children.toArray(children).map((child, slide) => <div key={slide} role="group" aria-roledescription={t("slide")} aria-label={t("item", { current: slide + 1, total: Children.count(children) })} aria-hidden={slide !== index} inert={slide !== index} className="h-full min-w-0 shrink-0 grow-0 basis-full">{child}</div>)}
+    </div>
+  </div>;
 }

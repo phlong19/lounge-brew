@@ -18,3 +18,26 @@ Inspected the HTML of https://trixie.com.vn/thuc-don.html, https://trixie.com.vn
 These are observations, not proof of the whole backend. A traditional server-rendered PHP/template CMS is a reasonable inference; its exact CMS/framework, PHP/database versions and origin server are unverified. Static-looking pages can still be generated from a CMS database. The menu artwork and older item catalog should not be assumed to share a single current data source.
 
 Follow-up: grouped bookmarks cover wine/spirits, snacks/beer/fruit, food divider/appetisers, and beef-pork/chicken. Mobile and desktop share grouped targets while preserving all 18 page images and URLs. Navigation controls lock during a page turn to prevent overlapping requests landing on the wrong spread. Arrow backgrounds are pale for contrast against the texture.
+
+
+## Phone/tablet revision after manual testing
+
+Below 640px: controlled Embla paging without any autoplay/auto-scroll plugin. Exclude physical indices 0 and 16 (original pages 1 and 17), preserving original page numbers in links and bookmarks. The first phone page is original page 2 and the last is original page 18. Arrows, keyboard navigation, swipes and category jumps share one selected physical page; unavailable deep links normalize to the next available page.
+
+640–1023px: retain all 18 pages and portrait page flipping. The corner-only click setting rejected the engine's synthetic backward-turn point after `flipToPage` had already moved its internal spread index. Portrait now allows directional turns. Navigation animates from the actual current page via `flipNext`/`flipPrev`; a distant category target settles through `turnToPage` after the animation ends. Displayed-page context remains stable while turning so requested targets do not replace the outgoing page midway.
+
+1024px and above: retain the two-page book, constant desktop page dimensions, centering animation and bookmarks. Reduced-motion behavior remains supported. Browser-history writes use Next-compatible state so language refresh does not drop the selected page query.
+
+Embla is isolated in the owned UI carousel adapter. Its resize/reinitialization events cannot become user navigation; only drag selections notify the parent, while arrows/category/keyboard actions update the controlled target. No authored styles or library-DOM patches were added.
+
+
+### Tablet exclusions revision
+
+The user extended exclusions of original pages 1 and 17 to tablets. All viewports below 1024px now use the same 16-face sequence; phones use Embla and tablets retain portrait page flipping. Desktop continues to use the complete 18-face book. The tablet engine receives dense local indices, mapped back to the original physical indices for URLs, category bookmarks, arrow navigation and reduced-motion fallback. This prevents skipped pages from appearing during flips or causing an off-by-one mismatch.
+
+
+### Live controls and mobile hotline
+
+Arrows, keyboard navigation, category dropdown and bookmarks remain enabled during flips and held-page gestures. The adapter retains the latest requested destination and settles on it when the engine returns to its reading state; only book boundaries disable arrows. Rapid keyboard reversal and desktop category changes were verified in the browser.
+
+Below 768px the announcement bar uses a phone-icon dropdown containing both tap-to-call numbers. Tablet and desktop keep the full hotline row. Verified at 375px and 768px. Lint, type checking, UI rules, all 26 test suites and production build passed.

@@ -13,7 +13,7 @@ import { headerStyles } from "@/lib/ui/home-styles";
 import { cn } from "@/lib/utils";
 import { locales } from "@/i18n/config";
 
-export function LocaleSwitcher({ side = "bottom" }: { side?: "top" | "bottom" }) {
+export function LocaleSwitcher({ side = "bottom", align = "end", openOnHover = true }: { side?: "top" | "bottom"; align?: "start" | "end"; openOnHover?: boolean }) {
   const locale = useLocale();
   const t = useTranslations("Navigation");
   const router = useRouter();
@@ -46,8 +46,8 @@ export function LocaleSwitcher({ side = "bottom" }: { side?: "top" | "bottom" })
       } catch { /* Mutation state exposes the translated error. */ }
     });
   }
-  return <Surface data-language-switcher ref={root} className="relative" aria-busy={pending}
-    onPointerEnter={event => { if (event.pointerType === "mouse") setOpen(true); }}
+  return <Surface data-language-switcher ref={root} className="relative w-fit" aria-busy={pending}
+    onPointerEnter={event => { if (openOnHover && event.pointerType === "mouse") setOpen(true); }}
     onPointerLeave={() => { if (!root.current?.querySelector(":focus-visible")) setOpen(false); }}
     onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}
     onKeyDown={event => {
@@ -57,9 +57,9 @@ export function LocaleSwitcher({ side = "bottom" }: { side?: "top" | "bottom" })
     <Button ref={trigger} variant="ghost" className={cn(headerStyles.navLink, headerStyles.trigger)} aria-label={`${t("language")}: ${locale === "vi" ? t("vietnamese") : t("english")}`} aria-expanded={open} aria-controls={id} disabled={pending} onClick={() => setOpen(value => !value)}>
       <Flag locale={locale === "vi" ? "vi" : "en"} /><Typography as="span" variant="small">{locale.toUpperCase()}</Typography><Icon name="chevronDown" className="size-3.5" />
     </Button>
-    {open ? <Surface id={id} className={cn("absolute right-0 z-50 min-w-48", side === "top" ? "bottom-full pb-2" : "top-full pt-2")} data-language-options>
+    {open ? <Surface id={id} className={cn("absolute z-50 min-w-48", align === "start" ? "left-0" : "right-0", side === "top" ? "bottom-full pb-2" : "top-full pt-2")} data-language-options>
       <Surface tone="white" className="rounded-md p-2 shadow-lg"><Stack gap="xs" role="group" aria-label={t("language")}>{locales.map(value => <Button key={value} variant="ghost" className={cn(headerStyles.navLink, headerStyles.trigger, "w-full justify-start px-3")} aria-pressed={locale === value} disabled={pending} onClick={() => select(value)}><Flag locale={value} />{value === "vi" ? t("vietnamese") : t("english")}{locale === value ? <Icon name="check" className="ml-auto size-4" /> : null}</Button>)}</Stack></Surface>
     </Surface> : null}
-    {error ? <Status className="absolute top-full right-0 z-50 w-56 bg-white p-3 text-red-800">{t("languageError")}</Status> : null}
+    {error ? <Status className={cn("absolute top-full z-50 w-56 bg-white p-3 text-red-800", align === "start" ? "left-0" : "right-0")}>{t("languageError")}</Status> : null}
   </Surface>;
 }

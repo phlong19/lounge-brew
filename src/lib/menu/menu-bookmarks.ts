@@ -14,7 +14,7 @@ const groups = [
     vi: "Khai vị & salad",
     en: "Appetisers & salads",
   },
-  { id: "meat", members: ["beef-pork", "chicken"], vi: "Thịt", en: "Meat" },
+  { id: "meat", members: ["beef-pork", "chicken"], vi: "Món chính", en: "Main dishes" },
 ] as const;
 export type MenuBookmark = {
   id: string;
@@ -30,7 +30,7 @@ export function menuBookmarks(
 ): MenuBookmark[] {
   const result: MenuBookmark[] = [],
     seen = new Set<string>();
-  pages.forEach((item, index) => {
+  pages.forEach((item) => {
     if (
       !includeCovers &&
       ["cover", "welcome", "thanks", "back"].includes(item.id)
@@ -42,8 +42,8 @@ export function menuBookmarks(
     if (group) {
       if (seen.has(group.id)) return;
       seen.add(group.id);
-      const members = pages.flatMap((page, i) =>
-        (group.members as readonly string[]).includes(page.id) ? [i] : [],
+      const members = pages.flatMap((page) =>
+        (group.members as readonly string[]).includes(page.id) ? [page.physicalIndex] : [],
       );
       result.push({
         id: group.id,
@@ -55,8 +55,8 @@ export function menuBookmarks(
       result.push({
         id: item.id,
         label: item.label,
-        page: index,
-        pages: [index],
+        page: item.physicalIndex,
+        pages: [item.physicalIndex],
       });
   });
   return result;

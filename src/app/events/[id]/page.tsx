@@ -84,7 +84,7 @@ export default async function ShowPage({ params }: Props) {
                   </Inline>
                   <Inline>
                     <Icon name="mapPin" />
-                    <Typography>{venue.address}</Typography>
+                    <Typography>{locale === "en" ? venue.addressEn : venue.address}</Typography>
                   </Inline>
                 </Stack>
                 {<Typography className="col-span-2">{locale === "vi" ? "Phụ thu: " : "Additional fee: "}{new Intl.NumberFormat(locale === "vi" ? "vi-VN" : "en-GB",{style:"currency",currency:"VND",maximumFractionDigits:0}).format(source.additional_fee??0)}</Typography>}

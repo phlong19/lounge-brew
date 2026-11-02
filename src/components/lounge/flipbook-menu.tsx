@@ -1,6 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { PhoneMenu } from "./phone-menu";
+import { compactMenuPages } from "@/lib/menu/menu-state";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
@@ -28,24 +30,27 @@ const MenuBook = dynamic(
 export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
   const t = useTranslations("Menu"),
     viewer = useMenuViewer(pages.length);
+  const visiblePages = useMemo(() => viewer.spread ? pages : compactMenuPages(pages.length).map(index => pages[index]), [pages, viewer.spread]);
+  // The flip engine requires dense indices; public URLs/bookmarks keep physical numbers.
+  const enginePages = useMemo(() => viewer.spread ? pages : visiblePages.map((item, index) => ({ ...item, physicalIndex: index })), [pages, viewer.spread, visiblePages]);
+  const enginePage = Math.max(0, visiblePages.findIndex(item => item.physicalIndex === viewer.page));
   const [readyMode, setReadyMode] = useState<string | null>(null),
     [motionTarget, setMotionTarget] = useState<number | null>(null);
-  const [turning, setTurning] = useState(false);
   const mode = viewer.spread ? "spread" : "portrait",
     engineReady = readyMode === mode && !viewer.reducedMotion;
   const current = viewer.visible[0] ?? 0,
     last = viewer.visible.at(-1) ?? 0,
     presentation = motionTarget ?? viewer.page;
   if (!pages.length) return <Status>{t("imageError")}</Status>;
+  if (viewer.phone) return <PhoneMenu pages={visiblePages} page={viewer.page} onSelect={viewer.goTo} />;
   return (
     <Surface className={s.panel} data-menu-viewer>
       <Surface className="px-4 pt-4 lg:hidden">
         <MenuIndex
           mode="select"
-          pages={pages}
+          pages={visiblePages}
           page={viewer.page}
           onSelect={viewer.goTo}
-          disabled={turning}
         />
       </Surface>
       <Grid
@@ -58,15 +63,15 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
           aria-describedby="menu-keyboard-hint"
           tabIndex={0}
           onKeyDown={(event) => {
-            if (!turning) viewer.onKeyDown(event);
+            viewer.onKeyDown(event);
           }}
           className={s.region}
         >
           <Button
             variant="ghost"
             size="icon"
-            className={s.arrow}
-            disabled={turning || current === 0}
+            className={cn(s.arrow, s.previous)}
+            disabled={current === visiblePages[0].physicalIndex}
             aria-label={t("previous")}
             onClick={() => viewer.step(-1)}
           >
@@ -125,15 +130,13 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
                 <Surface className={cn(s.engine, !engineReady && "invisible")}>
                   <MenuBook
                     key={mode}
-                    pages={pages}
-                    page={viewer.page}
+                    pages={enginePages}
+                    page={enginePage}
                     spread={viewer.spread}
-                    onPageChange={viewer.goTo}
-                    onMotionTarget={setMotionTarget}
-                    onTurningChange={setTurning}
+                    onPageChange={index => viewer.goTo(visiblePages[index].physicalIndex)}
+                    onMotionTarget={index => setMotionTarget(index === null ? null : visiblePages[index].physicalIndex)}
                     onReady={() => {
                       setReadyMode(mode);
-                      setTurning(false);
                     }}
                   />
                 </Surface>
@@ -143,8 +146,8 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
           <Button
             variant="ghost"
             size="icon"
-            className={s.arrow}
-            disabled={turning || last === pages.length - 1}
+            className={cn(s.arrow, s.next)}
+            disabled={last === visiblePages[visiblePages.length - 1].physicalIndex}
             aria-label={t("next")}
             onClick={() => viewer.step(1)}
           >
@@ -153,11 +156,10 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
         </Surface>
         <Surface className="hidden pr-4 py-8 lg:block">
           <MenuIndex
-            pages={pages}
+            pages={visiblePages}
             page={viewer.page}
             onSelect={viewer.goTo}
-            disabled={turning}
-          />
+            />
         </Surface>
       </Grid>
       <Typography id="menu-keyboard-hint" variant="small" className="sr-only">
@@ -169,7 +171,7 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
             {t("allPages")}
           </Typography>
           <List className="grid gap-2 sm:grid-cols-2">
-            {pages.map((item, index) => (
+            {visiblePages.map((item) => (
               <ListItem key={item.id}>
                 <Button
                   asChild
@@ -177,7 +179,7 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
                   className="w-full justify-start bg-white"
                 >
                   <AppLink href={item.image} target="_blank">
-                    {index + 1}. {item.label}
+                    {item.physicalIndex + 1}. {item.label}
                     <Icon name="externalLink" />
                   </AppLink>
                 </Button>
