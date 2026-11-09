@@ -1,0 +1,10 @@
+import {test} from "node:test";
+import assert from "node:assert/strict";
+import {registerHooks} from "node:module";
+import {pathToFileURL} from "node:url";
+registerHooks({resolve(s,c,n){return s.startsWith("@/")?n(pathToFileURL(`${process.cwd()}/src/${s.slice(2)}.ts`).href,c):n(s,c);}});
+const {blogPayload}=await import("../../src/lib/admin/blog-validation.ts");
+const base={title_vi:"Tin Trixie",slug:"tin-trixie",content_vi:'<p>Xin chào</p><script>bad()</script>',published_at:null};
+test("blog drafts sanitize content and keep optional translations nullable",()=>{const p=blogPayload(base);assert.equal(p.content_vi,"<p>Xin chào</p>");assert.equal(p.title_en,null);assert.equal(p.published_at,null);});
+test("blog input rejects reserved fields, invalid slugs and unsafe cover URLs",()=>{for(const p of [{...base,id:"x"},{...base,slug:"../admin"},{...base,title_vi:" "},{...base,thumbnail_url:"https://evil.test/a.jpg"},{...base,published_at:"2026-11-09T12:00"},{...base,expectedUpdatedAt:"invalid"}])assert.throws(()=>blogPayload(p));});
+test("blog publication dates use explicit timezone and normalize to UTC",()=>{assert.equal(blogPayload({...base,published_at:"2026-11-09T20:00:00+07:00"}).published_at,"2026-11-09T13:00:00.000Z");});

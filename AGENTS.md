@@ -57,3 +57,13 @@ These rules apply to all work in this repository. Explicit user instructions tak
 
 - Avoid duplicate actions or repeated information within the same section. When an embedded widget already provides an action, do not add another equivalent control next to it (for example, a directions link beside Google Maps’ Open in Maps control).
 - Keep demo explanations and implementation disclaimers out of the public page unless the user explicitly asks for them. Preserve truthful UI behavior: never invent a successful booking or submission.
+
+
+## Storage ownership
+
+- Supabase Storage is for core site assets: staff avatars, logo/branding, seating plans, menu assets and similar site configuration files.
+- Cloudflare R2 is the intended primary store for editorial media: event covers, event article images, blog/journal covers and article images.
+- Supabase continues to own authentication, application data and media metadata. Keep direct public image URLs on consuming records so public rendering does not require a media relation lookup.
+- Preserve existing image URLs until an explicit migration verifies replacement files. Adding R2 configuration alone does not switch existing uploads.
+- Keep normal file selection, paste and drag/drop workflows. Silently reuse byte-identical uploads by hash; do not require editors to copy URLs or choose a special cover-reuse action.
+- See `docs/storage.md` for connection setup and rollout requirements.

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { filterEvents, localDateInput, paginationPages } from "../../src/lib/admin/event-list.ts";
-const item = (id, date, options = {}) => ({ id, title_vi: `Minishow ${id}`, title_en: null, performer_name: id, event_date: date, description_vi: null, description_en: null, cover_image_url: null, is_active: true, ...options });
+const item = (id, date, options = {}) => ({ id, title_vi: `Minishow ${id}`, title_en: null, performer_name: id, event_date: date, cover_image_url: null, is_active: true, ...options });
 const rows = [item("Phương Linh", "2026-10-30T13:15:00Z"), item("Lan", "2026-10-31T18:15:00Z", { is_active: false }), item("Phương Linh 2027", "2027-10-30T20:15:00+07:00", { is_active: false })];
 test("event filters combine programme search, month, year and visibility", () => {
   assert.deepEqual(filterEvents(rows, { search: " MINISHOW PHƯƠNG ", scope: "visible", month: "10", year: "2026" }).map(row => row.id), ["Phương Linh"]);

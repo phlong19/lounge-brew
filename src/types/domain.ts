@@ -38,8 +38,6 @@ export type EventRow = {
   title_en: string | null;
   performer_name: string;
   event_date: string;
-  description_vi: string | null;
-  description_en: string | null;
   cover_image_url: string | null;
   is_active: boolean;
   end_date?: string | null;
@@ -70,7 +68,6 @@ export type LocalizedEvent = {
   title: string;
   performerName: string;
   eventDate: string;
-  description: string | null;
   coverImageUrl: string | null;
   fallbackFromVietnamese: boolean;
   endDate?: string | null;

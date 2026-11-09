@@ -1,0 +1,1 @@
+export const blogStyles={panel:"rounded-lg border border-stone-200 bg-white p-5 md:p-6",row:"flex flex-wrap items-center justify-between gap-4 border-b border-stone-200 py-4 last:border-0",editor:"grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(240px,320px)]",actions:"flex flex-wrap items-center gap-3",dialog:"max-h-[85dvh] overflow-y-auto sm:max-w-lg"} as const;

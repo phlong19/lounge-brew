@@ -17,7 +17,7 @@ import { isTrustedMediaSource } from "@/lib/config/image-patterns";
 import { safeHref } from "@/lib/ui/href";
 import { editorStyles as s } from "@/lib/ui/editor-styles";
 
-export function RichTextEditor({ id, value, onChange, onUploadStateChange }: { id: string; value: string; onChange: (html: string) => void; onUploadStateChange?: (busy:boolean)=>void }) {
+export function RichTextEditor({ id, value, onChange, onUploadStateChange, uploadPurpose = "event" }: { id: string; value: string; onChange: (html: string) => void; onUploadStateChange?: (busy:boolean)=>void; uploadPurpose?: "event" | "blog" }) {
   const imageInput = useRef<HTMLInputElement>(null);
   const imagePosition = useRef<number | null>(null);
   const pending = useRef(false);
@@ -40,7 +40,7 @@ export function RichTextEditor({ id, value, onChange, onUploadStateChange }: { i
     const issue = posterFileError(file); if (issue) { setError(issue); return; }
     const location = position ?? imagePosition.current ?? editor.state.selection.from;
     pending.current = true; setUploading(true); onUploadStateChange?.(true); setError("");
-    try { const result = await uploadAdminImage(file); if (!editor.isDestroyed) editor.chain().focus().setTextSelection(Math.min(location,editor.state.doc.content.size)).setImage({src:result.url,alt:file.name}).run(); }
+    try { const result = await uploadAdminImage(file, uploadPurpose); if (!editor.isDestroyed) editor.chain().focus().setTextSelection(Math.min(location,editor.state.doc.content.size)).setImage({src:result.url,alt:file.name}).run(); }
     catch(cause) { setError(cause instanceof Error ? cause.message : "Không thể tải ảnh lên."); }
     finally { pending.current = false; setUploading(false); onUploadStateChange?.(false); imagePosition.current = null; }
   }

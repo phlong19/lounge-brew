@@ -1,6 +1,8 @@
 export const ticketStyles = {
   section: "overflow-hidden bg-[#0C1512] text-[#FFFAE7]",
   link: "group relative isolate block bg-[repeating-linear-gradient(135deg,transparent_0px,transparent_7px,rgba(255,255,255,0.1)_7px,rgba(255,255,255,0.1)_8px)] rounded-t-xl rounded-b-md border border-black/20 shadow-[0_5px_0_rgba(0,0,0,0.25)] transition-transform duration-300 hover:-translate-y-1 focus-visible:-translate-y-1 motion-reduce:transform-none",
+  shineFrame: "pointer-events-none absolute inset-0 z-20 overflow-hidden rounded-[inherit] motion-reduce:hidden",
+  shine: "absolute inset-y-[-25%] left-0 w-2/3 -translate-x-[200%] -skew-x-12 bg-linear-to-r from-transparent via-white/75 to-transparent opacity-0 transition-[translate,opacity] duration-700 ease-out group-hover:translate-x-[250%] group-hover:opacity-100 group-focus-visible:translate-x-[250%] group-focus-visible:opacity-100",
   header: "relative px-4 pt-5 pb-3 text-center",
   stripe: "pointer-events-none absolute inset-x-4 top-0 h-1.5 rounded-b-sm",
   mark: "absolute top-5 size-3 opacity-60",

@@ -10,7 +10,7 @@ test("anonymous cached extras exclude current, hidden, deleted and started shows
  process.env.NEXT_PUBLIC_SUPABASE_URL="https://example.supabase.co";
  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="public-test-key";
  const calls=[];
- const base={title_vi:"Programme",title_en:null,performer_name:"Artist",description_vi:null,description_en:null,cover_image_url:null,is_active:true,event_date:new Date(Date.now()+3600000).toISOString()};
+ const base={title_vi:"Programme",title_en:null,performer_name:"Artist",cover_image_url:null,is_active:true,event_date:new Date(Date.now()+3600000).toISOString()};
  globalThis.fetch=async(url,options)=>{calls.push({url,options});return Response.json(url.includes("seating_settings")?[]:[
   {...base,id:"internal-current",public_id:"current"},{...base,id:"future"},
   {...base,id:"hidden",is_active:false},{...base,id:"deleted",is_deleted:true},

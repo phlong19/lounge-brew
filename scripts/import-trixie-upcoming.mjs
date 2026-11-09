@@ -142,7 +142,7 @@ for(const event of events){
   const image=await upload(url,event.title_vi);
   content=content.split(url.replaceAll("&","&amp;")).join(image.url);
  }
- const saved=await db.from("events").insert({source_id:event.source_id,source_url:event.source_url,title_vi:event.title_vi,title_en:null,performer_name:event.performer_name,event_date:event.event_date,end_date:event.end_date,description_vi:null,description_en:null,content_vi:content,content_en:null,cover_asset_id:poster.asset.id,cover_image_url:poster.url,is_active:true,additional_fee:null}).select("id,public_id,content_vi,cover_image_url").single();
+ const saved=await db.from("events").insert({source_id:event.source_id,source_url:event.source_url,title_vi:event.title_vi,title_en:null,performer_name:event.performer_name,event_date:event.event_date,end_date:event.end_date,content_vi:content,content_en:null,cover_asset_id:poster.asset.id,cover_image_url:poster.url,is_active:true,additional_fee:null}).select("id,public_id,content_vi,cover_image_url").single();
  if(saved.error)throw Error("Event save failed for "+event.source_id+": "+saved.error.code);
  const actual=DomUtils.textContent(parseDocument(saved.data.content_vi)).replace(/\s+/g," ").trim();
  if(actual!==event.sourceText)throw Error("Stored article verification failed");

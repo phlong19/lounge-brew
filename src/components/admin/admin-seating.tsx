@@ -20,8 +20,8 @@ function SeatingForm({item,onSaved}:{item:SeatingSettings;onSaved:()=>void}) {
  const {control,handleSubmit,setValue,reset,formState:{isDirty}}=useForm<SeatingDraft>({defaultValues:{lower_asset_id:item.lower_asset_id,upper_asset_id:item.upper_asset_id,is_visible:item.is_visible,lowerFile:null,upperFile:null}});
  const values=useWatch({control});
  const save=useMutation({mutationFn:async (draft:SeatingDraft)=>{
-  const lower=draft.lowerFile?(await uploadAdminImage(draft.lowerFile)).asset.id:draft.lower_asset_id;
-  const upper=draft.upperFile?(await uploadAdminImage(draft.upperFile)).asset.id:draft.upper_asset_id;
+  const lower=draft.lowerFile?(await uploadAdminImage(draft.lowerFile,"core")).asset.id:draft.lower_asset_id;
+  const upper=draft.upperFile?(await uploadAdminImage(draft.upperFile,"core")).asset.id:draft.upper_asset_id;
   const result=await adminRequest("/api/admin/seating",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({lower_asset_id:lower,upper_asset_id:upper,is_visible:draft.is_visible,expectedUpdatedAt:item.updated_at})});
   return result.item as SeatingSettings;
  },onSuccess:async saved=>{
@@ -45,6 +45,6 @@ export function AdminSeating() {
  const query=useQuery({queryKey:adminKeys.seating,queryFn:async ({signal})=>{const data=await adminRequest("/api/admin/seating",{signal});return data.item as SeatingSettings;}});
  return <Stack gap="lg">
   <AlertMessage>Sơ đồ dùng chung cho tất cả sự kiện. Thay đổi tại đây sẽ cập nhật trên mọi trang sự kiện.</AlertMessage>
-  {query.isPending?<Grid className="md:grid-cols-2"><ContentSkeleton image label="Đang tải sơ đồ…" /><ContentSkeleton image label="Đang tải sơ đồ…" /></Grid>:query.error?<Stack><AlertMessage variant="destructive">{query.error.message}</AlertMessage><Button variant="outline" className="w-fit" onClick={()=>void query.refetch()}>Tải lại cấu hình</Button></Stack>:<SeatingForm key={query.data.updated_at} item={query.data} onSaved={()=>toast("Đã lưu sơ đồ cho tất cả trang sự kiện.")} />}
+  {query.isPending?<Grid className="md:grid-cols-2"><ContentSkeleton image label="Đang tải sơ đồ…" /><ContentSkeleton image label="Đang tải sơ đồ…" /></Grid>:query.error?<Stack><AlertMessage variant="destructive">{query.error.message}</AlertMessage><Button variant="outline" className="w-fit" onClick={()=>void query.refetch()}>Tải lại</Button></Stack>:<SeatingForm key={query.data.updated_at} item={query.data} onSaved={()=>toast("Đã lưu sơ đồ cho tất cả trang sự kiện.")} />}
  </Stack>;
 }

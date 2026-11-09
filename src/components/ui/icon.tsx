@@ -1,4 +1,6 @@
 import {
+  LoaderCircle,
+  House,
   EllipsisVertical,
   KeyRound,
   ShieldOff,
@@ -57,6 +59,8 @@ import {
 import { cn } from "@/lib/utils";
 
 const icons = {
+  spinner: LoaderCircle,
+  home: House,
   more: EllipsisVertical,
   key: KeyRound,
   lock: ShieldOff,

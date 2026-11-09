@@ -126,8 +126,6 @@ export function AdminDesign({
       performer_name: "",
       event_date: "",
       end_date: null,
-      description_vi: "",
-      description_en: "",
       cover_image_url: null,
       is_active: true,
       additionalFee: 0,

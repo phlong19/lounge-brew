@@ -1,0 +1,16 @@
+export const pageStateStyles={
+ loading:"relative min-h-svh bg-[#FFFAE7] text-[#15201C]",
+ overlay:"fixed inset-0 z-[100] overflow-hidden text-[#15201C]",
+ half:"absolute inset-x-0 h-1/2 bg-[#FFFAE7] transition-transform duration-700 ease-in-out motion-reduce:transition-none",
+ upper:"top-0 flex items-end justify-center pb-2",
+ lower:"bottom-0 flex items-start justify-center px-6 pt-2",
+ logo:"h-auto w-40 sm:w-48",
+ spinner:"size-4 shrink-0 text-[#006B58] motion-safe:animate-spin",
+ loadingLabel:"flex items-center justify-center gap-2.5",
+ shimmer:"text-lg font-medium sm:text-xl bg-linear-to-r from-[#15201C]/35 via-[#006B58] to-[#15201C]/35 bg-clip-text text-center text-transparent motion-safe:animate-pulse",
+ missing:"bg-[#FFFAE7] text-[#15201C]",
+ split:"flex min-h-[calc(100svh-132px)] items-center justify-center",
+ copy:"flex w-full max-w-2xl flex-col items-center justify-center gap-6 px-6 py-16 text-center md:py-20",
+ code:"text-[clamp(6rem,15vw,12rem)] font-semibold leading-none tracking-[-0.08em] text-[#006B58]",
+ actions:"flex flex-wrap items-center justify-center gap-3 pt-2",
+} as const;

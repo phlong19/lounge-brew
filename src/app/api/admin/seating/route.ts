@@ -19,7 +19,7 @@ export async function PATCH(request: Request) {
   for (const key of ["lower_asset_id","upper_asset_id"] as const) {
    if (body[key] !== null && (typeof body[key] !== "string" || !/^[a-f0-9-]{36}$/i.test(body[key]))) throw new AdminApiError("Ảnh sơ đồ không hợp lệ.");
    if (body[key]) {
-    const asset = await supabase.from("media_assets").select("id").eq("id",body[key]).eq("bucket_id","lounge-public").maybeSingle();
+    const asset = await supabase.from("media_assets").select("id").eq("id",body[key]).eq("bucket_id","lounge-public").eq("provider","supabase").maybeSingle();
     databaseFailure(asset.error); if (!asset.data) throw new AdminApiError("Vui lòng tải ảnh công khai hợp lệ.");
    }
   }

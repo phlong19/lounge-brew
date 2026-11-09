@@ -1,3 +1,4 @@
+import {LandingReady} from "@/components/content/landing-loading";
 import {PublicDataBoundary} from "@/components/lounge/public-data-boundary";
 import { getLocale } from "next-intl/server";
 
@@ -16,6 +17,7 @@ export default async function LandingPage() {
   const locale=await getLocale();
   return (
     <PublicDataBoundary video>
+      <LandingReady english={locale==="en"} />
       <SiteHeader active="home" />
       <Main id="main-content">
         <HeroCarousel />

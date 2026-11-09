@@ -1,4 +1,5 @@
 import {cache} from "react";
+import { r2PublicUrl } from "@/lib/server/r2";
 import { isSameOrigin } from "@/lib/server/request-origin";
 import { canAccessAdmin,canManageEvents,type StaffRole } from "@/lib/admin/roles";
 import { createClient } from "@supabase/supabase-js";
@@ -56,9 +57,14 @@ export function databaseFailure(error: { code?: string } | null) {
 
 export async function resolveEventCover(supabase: Awaited<ReturnType<typeof requireStaff>>["supabase"], payload: Record<string,unknown>) {
   if (!payload.cover_asset_id) return;
-  const asset = await supabase.from("media_assets").select("object_path").eq("id",payload.cover_asset_id).eq("bucket_id","lounge-public").maybeSingle();
+  const asset = await supabase.from("media_assets").select("object_path,bucket_id,provider").eq("id",payload.cover_asset_id).maybeSingle();
   databaseFailure(asset.error);
   if (!asset.data) throw new AdminApiError("Vui lòng chọn ảnh bìa trong thư viện công khai.");
+  if (asset.data.provider === "r2") {
+    if (asset.data.bucket_id !== process.env.R2_BUCKET_NAME) throw new AdminApiError("Kho ảnh không hợp lệ.");
+    payload.cover_image_url = r2PublicUrl(asset.data.object_path); return;
+  }
+  if (asset.data.bucket_id !== "lounge-public") throw new AdminApiError("Ảnh bìa phải công khai.");
   payload.cover_image_url = supabase.storage.from("lounge-public").getPublicUrl(asset.data.object_path).data.publicUrl;
 }
 

@@ -21,6 +21,7 @@ export function EventTicket({ event, locale, colour }: { event: LocalizedEvent; 
   const palette = posterTicketColours[event.id] ?? { stock: ticketColours[colour % ticketColours.length], stripe: "bg-[#2E7017]" };
   const time = new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(event.eventDate));
   return <Article className="px-1 pt-2 pb-3"><AppLink href={`/events/${event.id}`} className={cn(s.link, ticketPrintFont.className, palette.stock)} aria-label={`${event.performerName} · ${formatDate(event.eventDate)} · ${t("details")}`}>
+    <Surface aria-hidden="true" className={s.shineFrame}><Surface className={s.shine} /></Surface>
     <Surface aria-hidden="true" className={cn(s.stripe, palette.stripe)} />
     <Surface className={s.header}>
       <Icon name="plus" aria-hidden="true" className={cn(s.mark, "left-3")} />

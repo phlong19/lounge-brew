@@ -103,7 +103,7 @@ export default async function ShowPage({ params }: Props) {
             </Grid>
             <Grid className={others.length ? "mt-10 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8" : "mt-10"}>
               <Stack gap="xl" className="w-full">
-                {event.content ? <Stack data-event-article><RichText content={eventBody(event.content)} imageSize="event" /></Stack> : event.description ? <Typography variant="lead">{event.description}</Typography> : null}
+                {event.content ? <Stack data-event-article><RichText content={eventBody(event.content)} imageSize="event" /></Stack> : null}
                 <PublicSeating english={locale === "en"} />
               </Stack>
               <EventSidebar currentId={id} locale={locale as AppLocale} />

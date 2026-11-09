@@ -42,7 +42,6 @@ export const getPublicEvents = cache(async ():Promise<EventRow[]>=>{
   id:row.id,public_id:row.public_id,title_vi:row.title_vi,title_en:row.title_en??null,
   performer_name:row.performer_name,event_date:row.event_date,end_date:row.end_date??null,
   cover_image_url:row.cover_image_url??null,is_active:true,is_deleted:false,
-  description_vi:null,description_en:null,
  }));
 });
 /** Transport failures must reject so React Query can retain its previous data. */

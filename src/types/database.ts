@@ -143,8 +143,6 @@ export type Database = {
           cover_image_url: string | null
           created_at: string
           created_by: string | null
-          description_en: string | null
-          description_vi: string | null
           end_date: string | null
           event_date: string
           id: string
@@ -167,8 +165,6 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
-          description_en?: string | null
-          description_vi?: string | null
           end_date?: string | null
           event_date: string
           id?: string
@@ -191,8 +187,6 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
-          description_en?: string | null
-          description_vi?: string | null
           end_date?: string | null
           event_date?: string
           id?: string
@@ -221,6 +215,7 @@ export type Database = {
         Row: {
           alt_en: string | null
           alt_vi: string
+          provider: "supabase" | "r2"
           bucket_id: string
           created_at: string
           created_by: string | null
@@ -237,6 +232,7 @@ export type Database = {
         Insert: {
           alt_en?: string | null
           alt_vi?: string
+          provider?: "supabase" | "r2"
           bucket_id: string
           created_at?: string
           created_by?: string | null
@@ -253,6 +249,7 @@ export type Database = {
         Update: {
           alt_en?: string | null
           alt_vi?: string
+          provider?: "supabase" | "r2"
           bucket_id?: string
           created_at?: string
           created_by?: string | null

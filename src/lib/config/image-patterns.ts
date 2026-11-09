@@ -15,6 +15,27 @@ export function remoteImagePatterns(supabaseUrl?: string): ImagePattern[] {
       pathname: "/media/**",
     },
   ];
+  const r2Base =
+    process.env.NEXT_PUBLIC_R2_MEDIA_URL || process.env.R2_PUBLIC_BASE_URL;
+  if (r2Base) {
+    try {
+      const u = new URL(r2Base);
+      if (
+        u.protocol === "https:" &&
+        !u.username &&
+        !u.password &&
+        !u.search &&
+        !u.hash &&
+        !/[*?]/.test(u.hostname)
+      )
+        patterns.push({
+          protocol: "https",
+          hostname: u.hostname,
+          port: u.port,
+          pathname: `${u.pathname.replace(/\/$/, "")}/**`,
+        });
+    } catch {}
+  }
   if (!supabaseUrl) return patterns;
 
   try {

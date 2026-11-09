@@ -1,3 +1,3 @@
 import {getLocale} from "next-intl/server";
-import {PageSkeleton} from "@/components/content/page-skeleton";
-export default async function Loading(){return <PageSkeleton english={(await getLocale())==="en"} />;}
+import {LandingLoading} from "@/components/content/landing-loading";
+export default async function Loading(){return <LandingLoading english={(await getLocale())==="en"} />;}

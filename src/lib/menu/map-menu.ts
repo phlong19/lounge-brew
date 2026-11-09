@@ -43,11 +43,6 @@ export function localizeEvent(
   event: EventRow,
 ): LocalizedEvent {
   const localizedTitle = localizeText(locale, event.title_vi, event.title_en);
-  const localizedDescription = localizeText(
-    locale,
-    event.description_vi,
-    event.description_en,
-  );
 
   return {
     id: event.public_id || event.id,
@@ -57,11 +52,8 @@ export function localizeEvent(
     eventDate: event.event_date,
     endDate: event.end_date ?? null,
     sourceUrl: event.source_url ?? null,
-    description: localizedDescription.value || null,
     coverImageUrl: event.cover_image_url,
-    fallbackFromVietnamese:
-      localizedTitle.fallbackFromVietnamese ||
-      localizedDescription.fallbackFromVietnamese,
+    fallbackFromVietnamese: localizedTitle.fallbackFromVietnamese,
   };
 }
 

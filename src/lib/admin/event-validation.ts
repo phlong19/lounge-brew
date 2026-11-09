@@ -27,7 +27,7 @@ export function eventPayload(input: unknown, partial = false): Record<string, un
   const raw = input as Record<string, unknown>;
   const result: Record<string, unknown> = {};
   if ("expectedUpdatedAt" in raw && (typeof raw.expectedUpdatedAt !== "string" || raw.expectedUpdatedAt.length > 64 || !Number.isFinite(Date.parse(raw.expectedUpdatedAt)))) throw new EventInputError("Phiên bản sự kiện không hợp lệ.");
-  const strings: Record<string, number> = { title_vi:200,title_en:200,performer_name:160,event_date:64,end_date:64,description_vi:5000,description_en:5000,content_vi:500000,content_en:500000,cover_image_url:2048,cover_asset_id:36,source_id:160,source_url:2048 };
+  const strings: Record<string, number> = { title_vi:200,title_en:200,performer_name:160,event_date:64,end_date:64,content_vi:500000,content_en:500000,cover_image_url:2048,cover_asset_id:36,source_id:160,source_url:2048 };
   const allowed = new Set([...Object.keys(strings),"is_active","additional_fee","additionalFee","isDeleted","expectedUpdatedAt"]);
   for (const key of Object.keys(raw)) if (!allowed.has(key)) throw new EventInputError(`Trường không được hỗ trợ: ${key}`);
   for (const [key,max] of Object.entries(strings)) if (key in raw) {
