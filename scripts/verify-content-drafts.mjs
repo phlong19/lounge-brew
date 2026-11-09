@@ -1,0 +1,58 @@
+import fs from 'node:fs';
+process.loadEnvFile('.env.local');
+const migration=process.argv.includes('--with-migration')?fs.readFileSync('supabase/migrations/20261110000000_content_drafts_media_lifecycle.sql','utf8'):'';
+const checks=`
+do $$
+declare uid uuid; a uuid:=gen_random_uuid(); b uuid:=gen_random_uuid(); c uuid:=gen_random_uuid(); d uuid:=gen_random_uuid(); e uuid:=gen_random_uuid(); f uuid:=gen_random_uuid(); g uuid:=gen_random_uuid(); h uuid:=gen_random_uuid(); session1 uuid:=gen_random_uuid(); session2 uuid:=gen_random_uuid(); shared_draft jsonb; draft jsonb; published jsonb; article jsonb; stamp timestamptz;
+begin
+ perform set_config('request.jwt.claims','{}',true);
+ begin perform public.release_media_session(session1);raise exception 'Anonymous release allowed';exception when insufficient_privilege then null;end;
+ select user_id into uid from public.staff_members where role='admin' and is_active limit 1;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',uid,'role','authenticated','iat',extract(epoch from now())::bigint)::text,true);
+ insert into public.media_assets(id,provider,bucket_id,object_path,original_filename,mime_type,size_bytes,width,height)select value,'supabase','lounge-public','lifecycle-test/'||value||'.jpg','fixture.jpg','image/jpeg',1,1,1 from unnest(array[a,b,c,d,e,f,g,h])value;
+ perform public.claim_media_upload(session1,a);
+ draft:=public.save_content_draft(null,'event',jsonb_build_object('title_vi','','cover_asset_id',a,'cover_image_url','https://example.invalid/lifecycle-test/'||a||'.jpg'),null,session1);
+ if exists(select 1 from public.media_upload_claims where session_id=session1)then raise exception 'Saved draft did not release claims';end if;
+ if not exists(select 1 from public.media_assets where id=a)then raise exception 'Draft cover deleted';end if;
+ if exists(select 1 from public.events where id=(draft->>'id')::uuid)then raise exception 'Incomplete draft became public event';end if;
+ begin perform public.commit_content('event',null,'{}',(draft->>'updated_at')::timestamptz,(draft->>'id')::uuid,session1);raise exception 'Invalid promotion succeeded';exception when integrity_constraint_violation then null;end;
+ if not exists(select 1 from public.content_drafts where id=(draft->>'id')::uuid)then raise exception 'Failed promotion lost draft';end if;
+ published:=public.commit_content('event',null,jsonb_build_object('title_vi','Lifecycle fixture','performer_name','Fixture','event_date',now()+interval '1 day','cover_asset_id',a,'cover_image_url','https://example.invalid/lifecycle-test/'||a||'.jpg'),(draft->>'updated_at')::timestamptz,(draft->>'id')::uuid,session1);
+ if exists(select 1 from public.content_drafts where id=(draft->>'id')::uuid)then raise exception 'Promoted draft retained';end if;
+ if not exists(select 1 from public.events where id=(draft->>'id')::uuid)then raise exception 'Promotion lost record identity';end if;
+ shared_draft:=public.save_content_draft(null,'article',jsonb_build_object('thumbnail_url','https://example.invalid/lifecycle-test/'||a||'.jpg'),null,null);
+ perform public.claim_media_upload(session2,b);
+ published:=public.commit_content('event',(published->>'id')::uuid,jsonb_build_object('cover_asset_id',b,'cover_image_url','https://example.invalid/lifecycle-test/'||b||'.jpg'),(published->>'updated_at')::timestamptz,null,session2);
+ if not exists(select 1 from public.media_assets where id=a)then raise exception 'Cover shared with another draft deleted';end if;
+ perform public.delete_content_draft((shared_draft->>'id')::uuid,(shared_draft->>'updated_at')::timestamptz,null);
+ if exists(select 1 from public.media_assets where id=a)then raise exception 'Detached old cover retained';end if;
+ if not exists(select 1 from public.media_deletion_jobs where object_path='lifecycle-test/'||a||'.jpg')then raise exception 'Old cover cleanup not recorded';end if;
+ perform public.claim_media_upload(session1,c);perform public.claim_media_upload(session2,c);
+ perform public.release_media_session(session1);
+ if not exists(select 1 from public.media_assets where id=c)then raise exception 'Another session claim ignored';end if;
+ perform public.release_media_session(session2);
+ if exists(select 1 from public.media_assets where id=c)then raise exception 'Discarded upload retained';end if;
+ article:=public.commit_content('article',null,jsonb_build_object('title_vi','Article fixture','slug','lifecycle-test-'||d,'thumbnail_url','https://example.invalid/lifecycle-test/'||d||'.jpg','content_vi','<img src="https://example.invalid/lifecycle-test/'||d||'.jpg">'),null,null,null);
+ article:=public.commit_content('article',(article->>'id')::uuid,jsonb_build_object('thumbnail_url','https://example.invalid/lifecycle-test/'||b||'.jpg','content_vi','<p>Replaced</p>'),(article->>'updated_at')::timestamptz,null,null);
+ if exists(select 1 from public.media_assets where id=d)then raise exception 'Blog replacement retained old media';end if;
+ delete from public.articles where id=(article->>'id')::uuid;
+ if not exists(select 1 from public.media_assets where id=b)then raise exception 'Blog deletion deleted shared event cover';end if;
+ update public.seating_settings set lower_asset_id=e,is_visible=false where id='home';
+ update public.seating_settings set lower_asset_id=null where id='home';
+ if exists(select 1 from public.media_assets where id=e)then raise exception 'Seating removal retained old image';end if;
+ begin perform public.delete_content_draft((draft->>'id')::uuid,now(),null);raise exception 'Stale/nonexistent draft deleted';exception when serialization_failure then null;end;
+ perform public.claim_media_upload(session1,f);perform public.claim_media_upload(session1,g);
+ shared_draft:=public.save_content_draft(null,'article',jsonb_build_object('thumbnail_url','https://example.invalid/lifecycle-test/'||g||'.jpg'),null,null);
+ update public.media_upload_claims set created_at=now()-interval '8 days'where asset_id in(f,g);
+ perform public.expire_abandoned_media_claims();
+ if exists(select 1 from public.media_assets where id=f)then raise exception 'Expired abandoned upload retained';end if;
+ if not exists(select 1 from public.media_assets where id=g)then raise exception 'Expiry deleted a saved draft image';end if;
+ if has_function_privilege('authenticated','public.expire_abandoned_media_claims()','EXECUTE')then raise exception 'Expiry service privilege leaked';end if;
+ perform public.claim_media_upload(session2,h);
+ perform public.delete_event_with_session((published->>'id')::uuid,(published->>'updated_at')::timestamptz,session2);
+ if exists(select 1 from public.events where id=(published->>'id')::uuid)or exists(select 1 from public.media_assets where id in(b,h))then raise exception 'Editor delete left live or unsaved media behind';end if;
+ if has_table_privilege('anon','public.content_drafts','SELECT')or has_table_privilege('authenticated','public.media_upload_claims','SELECT')then raise exception 'Private drafts/claims exposed';end if;
+end $$;`;
+const query='begin;\n'+migration+'\n'+checks+'\nrollback;';
+const response=await fetch('https://api.supabase.com/v1/projects/zcftrbvrfiypqtwhmxxj/database/query',{method:'POST',headers:{Authorization:`Bearer ${process.env.SUPABASE_PERSONAL_ACCESS_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({query})});
+console.log('Draft/media rollback contract checks:',response.status);if(!response.ok){console.log(await response.text());process.exitCode=1;}

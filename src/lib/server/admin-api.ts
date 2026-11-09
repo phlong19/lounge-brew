@@ -50,6 +50,7 @@ export function eventId(id: string) { if (!/^[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f
 export function databaseFailure(error: { code?: string } | null) {
   if (!error) return;
   if (error.code === "23505") throw new AdminApiError("Sự kiện hoặc ảnh đã tồn tại.",409);
+  if (["40001","40P01"].includes(error.code||"")) throw new AdminApiError("Nội dung đã thay đổi. Vui lòng tải lại và thử lại.",409);
   if (error.code === "42501") throw new AdminApiError("Không có quyền thực hiện thao tác này.",403);
   if (["23514","23503","22007","22008"].includes(error.code || "")) throw new AdminApiError("Dữ liệu hoặc ảnh của sự kiện không hợp lệ.");
   throw new AdminApiError("Không thể truy cập dữ liệu. Kiểm tra kết nối và cập nhật cơ sở dữ liệu.",503);
@@ -57,9 +58,10 @@ export function databaseFailure(error: { code?: string } | null) {
 
 export async function resolveEventCover(supabase: Awaited<ReturnType<typeof requireStaff>>["supabase"], payload: Record<string,unknown>) {
   if (!payload.cover_asset_id) return;
-  const asset = await supabase.from("media_assets").select("object_path,bucket_id,provider").eq("id",payload.cover_asset_id).maybeSingle();
+  const asset = await supabase.from("media_assets").select("object_path,bucket_id,provider,ticket_palette_key").eq("id",payload.cover_asset_id).maybeSingle();
   databaseFailure(asset.error);
   if (!asset.data) throw new AdminApiError("Vui lòng chọn ảnh bìa trong thư viện công khai.");
+  payload.ticket_palette_key = asset.data.ticket_palette_key;
   if (asset.data.provider === "r2") {
     if (asset.data.bucket_id !== process.env.R2_BUCKET_NAME) throw new AdminApiError("Kho ảnh không hợp lệ.");
     payload.cover_image_url = r2PublicUrl(asset.data.object_path); return;

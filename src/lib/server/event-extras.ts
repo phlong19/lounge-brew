@@ -24,7 +24,7 @@ export const getSeatingSettings = cache(async (): Promise<SeatingSettings | null
 export const getOtherUpcomingEvents = cache(async (currentId: string): Promise<EventRow[]> => {
  const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
  try {
-  const fields = "id,public_id,title_vi,title_en,performer_name,event_date,end_date,cover_image_url,is_active,is_deleted";
+  const fields = "id,public_id,title_vi,title_en,performer_name,event_date,end_date,cover_image_url,ticket_palette_key,ticket_palette_override,is_active,is_deleted";
   // Minute bucket shares results across all detail URLs; expired shows are filtered again below.
   const minute = new Date(Math.floor(Date.now()/60000)*60000).toISOString();
   const rows = configured ? await publicRows<EventRow>("events", `select=${fields}&is_active=eq.true&is_deleted=eq.false&event_date=gte.${minute}&order=event_date.asc,id.asc&limit=30`, "upcoming-events") : verifiedEvents;
@@ -34,14 +34,14 @@ export const getOtherUpcomingEvents = cache(async (currentId: string): Promise<E
 
 /** Shared anonymous summary dataset; never serialize full articles or staff fields. */
 export const getPublicEvents = cache(async ():Promise<EventRow[]>=>{
- const fields="id,public_id,title_vi,title_en,performer_name,event_date,end_date,cover_image_url,is_active,is_deleted";
+ const fields="id,public_id,title_vi,title_en,performer_name,event_date,end_date,cover_image_url,ticket_palette_key,ticket_palette_override,is_active,is_deleted";
  const configured=Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
  const minute=new Date(Math.floor(Date.now()/60000)*60000).toISOString();
  const rows=configured?await publicRows<EventRow>("events",`select=${fields}&is_active=eq.true&is_deleted=eq.false&or=(end_date.gte.${minute},event_date.gte.${minute})&order=event_date.asc,id.asc`,"upcoming-events"):verifiedEvents;
  return upcomingEvents(rows).map(row=>({
   id:row.id,public_id:row.public_id,title_vi:row.title_vi,title_en:row.title_en??null,
   performer_name:row.performer_name,event_date:row.event_date,end_date:row.end_date??null,
-  cover_image_url:row.cover_image_url??null,is_active:true,is_deleted:false,
+  cover_image_url:row.cover_image_url??null,ticket_palette_key:row.ticket_palette_override??row.ticket_palette_key??null,is_active:true,is_deleted:false,
  }));
 });
 /** Transport failures must reject so React Query can retain its previous data. */

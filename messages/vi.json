@@ -347,5 +347,10 @@
     "details": "Khám phá đêm nhạc",
     "stub": "Café & Lounge",
     "empty": "Lịch minishow mới sẽ được cập nhật tại đây."
+  },
+  "EventView": {
+    "normalLabel": "Hiển thị dạng thẻ thông thường",
+    "normalHint": "Bật để xem dạng thẻ thông thường.",
+    "ticketHint": "Tắt để xem dạng vé đêm nhạc."
   }
 }

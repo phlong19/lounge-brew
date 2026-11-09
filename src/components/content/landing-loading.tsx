@@ -4,6 +4,7 @@ import {createContext,useCallback,useContext,useEffect,useLayoutEffect,useMemo,u
 import {Inline,Main,Surface} from "@/components/ui/layout";
 import {Icon} from "@/components/ui/icon";
 import {Media} from "@/components/ui/media";
+import {ShimmerText} from "@/components/ui/shimmer-text";
 import {Typography} from "@/components/ui/typography";
 import {pageStateStyles as s} from "@/lib/ui/page-state-styles";
 import {cn} from "@/lib/utils";
@@ -12,7 +13,7 @@ const LoadingContext=createContext<{begin:(english:boolean)=>void;end:()=>void;p
 function LoadingCurtain({english=false,exiting=false,fixed=false,onExited}:{english?:boolean;exiting?:boolean;fixed?:boolean;onExited?:()=>void}){
  return <Surface className={fixed?s.overlay:s.loading} data-loading-curtain data-exiting={exiting} aria-hidden={exiting||undefined} role={exiting?undefined:"status"} aria-busy={!exiting} aria-live="polite">
  <Surface className={cn(s.half,s.upper,exiting?"-translate-y-full":"translate-y-0")}><Media src="/trixie/logo.png" alt="Trixie Café & Lounge" width={192} height={78} className={s.logo} fit="contain" priority /></Surface>
- <Surface className={cn(s.half,s.lower,exiting?"translate-y-full":"translate-y-0")} onTransitionEnd={event=>{if(event.target===event.currentTarget&&exiting)onExited?.();}}><Inline className={s.loadingLabel}><Icon name="spinner" className={s.spinner} /><Typography className={s.shimmer}>{english?"Loading…":"Đang tải…"}</Typography></Inline></Surface>
+ <Surface className={cn(s.half,s.lower,exiting?"translate-y-full":"translate-y-0")} onTransitionEnd={event=>{if(event.target===event.currentTarget&&exiting)onExited?.();}}><Inline className={s.loadingLabel}><Icon name="spinner" className={s.spinner} /><ShimmerText className={s.shimmer}>{english?"Loading…":"Đang tải…"}</ShimmerText></Inline></Surface>
  </Surface>;
 }
 

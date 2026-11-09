@@ -1,14 +1,19 @@
+import { after } from "next/server";
+import { drainMediaDeletionJobs } from "@/lib/server/media-cleanup";
 import { createHash } from "node:crypto";
 import sharp from "sharp";
+import { extractTicketPalette, ticketPaletteVersion } from "@/lib/media/extract-ticket-palette";
 import { putR2Image, r2PublicUrl, r2Config } from "@/lib/server/r2";
 import { NextResponse } from "next/server";
-import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, requireContentStaff } from "@/lib/server/admin-api";
+import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, requireContentStaff, eventId } from "@/lib/server/admin-api";
 import { posterFileError } from "@/lib/admin/poster";
 export const runtime = "nodejs";
+export const maxDuration=60;
 export async function POST(request:Request) {
   try {
     assertSameOrigin(request);
     const {supabase,user} = await requireContentStaff(request);
+    after(async()=>{try {await drainMediaDeletionJobs();} catch { /* Durable retry on the next admin operation. */ }});
     if (Number(request.headers.get("content-length")) > 11*1024*1024) throw new AdminApiError("Ảnh không được vượt quá 10 MB.",413);
     const reader = request.body?.getReader();
     if (!reader) throw new AdminApiError("Thiếu tệp ảnh.");
@@ -17,6 +22,8 @@ export async function POST(request:Request) {
     try { while (true) { const part = await reader.read(); if (part.done) break; size += part.value.byteLength; if (size > 11*1024*1024) { await reader.cancel(); throw new AdminApiError("Ảnh không được vượt quá 10 MB.",413); } chunks.push(part.value); } }
     finally { reader.releaseLock(); }
     const form = await new Response(Buffer.concat(chunks),{headers:{"Content-Type":request.headers.get("content-type") || ""}}).formData();
+    const session=form.get("sessionId");if(session!==null)eventId(String(session));
+    async function respond(asset:{id:string},url:string,status=200){if(session){const claim=await supabase.rpc("claim_media_upload",{p_session:String(session),p_asset:asset.id});databaseFailure(claim.error);}return NextResponse.json({asset,url},{status});}
     const file = form.get("file");
     if (!(file instanceof File)) throw new AdminApiError("Vui lòng chọn ảnh.");
     const validation = posterFileError(file);
@@ -36,7 +43,18 @@ export async function POST(request:Request) {
     const existing = await supabase.from("media_assets").select("*").eq("provider",provider).eq("bucket_id",bucket).eq("object_path",path).maybeSingle();
     databaseFailure(existing.error);
     const url = provider === "r2" ? r2PublicUrl(path) : supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
-    if (existing.data) return NextResponse.json({asset:existing.data,url});
+    let paletteFields = {};
+    if (purpose === "event" && (!existing.data?.ticket_palette_key || existing.data.ticket_palette_version !== ticketPaletteVersion)) {
+      const palette = await extractTicketPalette(bytes);
+      paletteFields = {ticket_palette_key:palette.key,ticket_palette_version:palette.version,ticket_palette_hash:palette.hash};
+    }
+    if (existing.data) {
+      if (Object.keys(paletteFields).length) {
+        const updated = await supabase.from("media_assets").update(paletteFields).eq("id",existing.data.id).select().single(); databaseFailure(updated.error);
+        return await respond(updated.data,url);
+      }
+      return await respond(existing.data,url);
+    }
     if (provider === "r2") { try { await putR2Image(path,bytes,file.type); } catch { throw new AdminApiError("Không thể tải ảnh lên R2. Vui lòng thử lại.",503); } }
     else {
     const upload = await supabase.storage.from("lounge-public").upload(path,bytes,{contentType:file.type,upsert:false,cacheControl:"31536000"});
@@ -45,11 +63,11 @@ export async function POST(request:Request) {
     const source = form.get("sourceUrl");
     let sourceUrl: string|null = null;
     if (typeof source === "string") { try { const parsed = new URL(source); if (parsed.protocol === "https:" && parsed.hostname === "trixie.com.vn" && !parsed.username && !parsed.password) sourceUrl = parsed.href; } catch {} }
-    const insert = await supabase.from("media_assets").insert({provider,bucket_id:bucket,object_path:path,original_filename:file.name.slice(0,240),mime_type:file.type,size_bytes:bytes.length,width:metadata.width,height:metadata.height,alt_vi:typeof form.get("alt") === "string" ? String(form.get("alt")).slice(0,500) : "",source_url:sourceUrl,created_by:user.id}).select().single();
+    const insert = await supabase.from("media_assets").insert({...paletteFields,provider,bucket_id:bucket,object_path:path,original_filename:file.name.slice(0,240),mime_type:file.type,size_bytes:bytes.length,width:metadata.width,height:metadata.height,alt_vi:typeof form.get("alt") === "string" ? String(form.get("alt")).slice(0,500) : "",source_url:sourceUrl,created_by:user.id}).select().single();
     if (insert.error?.code === "23505") {
-      const retry = await supabase.from("media_assets").select("*").eq("provider",provider).eq("bucket_id",bucket).eq("object_path",path).single(); databaseFailure(retry.error); return NextResponse.json({asset:retry.data,url});
+      const retry = await supabase.from("media_assets").select("*").eq("provider",provider).eq("bucket_id",bucket).eq("object_path",path).single(); databaseFailure(retry.error); return await respond(retry.data,url);
     }
     databaseFailure(insert.error);
-    return NextResponse.json({asset:insert.data,url},{status:201});
+    return await respond(insert.data,url,201);
   } catch(error) { return apiFailure(error); }
 }

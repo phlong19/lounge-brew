@@ -27,7 +27,7 @@ export default async function LandingPage() {
         <HomeVideo />
         <HomeArchive locale={locale as AppLocale} />
       </Main>
-      <SiteFooter />
+      <SiteFooter reveal />
     </PublicDataBoundary>
   );
 }

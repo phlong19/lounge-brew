@@ -1,3 +1,5 @@
+import { normalizeTicketColor } from "@/lib/ui/ticket-color";
+import { ticketPalette } from "@/lib/ui/ticket-palettes";
 import { parseDocument } from "htmlparser2";
 import { isTrustedMediaSource } from "@/lib/config/image-patterns";
 import { normalizeTextColor } from "@/lib/content/text-color";
@@ -28,7 +30,7 @@ export function eventPayload(input: unknown, partial = false): Record<string, un
   const result: Record<string, unknown> = {};
   if ("expectedUpdatedAt" in raw && (typeof raw.expectedUpdatedAt !== "string" || raw.expectedUpdatedAt.length > 64 || !Number.isFinite(Date.parse(raw.expectedUpdatedAt)))) throw new EventInputError("Phiên bản sự kiện không hợp lệ.");
   const strings: Record<string, number> = { title_vi:200,title_en:200,performer_name:160,event_date:64,end_date:64,content_vi:500000,content_en:500000,cover_image_url:2048,cover_asset_id:36,source_id:160,source_url:2048 };
-  const allowed = new Set([...Object.keys(strings),"is_active","additional_fee","additionalFee","isDeleted","expectedUpdatedAt"]);
+  const allowed = new Set([...Object.keys(strings),"ticket_palette_override","is_active","additional_fee","additionalFee","isDeleted","expectedUpdatedAt"]);
   for (const key of Object.keys(raw)) if (!allowed.has(key)) throw new EventInputError(`Trường không được hỗ trợ: ${key}`);
   for (const [key,max] of Object.entries(strings)) if (key in raw) {
     const value = raw[key];
@@ -49,6 +51,10 @@ export function eventPayload(input: unknown, partial = false): Record<string, un
   if (result.source_url) { try { const url = new URL(result.source_url as string); if (url.protocol !== "https:" || url.username || url.password) throw new Error(); } catch { throw new EventInputError("Liên kết nguồn không hợp lệ."); } }
   if ("is_active" in raw) { if (typeof raw.is_active !== "boolean") throw new EventInputError("Trạng thái không hợp lệ."); result.is_active = raw.is_active; }
   if ("isDeleted" in raw) { if (typeof raw.isDeleted !== "boolean") throw new EventInputError("Trạng thái xóa không hợp lệ."); result.is_deleted = raw.isDeleted; }
+  if ("ticket_palette_override" in raw) {
+    if (raw.ticket_palette_override !== null && (typeof raw.ticket_palette_override !== "string" || !ticketPalette(raw.ticket_palette_override) && !normalizeTicketColor(raw.ticket_palette_override))) throw new EventInputError("Màu vé không hợp lệ.");
+    result.ticket_palette_override = normalizeTicketColor(raw.ticket_palette_override) ?? raw.ticket_palette_override;
+  }
   const fee = raw.additional_fee ?? raw.additionalFee;
   if ("additional_fee" in raw || "additionalFee" in raw) {
     if (fee != null && (!Number.isSafeInteger(fee) || Number(fee) < 0)) throw new EventInputError("Phụ thu phải là số nguyên VNĐ không âm.");

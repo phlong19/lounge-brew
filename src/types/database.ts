@@ -14,6 +14,16 @@ export type Database = {
   }
   public: {
     Tables: {
+      content_drafts: {Row:{id:string;kind:string;data:Json;created_by:string;updated_at:string};Insert:{id?:string;kind:string;data:Json};Update:{data?:Json};Relationships:[]}
+      media_upload_claims: {Row:{session_id:string;asset_id:string;created_by:string;created_at:string};Insert:{session_id:string;asset_id:string};Update:{created_at?:string};Relationships:[]}
+
+      media_deletion_jobs: {
+        Row: { id:string; provider:string; bucket_id:string; object_path:string; created_at:string; claim_token:string|null; lease_until:string|null }
+        Insert: { id?:string; provider:string; bucket_id:string; object_path:string; created_at?:string }
+        Update: { provider?:string; bucket_id?:string; object_path?:string; claim_token?:string|null; lease_until?:string|null }
+        Relationships: []
+      }
+
       articles: {
         Row: {
           content_en: string | null
@@ -136,6 +146,8 @@ export type Database = {
       }
       events: {
         Row: {
+          ticket_palette_override: string | null
+          ticket_palette_key: string | null
           additional_fee: number | null
           content_en: string | null
           content_vi: string
@@ -158,6 +170,8 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          ticket_palette_override?: string | null
+          ticket_palette_key?: string | null
           additional_fee?: number | null
           content_en?: string | null
           content_vi?: string
@@ -180,6 +194,8 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          ticket_palette_override?: string | null
+          ticket_palette_key?: string | null
           additional_fee?: number | null
           content_en?: string | null
           content_vi?: string
@@ -213,8 +229,11 @@ export type Database = {
       }
       media_assets: {
         Row: {
+          ticket_palette_key: string | null
           alt_en: string | null
           alt_vi: string
+          ticket_palette_version: number
+          ticket_palette_hash: string | null
           provider: "supabase" | "r2"
           bucket_id: string
           created_at: string
@@ -230,8 +249,11 @@ export type Database = {
           width: number
         }
         Insert: {
+          ticket_palette_key?: string | null
           alt_en?: string | null
           alt_vi?: string
+          ticket_palette_version?: number
+          ticket_palette_hash?: string | null
           provider?: "supabase" | "r2"
           bucket_id: string
           created_at?: string
@@ -247,8 +269,11 @@ export type Database = {
           width: number
         }
         Update: {
+          ticket_palette_key?: string | null
           alt_en?: string | null
           alt_vi?: string
+          ticket_palette_version?: number
+          ticket_palette_hash?: string | null
           provider?: "supabase" | "r2"
           bucket_id?: string
           created_at?: string
@@ -493,9 +518,23 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_event_summaries:{Row:{id:string;title_vi:string;title_en:string|null;performer_name:string;event_date:string;end_date:string|null;cover_image_url:string|null;cover_asset_id:string|null;is_active:boolean;additional_fee:number;is_deleted:boolean;updated_at:string;is_draft:boolean};Relationships:[]}
+      admin_article_summaries:{Row:{id:string;title_vi:string;title_en:string|null;slug:string;thumbnail_url:string|null;published_at:string|null;updated_at:string;is_draft:boolean};Relationships:[]}
+
+      admin_content_entries: {Row:{kind:string;id:string;data:Json;updated_at:string;is_draft:boolean};Relationships:[]}
     }
     Functions: {
+      delete_event_with_session:{Args:{p_event_id:string;p_expected_updated_at:string;p_session:string|null};Returns:string}
+      expire_abandoned_media_claims:{Args:Record<PropertyKey,never>;Returns:number}
+      claim_media_upload:{Args:{p_session:string;p_asset:string};Returns:undefined}
+      release_media_session:{Args:{p_session:string};Returns:undefined}
+      save_content_draft:{Args:{p_id:string|null;p_kind:string;p_data:Json;p_expected:string|null;p_session:string|null};Returns:Json}
+      delete_content_draft:{Args:{p_id:string;p_expected:string;p_session:string|null};Returns:undefined}
+      commit_content:{Args:{p_kind:string;p_id:string|null;p_data:Json;p_expected:string|null;p_draft:string|null;p_session:string|null};Returns:Json}
+
+      claim_media_deletion_jobs: { Args: {p_token:string}; Returns: {id:string;provider:string;bucket_id:string;object_path:string;created_at:string;claim_token:string|null;lease_until:string|null}[] }
+      delete_event_permanently: { Args: { p_event_id:string; p_expected_updated_at:string }; Returns:string }
+
       admin_staff_directory: {
         Args: { p_page?: number; p_search?: string; p_status?: string }
         Returns: Json

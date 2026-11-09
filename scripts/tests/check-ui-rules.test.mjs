@@ -96,3 +96,11 @@ test("only the approved rich-text span can author a single validated colour", ()
   ["src/components/ui/colored-text.tsx", '<div style={{ color: safeColor }}>Text</div>'],
  ]) assert(inspectSource(file, source).some(issue => issue.rule === "authored-style-or-html"));
 });
+
+test('ticket colour exception is confined to its exact two safe properties',()=>{
+ const file='src/components/ui/ticket-paper.tsx';
+ const allowed='<Slot style={{backgroundColor:safeBackground,color:safeInk}}>{children}</Slot>';
+ assert.equal(inspectSource(file,allowed).length,0);
+ for(const source of [allowed.replace('safeBackground','rawColor'),allowed.replace('color:safeInk','opacity:1'),allowed.replace('Slot','div')])assert(inspectSource(file,source).length>0);
+ assert(inspectSource('src/components/ui/other.tsx',allowed).length>0);
+});

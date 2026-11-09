@@ -1,0 +1,89 @@
+{
+  "generatedAt": "2026-11-09T14:01:06.583Z",
+  "results": [
+    {
+      "id": "27391056",
+      "artist": "MINH TUYẾT",
+      "palette": "plum",
+      "hash": "826d8da4e890510cfc2559c91ff3a004e170a27a5df2a3126028ed36b89321b5",
+      "version": 1
+    },
+    {
+      "id": "58320194",
+      "artist": "NGUYÊN HÀ",
+      "palette": "rust",
+      "hash": "d1df7f4cddb3c8fa649f322e8966f1a242bb3fcfb0aed3007aae7b960ec854bb",
+      "version": 1
+    },
+    {
+      "id": "31560924",
+      "artist": "DƯƠNG EDWARD",
+      "palette": "rust",
+      "hash": "3b6544c6c99ba1e7fa06c56e1626b4aa8eab352adfee14f9f9c8d191765cea84",
+      "version": 1
+    },
+    {
+      "id": "76352980",
+      "artist": "QUANG ĐĂNG TRẦN",
+      "palette": "wine",
+      "hash": "0c27cf3577d41e46f9561234ea881052cc6ba5e36d2355f764e802c6be13c9a8",
+      "version": 1
+    },
+    {
+      "id": "24567190",
+      "artist": "ĐỖ HOÀNG HIỆP",
+      "palette": "amber",
+      "hash": "25af3b3ac7a68d0ad798eeb07f584627cda0739747075f220ceb9eabaaad119e",
+      "version": 1
+    },
+    {
+      "id": "20875436",
+      "artist": "ƯNG HOÀNG PHÚC",
+      "palette": "forest",
+      "hash": "3fa15b7733c1c306a6774aec5326edd8004a969608a4bde0be723205d14bc1c7",
+      "version": 1
+    },
+    {
+      "id": "96851273",
+      "artist": "QUANG VINH",
+      "palette": "wine",
+      "hash": "7150c33ca8c2d84b71e7d0d88adfee49cee2d39aa2f73b2f0c55244a964198d8",
+      "version": 1
+    },
+    {
+      "id": "71362849",
+      "artist": "HƯƠNG LAN",
+      "palette": "teal",
+      "hash": "cb9263b1d4b6c371fbaaa12470f75ba6d82c9bc4e2139217f1a1e37b3ab8dce6",
+      "version": 1
+    },
+    {
+      "id": "17598430",
+      "artist": "VĂN MAI HƯƠNG",
+      "palette": "plum",
+      "hash": "2efd5e91bd1d9f69fd7e95f8104092ac747005d5a09820eb98116ce451b559bb",
+      "version": 1
+    },
+    {
+      "id": "72856139",
+      "artist": "NGUYỄN KIỀU OANH",
+      "palette": "rust-light",
+      "hash": "31369cacc3a28fe264b59693f9b7f91b4f7331e820a17a53d019d1a96a674142",
+      "version": 1
+    },
+    {
+      "id": "79213854",
+      "artist": "14 CASPER x WILL x BON NGHIÊM",
+      "palette": "blue",
+      "hash": "6433c5d2a9c2af4ccd10561c3659e54c276fa03547170720f62cbd357eb1eebd",
+      "version": 1
+    },
+    {
+      "id": "65340728",
+      "artist": "VICKY NHUNG",
+      "palette": "forest",
+      "hash": "42a8e9893827a35587978f22d4f82f6044d4f401a59704335b70bc009cee9904",
+      "version": 1
+    }
+  ]
+}

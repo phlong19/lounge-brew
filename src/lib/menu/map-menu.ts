@@ -53,6 +53,7 @@ export function localizeEvent(
     endDate: event.end_date ?? null,
     sourceUrl: event.source_url ?? null,
     coverImageUrl: event.cover_image_url,
+    ticketPaletteKey: event.ticket_palette_override ?? event.ticket_palette_key ?? null,
     fallbackFromVietnamese: localizedTitle.fallbackFromVietnamese,
   };
 }

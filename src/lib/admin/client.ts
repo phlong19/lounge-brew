@@ -20,14 +20,16 @@ export async function adminRequest(path: string, init?: RequestInit) {
 export async function uploadAdminImage(
   file: File,
   purpose: "event" | "blog" | "core" = "event",
+  sessionId?:string,
 ) {
   const form = new FormData();
   form.set("file", file);
   form.set("purpose", purpose);
+  if(sessionId)form.set("sessionId",sessionId);
   return adminRequest("/api/admin/media", {
     method: "POST",
     body: form,
-  }) as Promise<{ url: string; asset: { id: string } }>;
+  }) as Promise<{ url: string; asset: { id: string; ticket_palette_key?: string | null } }>;
 }
 export async function loadAdminEvents(
   signal?: AbortSignal,
@@ -53,15 +55,18 @@ export async function loadAdminEvents(
 export async function saveAdminEvent(
   event: EditableEvent,
   isNew: boolean,
+  mediaSession:string|undefined=event.media_session,
 ): Promise<EditableEvent> {
   let coverUrl = event.cover_image_url,
     coverId = event.cover_asset_id;
   if (event.cover_file) {
-    const image = await uploadAdminImage(event.cover_file);
+    const image = await uploadAdminImage(event.cover_file,"event",mediaSession);
     coverUrl = image.url;
     coverId = image.asset.id;
   }
   const payload = {
+    media_session:mediaSession,
+    ...(event.is_draft?{draft_id:event.id}:{}),
     title_vi: event.title_vi,
     title_en: event.title_en,
     performer_name: event.performer_name,
@@ -72,13 +77,14 @@ export async function saveAdminEvent(
     cover_image_url: coverUrl,
     cover_asset_id: coverId || null,
     is_active: event.is_active,
+    ticket_palette_override: event.ticket_palette_override ?? null,
     additionalFee: event.additionalFee ?? null,
     ...(!isNew && event.updated_at
       ? { expectedUpdatedAt: event.updated_at }
       : {}),
   };
   const result = await adminRequest(
-    isNew ? "/api/admin/events" : `/api/admin/events/${event.id}`,
+    isNew||event.is_draft ? "/api/admin/events" : `/api/admin/events/${event.id}`,
     {
       method: isNew ? "POST" : "PATCH",
       headers: { "Content-Type": "application/json" },

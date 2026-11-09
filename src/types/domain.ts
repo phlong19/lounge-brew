@@ -25,6 +25,9 @@ export type MenuItemRow = {
 };
 
 export type EventRow = {
+  is_draft?: boolean;
+  ticket_palette_override?: string | null;
+  ticket_palette_key?: string | null;
   public_id?: string;
   source_id?: string | null;
   content_vi?: string;
@@ -45,6 +48,7 @@ export type EventRow = {
 };
 
 export type ArticleRow = {
+  is_draft?: boolean;
   id: string;
   title_vi: string;
   title_en: string | null;
@@ -63,6 +67,7 @@ export type HomePageData = {
 };
 
 export type LocalizedEvent = {
+  ticketPaletteKey?: string | null;
   content?: string | null;
   id: string;
   title: string;

@@ -32,6 +32,13 @@ export function inspectSource(file, source) {
     return ts.isPropertyAssignment(property) && property.name.getText(ast) === "color" && ts.isIdentifier(property.initializer) && property.initializer.text === "safeColor";
   };
 
+  const approvedTicketColor = (node) => {
+    if (path !== "src/components/ui/ticket-paper.tsx" || node.name.getText(ast) !== "style") return false;
+    const element=node.parent.parent;
+    if ((!ts.isJsxOpeningElement(element) && !ts.isJsxSelfClosingElement(element)) || element.tagName.getText(ast)!=="Slot") return false;
+    const expression=node.initializer && ts.isJsxExpression(node.initializer) ? node.initializer.expression : null;
+    return expression && ts.isObjectLiteralExpression(expression) && expression.properties.length===2 && expression.properties.every((property,index)=>ts.isPropertyAssignment(property) && property.name.getText(ast)===["backgroundColor","color"][index] && ts.isIdentifier(property.initializer) && property.initializer.text===["safeBackground","safeInk"][index]);
+  };
   const visit = (node) => {
     if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
       const name = node.tagName;
@@ -47,7 +54,7 @@ export function inspectSource(file, source) {
     }
     if (
       ts.isJsxAttribute(node) &&
-      ["style", "dangerouslySetInnerHTML"].includes(node.name.getText(ast)) && !approvedTextColor(node)
+      ["style", "dangerouslySetInnerHTML"].includes(node.name.getText(ast)) && !approvedTextColor(node) && !approvedTicketColor(node)
     ) {
       report("authored-style-or-html", node);
     }

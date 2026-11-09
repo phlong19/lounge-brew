@@ -82,7 +82,7 @@ export function AdminDesign({
   });
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
-      adminRequest("/api/admin/events/" + id, { method: "DELETE" }),
+      adminRequest(deleting?.is_draft?"/api/admin/drafts":"/api/admin/events/" + id, { method: "DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,expectedUpdatedAt:deleting?.updated_at,media_session:deleting?.media_session}) }),
     onSuccess: async (_result, id) => {
       client.setQueryData<EditableEvent[]>(adminKeys.events, (rows) =>
         (rows ?? []).filter((item) => item.id !== id),
@@ -90,6 +90,7 @@ export function AdminDesign({
       setEditing(null);
       setDeleting(null);
       toast("Đã xóa sự kiện.");
+      if(_result.mediaCleanupPending)toast.info("Một số ảnh đang chờ xóa và sẽ được thử lại tự động.");
       await client.invalidateQueries({ queryKey: adminKeys.events });
     },
   });
@@ -216,6 +217,7 @@ export function AdminDesign({
         onConfirm={() => void removeEvent()}
       />
       <AdminEventDrawer
+        onDraftSaved={async()=>{await client.invalidateQueries({queryKey:adminKeys.events});toast("Đã lưu bản nháp. Xem trong bộ lọc Bản nháp.");}}
         onDelete={(event) => {
           setDeleteError("");
           setDeleting(event);

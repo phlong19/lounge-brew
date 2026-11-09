@@ -347,5 +347,10 @@
     "details": "Explore the show",
     "stub": "Café & Lounge",
     "empty": "New minishows will be announced here."
+  },
+  "EventView": {
+    "normalLabel": "Show standard cards",
+    "normalHint": "Enable to view standard event cards.",
+    "ticketHint": "Disable to view concert tickets."
   }
 }

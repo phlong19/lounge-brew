@@ -9,6 +9,7 @@ import { Icon } from "@/components/ui/icon";
 import { Container, Inline, Navigation, SiteHeaderFrame, Surface } from "@/components/ui/layout";
 import { AppLink } from "@/components/ui/link";
 import { Media } from "@/components/ui/media";
+import { Reveal } from "@/components/ui/reveal";
 import { Typography } from "@/components/ui/typography";
 import { venue } from "@/data/trixie-content";
 import type { NavigationItem } from "@/types/navigation";
@@ -45,10 +46,10 @@ export async function SiteHeader({ active }: Props) {
     <SiteHeaderFrame className={headerStyles.frame} data-source-navigation="preserved">
     <AppLink href="#main-content" className="fixed top-3 left-3 z-50 -translate-y-32 rounded-md bg-white px-5 py-3 focus:translate-y-0">{site("skip")}</AppLink>
 
-    <Container className="flex h-20 items-center justify-between gap-4 xl:h-24">
+    <Container><Reveal enabled={active === "home"} className="flex h-20 items-center justify-between gap-4 xl:h-24">
       <AppLink href="/" aria-label={`Trixie · ${t("home")}`} className="shrink-0"><Media src="/trixie/logo.png" alt="Trixie Café & Lounge" width={150} height={60} priority fit="contain" className="h-12 w-28 xl:h-14 xl:w-32" /></AppLink>
       <Navigation aria-label={t("home")} className="hidden gap-6 xl:flex">{items.map(item => item.children ? <NavigationGroup key={item.key} item={item} active={active === item.key} /> : <AppLink key={item.key} href={item.href} aria-current={active === item.key ? "page" : undefined} className={headerStyles.navLink}>{item.label}</AppLink>)}</Navigation>
       <Inline gap="sm" className="flex-nowrap md:gap-6"><Surface className="hidden md:block"><LocaleSwitcher /></Surface><ReservationButton data-reservation-focus-fallback className="hidden hover:bg-[#2E7017] hover:text-white sm:inline-flex">{t("book")}<Icon name="arrowUpRight" className="size-4" /></ReservationButton><MobileNavigation items={items} active={active} title={t("brand")} openLabel={t("openMenu")} closeLabel={t("closeMenu")} bookingLabel={t("book")} /></Inline>
-    </Container>
+    </Reveal></Container>
   </SiteHeaderFrame><ReservationDialogData /></>;
 }

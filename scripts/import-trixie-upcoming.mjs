@@ -8,6 +8,7 @@ import {listingEvents,originalArticle,normalizeSourceMarkup,titleDate,archivedSc
 if(fs.existsSync(".env.local"))process.loadEnvFile(".env.local");
 registerHooks({resolve(specifier,context,next){return next(specifier.startsWith("@/")?pathToFileURL(process.cwd()+"/src/"+specifier.slice(2)+".ts").href:specifier,context);}});
 const {sanitizeEventContent}=await import("../src/lib/admin/event-validation.ts");
+const {extractTicketPalette}=await import("../src/lib/media/extract-ticket-palette.ts");
 const require=createRequire(import.meta.url);
 const sharp=require("sharp");
 const apply=process.argv.includes("--apply");
@@ -28,15 +29,9 @@ async function official(url) {
 }
 let db,publicDb;
 const known=new Set();
-if(apply||past){
-const token=process.env.SUPABASE_PERSONAL_ACCESS_TOKEN;
-if(!token)throw Error("Missing management token for authorized import.");
-// Existing server key stays in memory; never write it to files or logs.
-const keysRes=await fetch("https://api.supabase.com/v1/projects/"+ref+"/api-keys",{headers:{Authorization:"Bearer "+token}});
-if(!keysRes.ok)throw Error("Cannot access project import credentials.");
-const keys=await keysRes.json();
-const secret=keys.find(key=>key.name==="service_role")?.api_key;
-if(!secret)throw Error("Project server key unavailable.");
+if(apply||past||process.env.SUPABASE_SECRET_KEY){
+const secret=process.env.SUPABASE_SECRET_KEY;
+if(!secret?.startsWith("sb_secret_"))throw Error("A configured Supabase secret key is required for import checks.");
 db=createClient(base,secret,{auth:{persistSession:false,autoRefreshToken:false}});
 publicDb=createClient(base,publicKey,{auth:{persistSession:false}});
 const existing=await db.from("events").select("id,source_id,updated_at").limit(10000);
@@ -74,7 +69,7 @@ if(past)listings.sort((a,b)=>(titleDate(b.title_vi)||"").localeCompare(titleDate
 
 for(const item of listings){
  if(past&&events.length>=limit)break;
- if(past&&known.has(item.source_id))continue;
+ if(known.has(item.source_id)){console.log("Existing record preserved:",item.source_id);continue;}
  if(past&&titleDate(item.title_vi)&&Date.parse(titleDate(item.title_vi)+"T00:00:00+07:00")>Date.now())continue;
  try {
  const detail=(await(await official(item.source_url)).text()).replaceAll("http://trixie.com.vn/media/","https://trixie.com.vn/media/");
@@ -104,10 +99,21 @@ for(const item of listings){
 }
 const dir="supabase/imports";
 fs.mkdirSync(dir,{recursive:true});
-const manifest=path.join(dir,past?"past-2026-10-31.json":"upcoming-2026-10-30.json");
+const manifestName=process.argv.find(arg=>arg.startsWith("--manifest="))?.slice("--manifest=".length)|| (past?"past-2026-10-31.json":"upcoming-2026-10-30.json");
+if(!/^[a-z0-9-]+\.json$/.test(manifestName))throw Error("Invalid manifest filename");
+const manifest=path.join(dir,manifestName);
 fs.writeFileSync(manifest,JSON.stringify({fetchedAt:new Date().toISOString(),source:"https://trixie.com.vn/mini-show.html",events,skipped},null,2)+"\n");
 console.log(past?"Verified past originals:":"Verified upcoming originals:",events.length);
 if(!apply){console.log("Dry run only. Use --apply to import missing records.");process.exit(0);}
+// Fail before uploading if R2 or its provider-aware metadata schema is unavailable.
+const {S3Client,PutObjectCommand}=require("@aws-sdk/client-s3");
+const account=process.env.R2_ACCOUNT_ID,accessKeyId=process.env.R2_ACCESS_KEY_ID,secretAccessKey=process.env.R2_SECRET_ACCESS_KEY,bucket=process.env.R2_BUCKET_NAME,delivery=process.env.R2_PUBLIC_BASE_URL;
+if(!account||!accessKeyId||!secretAccessKey||!bucket||!delivery)throw Error("R2 configuration is required for editorial imports; no fallback uploads.");
+const deliveryUrl=new URL(delivery);
+if(deliveryUrl.protocol!=="https:"||deliveryUrl.username||deliveryUrl.password||deliveryUrl.search||deliveryUrl.hash)throw Error("Invalid public R2 origin");
+const r2=new S3Client({region:"auto",endpoint:`https://${account}.r2.cloudflarestorage.com`,credentials:{accessKeyId,secretAccessKey},maxAttempts:3});
+const schema=await db.from("media_assets").select("provider").limit(1);
+if(schema.error)throw Error("Apply the provider-aware media migration before importing.");
 const assets=new Map();
 async function upload(url,alt){
  if(assets.has(url))return assets.get(url);
@@ -118,17 +124,17 @@ async function upload(url,alt){
  if(!mime||!metadata.width||!metadata.height||metadata.pages>1)throw Error("Unsupported original image.");
  const hash=createHash("sha256").update(bytes).digest("hex");
  const objectPath="events/"+hash+"."+(metadata.format==="jpeg"?"jpg":metadata.format);
- const prior=await db.from("media_assets").select("*").eq("bucket_id","lounge-public").eq("object_path",objectPath).maybeSingle();
+ const prior=await db.from("media_assets").select("*").eq("provider","r2").eq("bucket_id",bucket).eq("object_path",objectPath).maybeSingle();
  if(prior.error)throw Error("Cannot inspect existing image.");
  let asset=prior.data;
  if(!asset){
-  const stored=await db.storage.from("lounge-public").upload(objectPath,bytes,{contentType:mime,cacheControl:"31536000",upsert:false});
-  if(stored.error&&!/already exists|duplicate/i.test(stored.error.message))throw Error("Bucket upload failed.");
-  const saved=await db.from("media_assets").insert({bucket_id:"lounge-public",object_path:objectPath,original_filename:new URL(url).pathname.split("/").pop(),mime_type:mime,size_bytes:bytes.length,width:metadata.width,height:metadata.height,alt_vi:alt,source_url:url}).select().single();
+  await r2.send(new PutObjectCommand({Bucket:bucket,Key:objectPath,Body:bytes,ContentType:mime,CacheControl:"public, max-age=31536000, immutable"}));
+  const palette=await extractTicketPalette(bytes);
+  const saved=await db.from("media_assets").insert({ticket_palette_key:palette.key,ticket_palette_version:palette.version,ticket_palette_hash:palette.hash,provider:"r2",bucket_id:bucket,object_path:objectPath,original_filename:new URL(url).pathname.split("/").pop(),mime_type:mime,size_bytes:bytes.length,width:metadata.width,height:metadata.height,alt_vi:alt,source_url:url}).select().single();
   if(saved.error)throw Error("Image metadata save failed.");
   asset=saved.data;
  }
- const hosted=db.storage.from("lounge-public").getPublicUrl(objectPath).data.publicUrl;
+ const hosted=delivery.replace(/\/$/,"")+"/"+objectPath.split("/").map(encodeURIComponent).join("/");
  const verified=await fetch(hosted,{signal:AbortSignal.timeout(20000)});
  if(!verified.ok||createHash("sha256").update(Buffer.from(await verified.arrayBuffer())).digest("hex")!==hash)throw Error("Hosted image verification failed.");
  const result={asset,url:hosted};assets.set(url,result);return result;
@@ -142,7 +148,7 @@ for(const event of events){
   const image=await upload(url,event.title_vi);
   content=content.split(url.replaceAll("&","&amp;")).join(image.url);
  }
- const saved=await db.from("events").insert({source_id:event.source_id,source_url:event.source_url,title_vi:event.title_vi,title_en:null,performer_name:event.performer_name,event_date:event.event_date,end_date:event.end_date,content_vi:content,content_en:null,cover_asset_id:poster.asset.id,cover_image_url:poster.url,is_active:true,additional_fee:null}).select("id,public_id,content_vi,cover_image_url").single();
+ const saved=await db.from("events").insert({source_id:event.source_id,source_url:event.source_url,title_vi:event.title_vi,title_en:null,performer_name:event.performer_name,event_date:event.event_date,end_date:event.end_date,content_vi:content,content_en:null,cover_asset_id:poster.asset.id,cover_image_url:poster.url,is_active:true,additional_fee:0}).select("id,public_id,content_vi,cover_image_url").single();
  if(saved.error)throw Error("Event save failed for "+event.source_id+": "+saved.error.code);
  const actual=DomUtils.textContent(parseDocument(saved.data.content_vi)).replace(/\s+/g," ").trim();
  if(actual!==event.sourceText)throw Error("Stored article verification failed");

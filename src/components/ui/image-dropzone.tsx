@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { useDropzone, type DropzoneInputProps } from "react-dropzone";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ export function FileImage({ file, alt, className }: { file: File; alt: string; c
   useEffect(() => { const url = URL.createObjectURL(file); setSrc(url); return () => URL.revokeObjectURL(url); }, [file]);
   return src ? <Image src={src} alt={alt} width={600} height={800} unoptimized className={cn("object-contain", className)} /> : null;
 }
-export function ImageDropzone({ id, file, existingSrc, error, onChange }: { id: string; file?: File; existingSrc: string | null; error?: string; onChange: (file: File | null) => void }) {
+export function ImageDropzone({ id, file, existingSrc, error, onChange, preview, compact=false }: { compact?: boolean; preview?: ReactNode; id: string; file?: File; existingSrc: string | null; error?: string; onChange: (file: File | null) => void }) {
   const [fileError, setFileError] = useState("");
   const [busy, setBusy] = useState(false);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -38,10 +38,10 @@ export function ImageDropzone({ id, file, existingSrc, error, onChange }: { id: 
   void omittedStyles;
   const message = fileError || error;
   return <div className="space-y-3">
-    <div {...getRootProps({ id, role: "button", "aria-label": "Ảnh chương trình: kéo thả hoặc chọn ảnh", "aria-required": true, "aria-invalid": !!message, "aria-describedby": message ? `${id}-error` : `${id}-help` })} data-drag={isDragActive} aria-busy={busy} className={editorStyles.dropzone}>
+    <div {...getRootProps({ id, role: "button", "aria-label": "Ảnh chương trình: kéo thả hoặc chọn ảnh", "aria-required": true, "aria-invalid": !!message, "aria-describedby": message ? `${id}-error` : `${id}-help` })} data-drag={isDragActive} aria-busy={busy} className={cn(editorStyles.dropzone,compact&&"min-h-48 p-4",preview&&"bg-[#0C1512] p-3 data-[drag=true]:bg-[#1D3229]")}>
       <input {...inputProps} className="sr-only" />
-      {file ? <FileImage file={file} alt="Ảnh chương trình đã chọn" className="h-64 w-auto max-w-full md:h-72" /> : existingSrc ? <Media src={existingSrc} alt="Ảnh chương trình hiện tại" width={600} height={800} fit="contain" className="h-64 w-auto max-w-full md:h-72" /> : <Icon name="upload" className="size-8 text-[#2E7017]" />}
-      <Typography variant="small" className="font-semibold text-[#2E7017]">{busy ? "Đang kiểm tra ảnh…" : isDragActive ? "Thả ảnh vào đây" : file || existingSrc ? "Kéo thả hoặc chọn ảnh để thay thế" : "Kéo thả hoặc bấm để chọn ảnh"}</Typography>
+      {preview && !file ? <div className="pointer-events-none w-full max-w-[304px] text-left">{preview}</div> : file ? <FileImage file={file} alt="Ảnh chương trình đã chọn" className={compact?"h-48 w-auto max-w-full":"h-64 w-auto max-w-full md:h-72"} /> : existingSrc ? <Media src={existingSrc} alt="Ảnh chương trình hiện tại" width={600} height={800} fit="contain" className={compact?"h-48 w-auto max-w-full":"h-64 w-auto max-w-full md:h-72"} /> : <Icon name="upload" className="size-8 text-[#2E7017]" />}
+      <Typography variant="small" className={cn("font-semibold",preview?"text-[#FFFAE7]":"text-[#2E7017]")}>{busy ? "Đang kiểm tra ảnh…" : isDragActive ? "Thả ảnh vào đây" : file || existingSrc ? "Kéo thả hoặc chọn ảnh để thay thế" : "Kéo thả hoặc bấm để chọn ảnh"}</Typography>
       {file ? <Typography variant="small" className="max-w-full break-all text-stone-600">{file.name}</Typography> : null}
     </div>
     <div className="flex flex-wrap items-center justify-between gap-2"><Typography id={`${id}-help`} variant="small" tone="muted">JPG, PNG, WebP · tối đa 10 MB</Typography>{file || existingSrc ? <Button variant="destructive" size="sm" onClick={() => { onChange(null); setFileError(""); }}><Icon name="trash" className="size-4" />Xóa ảnh</Button> : null}</div>

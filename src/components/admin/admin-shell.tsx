@@ -13,7 +13,7 @@ import {Media} from "@/components/ui/media";
 import {Typography} from "@/components/ui/typography";
 import {adminStyles as s} from "@/lib/ui/admin-styles";
 const labels:Record<AdminSection,string>={blogs:"Bài viết",events:"Sự kiện",video:"Video",seating:"Sơ đồ chỗ ngồi",reservations:"Đặt bàn",staff:"Nhân viên"};
-const links:{key:AdminSection;href:string;icon:IconName}[]=[{key:"blogs",href:"/admin/blogs",icon:"calendar"},{key:"events",href:"/admin?section=events",icon:"calendar"},{key:"video",href:"/admin?section=video",icon:"music"},{key:"seating",href:"/admin?section=seating",icon:"seat"},{key:"reservations",href:"/admin/reservations",icon:"phone"},{key:"staff",href:"/admin/staff",icon:"users"}];
+const links:{key:AdminSection;href:string;icon:IconName}[]=[{key:"events",href:"/admin?section=events",icon:"calendar"},{key:"blogs",href:"/admin/blogs",icon:"article"},{key:"video",href:"/admin?section=video",icon:"music"},{key:"seating",href:"/admin?section=seating",icon:"seat"},{key:"reservations",href:"/admin/reservations",icon:"phone"},{key:"staff",href:"/admin/staff",icon:"users"}];
 export function AdminShell({staff,children}:{staff:StaffInfo;children:ReactNode}){
  const selected=adminSection(usePathname(),useSearchParams().get("section")),tab=selected,reservations=useReservationNotifications(true);
  return <Main lang="vi" className={s.root} data-admin-design><Surface className={s.sidebar} data-admin-sidebar><Inline className="justify-between"><Media src="/trixie/logo.png" alt="Trixie" width={124} height={50} fit="contain" /></Inline><Navigation aria-label="Quản lý website" className={s.nav}>
