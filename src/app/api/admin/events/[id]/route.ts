@@ -11,7 +11,7 @@ export async function GET(request: Request, {params}:Props) {
   try {
     const {supabase} = await requireContentStaff(request);
     const id = eventId((await params).id);
-    const result = await supabase.from("admin_content_entries").select("*").eq("kind","event").eq("id",id).maybeSingle();
+    const result = await supabase.from("events").select("*").eq("id",id).maybeSingle();
     databaseFailure(result.error);
     if (!result.data) throw new AdminApiError("Không tìm thấy sự kiện.",404);
     return NextResponse.json({item:contentEntry(result.data)},{headers:{"Cache-Control":"no-store"}});

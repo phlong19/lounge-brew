@@ -7,7 +7,7 @@ import {adminKeys} from "@/lib/admin/query";
 import {TicketColourField} from "@/components/admin/ticket-colour-field";
 import {EventTicket} from "@/components/lounge/home-ticket-shows";
 import {adminRequest,uploadAdminImage} from "@/lib/admin/client";
-import {ContentSkeleton} from "@/components/ui/loading-state";
+import {Skeleton} from "@/components/ui/skeleton";
 import {AlertMessage} from "@/components/ui/alert";
 
 import { useState,useRef,useImperativeHandle,type Ref } from "react";
@@ -57,17 +57,17 @@ function EventForm({event,onApply,uploading,saving,onUploadStateChange,actions}:
   finally{setValue("cover_file",undefined);setCoverBusy(false);onUploadStateChange(false);}
  }
 
- return <Form noValidate inert={saving||coverBusy} aria-busy={saving} id="event-editor" className="min-h-0 flex-1 overflow-y-auto p-6" onSubmit={handleSubmit(async values=>{
+ return <Form noValidate inert={saving||coverBusy} aria-busy={saving} id="event-editor" className={s.eventFormBody} onSubmit={handleSubmit(async values=>{
   if(uploading||saving)return;
   if(!values.cover_file&&!values.cover_image_url){setError("cover_image_url",{message:"Vui lòng chọn ảnh chương trình trước khi lưu."});document.getElementById("event-poster")?.focus();return;}
   await onApply({...event,...values,media_session:mediaSession});
  })}>
-  <Grid className="gap-4 sm:grid-cols-2">
+  <Grid className={s.eventNameFields}>
    <Field><Label htmlFor="event-name" required>Tên chương trình</Label><Controller control={control} name="title_vi" rules={{validate:value=>!!value.trim()&&value.length<=200||"Nhập tên chương trình từ 1 đến 200 ký tự."}} render={({field})=><Input {...field} id="event-name" maxLength={200} aria-invalid={!!errors.title_vi} aria-describedby={errors.title_vi?"event-name-error":undefined} />} /><FormError id="event-name-error" message={errors.title_vi?.message} /></Field>
    <Field><Label htmlFor="artist" required>Nghệ sĩ</Label><Controller control={control} name="performer_name" rules={{validate:value=>!!value.trim()&&value.length<=160||"Vui lòng nhập tên nghệ sĩ."}} render={({field})=><Input {...field} id="artist" maxLength={160} aria-invalid={!!errors.performer_name} />} /><FormError id="artist-error" message={errors.performer_name?.message} /></Field>
   </Grid>
   <Stack gap="sm"><Inline gap="xs"><Button variant="ghost" size="sm" className="h-auto w-fit justify-start p-0 font-normal text-blue-700 underline underline-offset-4 hover:bg-transparent hover:text-blue-800" aria-expanded={english} aria-controls="event-name-en-field" onClick={()=>{setEnglish(!english);if(!english)requestAnimationFrame(()=>document.getElementById("event-name-en")?.focus());}}>{english?"Ẩn tên Tiếng Anh":"Thêm tên Tiếng Anh"}</Button><TooltipProvider delayDuration={150}><Tooltip><TooltipTrigger asChild><Button variant="ghost" size="icon" className="size-7 rounded-full text-stone-500" aria-label="Tên Tiếng Anh được dùng khi nào?"><Icon name="help" className="size-4" /></Button></TooltipTrigger><TooltipContent className="max-w-72">Tên này được dùng khi khách xem website bằng tiếng Anh.</TooltipContent></Tooltip></TooltipProvider></Inline>{english?<Field id="event-name-en-field"><Label htmlFor="event-name-en" optionalLabel="không bắt buộc">Tên chương trình tiếng Anh</Label><Controller control={control} name="title_en" render={({field})=><Input {...field} value={field.value??""} id="event-name-en" maxLength={200} />} /></Field>:null}</Stack>
-  <Grid className="items-start gap-6 md:grid-cols-2" data-poster-settings>
+  <Grid className={s.eventPosterSettings} data-poster-settings>
    <Field><Label htmlFor="event-poster-file" required>Ảnh bìa / poster</Label><ImageDropzone id="event-poster" file={coverFile} existingSrc={coverUrl??null} error={errors.cover_image_url?.message} preview={<EventTicket preview locale="vi" event={{id:event.id,title:"",performerName:artist||"Tên nghệ sĩ",eventDate:start||"",coverImageUrl:coverUrl??null,ticketPaletteKey:override??paletteKey,fallbackFromVietnamese:false}} />} onChange={file=>void selectCover(file)} /></Field>
    <Stack gap="md">  <Grid className="gap-4">
    <Field><Label htmlFor="event-start" required>Bắt đầu · giờ Hà Nội</Label><Controller control={control} name="event_date" rules={{validate:value=>Number.isFinite(Date.parse(value))||"Vui lòng chọn ngày và giờ bắt đầu."}} render={({field})=><DateTimeInput ref={field.ref} onBlur={field.onBlur} id="event-start" value={localDateInput(field.value)} onValueChange={value=>field.onChange(value?value+":00+07:00":"")} aria-invalid={!!errors.event_date} />} /><FormError id="event-start-error" message={errors.event_date?.message} /></Field>
@@ -78,6 +78,29 @@ function EventForm({event,onApply,uploading,saving,onUploadStateChange,actions}:
   <Field><Label htmlFor="event-content">Nội dung trang sự kiện</Label><Controller control={control} name="content_vi" render={({field})=><RichTextEditor mediaSession={mediaSession} onUploadStateChange={onUploadStateChange} id="event-content" value={field.value??""} onChange={field.onChange} />} /></Field>
  </Form>;
 }
+function EventFormSkeleton({isDraft}:{isDraft:boolean}) {
+ return <>
+  <Stack className={s.eventFormBody} gap="lg" role="status" aria-busy="true">
+   <Typography className="sr-only">Đang tải nội dung sự kiện…</Typography>
+   <Grid className={s.eventNameFields}>
+    {["title", "artist"].map(field=><Field key={field}><Skeleton className="h-4 w-28" /><Skeleton className="h-11" /></Field>)}
+   </Grid>
+   <Skeleton className="my-1 h-5 w-36" />
+   <Grid className={s.eventPosterSettings}>
+    <Field><Skeleton className="h-4 w-28" /><Stack className={s.eventPosterPlaceholder}><Skeleton className="h-12 w-3/5" /><Skeleton className="aspect-[4/5] w-full" /></Stack></Field>
+    <Stack gap="md">
+     {["start", "end"].map(field=><Field key={field}><Skeleton className="h-4 w-40" /><Grid className="grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-2"><Skeleton className="h-11" /><Skeleton className="h-11" /></Grid></Field>)}
+     <Field><Skeleton className="h-4 w-16" /><Inline gap="sm"><Skeleton className="h-10 flex-1" /><Skeleton className="size-10" /></Inline><Skeleton className="h-4 w-44" /></Field>
+     <Field><Skeleton className="h-4 w-36" /><Skeleton className="h-11" /></Field>
+     <Stack gap="xs"><Inline gap="sm"><Skeleton className="size-5" /><Skeleton className="h-4 w-48" /></Inline><Skeleton className="mt-2 h-4 w-40" /></Stack>
+    </Stack>
+   </Grid>
+   <Field><Skeleton className="h-4 w-48" /><Skeleton className="h-48" /></Field>
+  </Stack>
+  <Inline className={s.eventFormFooter} aria-hidden="true"><Skeleton className="mr-auto h-11 w-28" /><Skeleton className="h-11 w-16" />{isDraft?<Skeleton className="h-11 w-28" />:null}<Skeleton className="h-11 w-20" /></Inline>
+ </>;
+}
+
 export function AdminEventDrawer({ onDraftSaved,event, isNew, onClose, onApply, onReturnFocus, saving = false, error = "", onDelete }: Props) {
   const [uploading,setUploading] = useState(false);
   const [closePrompt,setClosePrompt]=useState(false),[actionBusy,setActionBusy]=useState(false),[actionError,setActionError]=useState("");
@@ -93,8 +116,8 @@ export function AdminEventDrawer({ onDraftSaved,event, isNew, onClose, onApply, 
   return <><CreationCloseDialog open={closePrompt} busy={actionBusy||saving||uploading} error={actionError} onKeepEditing={()=>{setClosePrompt(false);destination.current=null;}} onSaveDraft={()=>void saveDraft()} onDiscard={()=>void discard()} /><Sheet open={!!event} onOpenChange={open => { if (!open) requestClose(); }}><SheetContent onCloseAutoFocus={event => { event.preventDefault(); onReturnFocus(); }} lang="vi" closeLabel="Đóng" aria-describedby={undefined} className={s.drawer} data-event-editor>
     <SheetHeader className="shrink-0 border-b border-[#E2E6DE] px-6 py-5 pr-16"><SheetTitle>{isNew ? "Thêm sự kiện" : "Chỉnh sửa sự kiện"}</SheetTitle></SheetHeader>
     {error ? <AlertMessage variant="destructive">{error}</AlertMessage> : null}
-    {event&&!isNew&&detail.isPending?<ContentSkeleton label="Đang tải nội dung sự kiện…" />:null}
+    {event&&!isNew&&detail.isPending?<EventFormSkeleton isDraft={!!event.is_draft} />:null}
     {event&&!isNew&&detail.isError?<Stack className="p-6"><AlertMessage variant="destructive">{detail.error.message}</AlertMessage><Button variant="outline" onClick={()=>void detail.refetch()}>Thử lại</Button></Stack>:null}
-    {readyEvent ? <><EventForm actions={actions} saving={saving||actionBusy} uploading={uploading} onUploadStateChange={setUploading} key={readyEvent.id} event={readyEvent} onApply={onApply} /><Inline className="shrink-0 justify-end border-t border-[#E2E6DE] bg-white px-6 py-4">{!isNew && onDelete ? <Button variant="destructive" disabled={saving || uploading || actionBusy} className="mr-auto" onClick={()=>onDelete({...readyEvent,media_session:actions.current?.mediaSession()})}><Icon name="trash" />Xóa sự kiện</Button> : null}<Button disabled={saving || uploading || actionBusy} variant="outline" onClick={()=>requestClose()}>Hủy</Button>{isNew||event?.is_draft?<Button variant="outline" disabled={saving||uploading||actionBusy} onClick={()=>void saveDraft()}>Lưu bản nháp</Button>:null}<Button disabled={saving || uploading || actionBusy} type="submit" form="event-editor" className={s.primary}><Icon name="check" />{saving ? "Đang lưu…" : uploading ? "Đang tải ảnh…" : "Lưu"}</Button></Inline></> : null}
+    {readyEvent ? <><EventForm actions={actions} saving={saving||actionBusy} uploading={uploading} onUploadStateChange={setUploading} key={readyEvent.id} event={readyEvent} onApply={onApply} /><Inline className={s.eventFormFooter}>{!isNew && onDelete ? <Button variant="destructive" disabled={saving || uploading || actionBusy} className="mr-auto" onClick={()=>onDelete({...readyEvent,media_session:actions.current?.mediaSession()})}><Icon name="trash" />Xóa sự kiện</Button> : null}<Button disabled={saving || uploading || actionBusy} variant="outline" onClick={()=>requestClose()}>Hủy</Button>{isNew||event?.is_draft?<Button variant="outline" disabled={saving||uploading||actionBusy} onClick={()=>void saveDraft()}>Lưu bản nháp</Button>:null}<Button disabled={saving || uploading || actionBusy} type="submit" form="event-editor" className={s.primary}><Icon name="check" />{saving ? "Đang lưu…" : uploading ? "Đang tải ảnh…" : "Lưu"}</Button></Inline></> : null}
   </SheetContent></Sheet></>;
 }

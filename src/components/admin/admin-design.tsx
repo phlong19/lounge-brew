@@ -82,7 +82,7 @@ export function AdminDesign({
   });
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
-      adminRequest(deleting?.is_draft?"/api/admin/drafts":"/api/admin/events/" + id, { method: "DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,expectedUpdatedAt:deleting?.updated_at,media_session:deleting?.media_session}) }),
+      adminRequest(deleting?.is_draft?"/api/admin/drafts":"/api/admin/events/" + id, { method: "DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,...(deleting?.is_draft?{kind:"event"}:{}),expectedUpdatedAt:deleting?.updated_at,media_session:deleting?.media_session}) }),
     onSuccess: async (_result, id) => {
       client.setQueryData<EditableEvent[]>(adminKeys.events, (rows) =>
         (rows ?? []).filter((item) => item.id !== id),

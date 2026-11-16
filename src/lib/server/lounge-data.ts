@@ -76,7 +76,7 @@ async function readLoungeData(): Promise<LoungeDataResult> {
         supabase
           .from("events")
           .select("*")
-          .eq("is_active", true)
+          .eq("status", "ready").eq("is_active", true)
           .eq("is_deleted", false)
           .order("event_date", { ascending: true })
           .abortSignal(AbortSignal.timeout(5000)),
@@ -87,7 +87,7 @@ async function readLoungeData(): Promise<LoungeDataResult> {
         supabase
           .from("articles")
           .select("*")
-          .not("published_at", "is", null)
+          .eq("status", "ready").not("published_at", "is", null)
           .lte("published_at", now.toISOString())
           .order("published_at", { ascending: false })
           .abortSignal(AbortSignal.timeout(5000)),
@@ -144,7 +144,7 @@ export async function getArticleBySlug(slug: string): Promise<{
         .from("articles")
         .select("*")
         .eq("slug", slug)
-        .not("published_at", "is", null)
+        .eq("status", "ready").not("published_at", "is", null)
         .lte("published_at", now.toISOString())
         .abortSignal(AbortSignal.timeout(5000))
         .maybeSingle(),
@@ -184,7 +184,7 @@ export const getEventById = cache(async (id: string): Promise<{
         .from("events")
         .select("*")
         .eq("public_id", id)
-        .eq("is_active", true)
+        .eq("status", "ready").eq("is_active", true)
           .eq("is_deleted", false)
         .abortSignal(AbortSignal.timeout(5000))
         .maybeSingle(),

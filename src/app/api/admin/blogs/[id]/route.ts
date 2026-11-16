@@ -6,7 +6,7 @@ import {blogPayload} from "@/lib/admin/blog-validation";
 type Context={params:Promise<{id:string}>};
 export async function GET(request:Request,{params}:Context){try{
  const {supabase}=await requireContentStaff(request);const id=eventId((await params).id);
- const result=await supabase.from("admin_content_entries").select("*").eq("kind","article").eq("id",id).maybeSingle();databaseFailure(result.error);if(!result.data)throw new AdminApiError("Không tìm thấy bài viết.",404);
+ const result=await supabase.from("articles").select("*").eq("id",id).maybeSingle();databaseFailure(result.error);if(!result.data)throw new AdminApiError("Không tìm thấy bài viết.",404);
  return NextResponse.json({item:contentEntry(result.data)},{headers:{"Cache-Control":"no-store"}});
 }catch(error){return apiFailure(error);}}
 export async function PATCH(request:Request,{params}:Context){try{

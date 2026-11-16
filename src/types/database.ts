@@ -14,7 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      content_drafts: {Row:{id:string;kind:string;data:Json;created_by:string;updated_at:string};Insert:{id?:string;kind:string;data:Json};Update:{data?:Json};Relationships:[]}
+
       media_upload_claims: {Row:{session_id:string;asset_id:string;created_by:string;created_at:string};Insert:{session_id:string;asset_id:string};Update:{created_at?:string};Relationships:[]}
 
       media_deletion_jobs: {
@@ -26,36 +26,39 @@ export type Database = {
 
       articles: {
         Row: {
+          status: "draft" | "ready"
           content_en: string | null
           content_vi: string
           created_at: string
           id: string
           published_at: string | null
-          slug: string
+          slug: string | null
           thumbnail_url: string | null
           title_en: string | null
           title_vi: string
           updated_at: string
         }
         Insert: {
+          status?: "draft" | "ready"
           content_en?: string | null
           content_vi: string
           created_at?: string
           id?: string
           published_at?: string | null
-          slug: string
+          slug: string | null
           thumbnail_url?: string | null
           title_en?: string | null
           title_vi: string
           updated_at?: string
         }
         Update: {
+          status?: "draft" | "ready"
           content_en?: string | null
           content_vi?: string
           created_at?: string
           id?: string
           published_at?: string | null
-          slug?: string
+          slug?: string | null
           thumbnail_url?: string | null
           title_en?: string | null
           title_vi?: string
@@ -146,6 +149,7 @@ export type Database = {
       }
       events: {
         Row: {
+          status: "draft" | "ready"
           ticket_palette_override: string | null
           ticket_palette_key: string | null
           additional_fee: number | null
@@ -156,7 +160,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           end_date: string | null
-          event_date: string
+          event_date: string | null
           id: string
           is_active: boolean
           is_deleted: boolean
@@ -170,6 +174,7 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          status?: "draft" | "ready"
           ticket_palette_override?: string | null
           ticket_palette_key?: string | null
           additional_fee?: number | null
@@ -180,7 +185,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           end_date?: string | null
-          event_date: string
+          event_date: string | null
           id?: string
           is_active?: boolean
           is_deleted?: boolean
@@ -194,6 +199,7 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          status?: "draft" | "ready"
           ticket_palette_override?: string | null
           ticket_palette_key?: string | null
           additional_fee?: number | null
@@ -204,7 +210,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           end_date?: string | null
-          event_date?: string
+          event_date?: string | null
           id?: string
           is_active?: boolean
           is_deleted?: boolean
@@ -521,16 +527,15 @@ export type Database = {
       admin_event_summaries:{Row:{id:string;title_vi:string;title_en:string|null;performer_name:string;event_date:string;end_date:string|null;cover_image_url:string|null;cover_asset_id:string|null;is_active:boolean;additional_fee:number;is_deleted:boolean;updated_at:string;is_draft:boolean};Relationships:[]}
       admin_article_summaries:{Row:{id:string;title_vi:string;title_en:string|null;slug:string;thumbnail_url:string|null;published_at:string|null;updated_at:string;is_draft:boolean};Relationships:[]}
 
-      admin_content_entries: {Row:{kind:string;id:string;data:Json;updated_at:string;is_draft:boolean};Relationships:[]}
     }
     Functions: {
       delete_event_with_session:{Args:{p_event_id:string;p_expected_updated_at:string;p_session:string|null};Returns:string}
       expire_abandoned_media_claims:{Args:Record<PropertyKey,never>;Returns:number}
       claim_media_upload:{Args:{p_session:string;p_asset:string};Returns:undefined}
       release_media_session:{Args:{p_session:string};Returns:undefined}
-      save_content_draft:{Args:{p_id:string|null;p_kind:string;p_data:Json;p_expected:string|null;p_session:string|null};Returns:Json}
-      delete_content_draft:{Args:{p_id:string;p_expected:string;p_session:string|null};Returns:undefined}
-      commit_content:{Args:{p_kind:string;p_id:string|null;p_data:Json;p_expected:string|null;p_draft:string|null;p_session:string|null};Returns:Json}
+
+      delete_content_draft:{Args:{p_kind:string;p_id:string;p_expected:string;p_session:string|null};Returns:undefined}
+      commit_content:{Args:{p_kind:string;p_id:string|null;p_data:Json;p_expected:string|null;p_status:"draft"|"ready";p_session:string|null};Returns:Json}
 
       claim_media_deletion_jobs: { Args: {p_token:string}; Returns: {id:string;provider:string;bucket_id:string;object_path:string;created_at:string;claim_token:string|null;lease_until:string|null}[] }
       delete_event_permanently: { Args: { p_event_id:string; p_expected_updated_at:string }; Returns:string }

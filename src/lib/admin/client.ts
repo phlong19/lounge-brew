@@ -66,7 +66,6 @@ export async function saveAdminEvent(
   }
   const payload = {
     media_session:mediaSession,
-    ...(event.is_draft?{draft_id:event.id}:{}),
     title_vi: event.title_vi,
     title_en: event.title_en,
     performer_name: event.performer_name,
@@ -84,7 +83,7 @@ export async function saveAdminEvent(
       : {}),
   };
   const result = await adminRequest(
-    isNew||event.is_draft ? "/api/admin/events" : `/api/admin/events/${event.id}`,
+    isNew ? "/api/admin/events" : `/api/admin/events/${event.id}`,
     {
       method: isNew ? "POST" : "PATCH",
       headers: { "Content-Type": "application/json" },

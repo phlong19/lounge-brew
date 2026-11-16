@@ -2,6 +2,11 @@ import { buttonStyles } from "@/lib/ui/styles";
 export const adminStyles = {
   upcomingBadge: "w-fit rounded px-2 py-0.5 text-xs font-medium bg-[#E5F4EA] text-[#205B3B]",
   pastBadge: "w-fit rounded px-2 py-0.5 text-xs font-medium bg-[#FFF0DB] text-[#8B4B0B]",
+  eventFormBody: "min-h-0 flex-1 overflow-y-auto p-6",
+  eventNameFields: "gap-4 sm:grid-cols-2",
+  eventPosterSettings: "items-start gap-6 md:grid-cols-2",
+  eventPosterPlaceholder: "min-h-80 items-center justify-center gap-5 rounded-lg bg-stone-100 p-6 [&>*]:max-w-72",
+  eventFormFooter: "shrink-0 flex-wrap justify-end border-t border-[#E2E6DE] bg-white px-6 py-4",
   drawer: "min-h-0 overflow-clip w-full gap-0 bg-white p-0 sm:w-[min(92vw,64rem)]",
   root: "min-h-dvh bg-[#F2F4EF] text-[#15201C] lg:grid lg:grid-cols-[224px_minmax(0,1fr)]",
   sidebar: "flex flex-col gap-4 px-5 py-4 lg:gap-7 lg:sticky lg:top-0 lg:h-dvh lg:py-8",

@@ -9,6 +9,15 @@ import { AdminApiError, apiFailure, assertSameOrigin, databaseFailure, requireCo
 import { posterFileError } from "@/lib/admin/poster";
 export const runtime = "nodejs";
 export const maxDuration=60;
+// Retry transient failures only. Conflict handling and claim upserts make repeats safe.
+async function retryMediaWrite<T extends {error: {code?: string}|null; status: number}>(write:()=>PromiseLike<T>):Promise<T>{
+ for(let attempt=0;;attempt++){
+  const result=await write();
+  const transient=result.status===0||result.status===429||result.status>=500||["40001","40P01"].includes(result.error?.code??"");
+  if(!result.error||!transient||attempt===2)return result;
+  await new Promise(resolve=>setTimeout(resolve,150*2**attempt));
+ }
+}
 export async function POST(request:Request) {
   try {
     assertSameOrigin(request);
@@ -23,7 +32,7 @@ export async function POST(request:Request) {
     finally { reader.releaseLock(); }
     const form = await new Response(Buffer.concat(chunks),{headers:{"Content-Type":request.headers.get("content-type") || ""}}).formData();
     const session=form.get("sessionId");if(session!==null)eventId(String(session));
-    async function respond(asset:{id:string},url:string,status=200){if(session){const claim=await supabase.rpc("claim_media_upload",{p_session:String(session),p_asset:asset.id});databaseFailure(claim.error);}return NextResponse.json({asset,url},{status});}
+    async function respond(asset:{id:string},url:string,status=200){if(session){const claim=await retryMediaWrite(()=>supabase.rpc("claim_media_upload",{p_session:String(session),p_asset:asset.id}));databaseFailure(claim.error);}return NextResponse.json({asset,url},{status});}
     const file = form.get("file");
     if (!(file instanceof File)) throw new AdminApiError("Vui lòng chọn ảnh.");
     const validation = posterFileError(file);
@@ -63,7 +72,7 @@ export async function POST(request:Request) {
     const source = form.get("sourceUrl");
     let sourceUrl: string|null = null;
     if (typeof source === "string") { try { const parsed = new URL(source); if (parsed.protocol === "https:" && parsed.hostname === "trixie.com.vn" && !parsed.username && !parsed.password) sourceUrl = parsed.href; } catch {} }
-    const insert = await supabase.from("media_assets").insert({...paletteFields,provider,bucket_id:bucket,object_path:path,original_filename:file.name.slice(0,240),mime_type:file.type,size_bytes:bytes.length,width:metadata.width,height:metadata.height,alt_vi:typeof form.get("alt") === "string" ? String(form.get("alt")).slice(0,500) : "",source_url:sourceUrl,created_by:user.id}).select().single();
+    const insert = await retryMediaWrite(()=>supabase.from("media_assets").insert({...paletteFields,provider,bucket_id:bucket,object_path:path,original_filename:file.name.slice(0,240),mime_type:file.type,size_bytes:bytes.length,width:metadata.width,height:metadata.height,alt_vi:typeof form.get("alt") === "string" ? String(form.get("alt")).slice(0,500) : "",source_url:sourceUrl,created_by:user.id}).select().single());
     if (insert.error?.code === "23505") {
       const retry = await supabase.from("media_assets").select("*").eq("provider",provider).eq("bucket_id",bucket).eq("object_path",path).single(); databaseFailure(retry.error); return await respond(retry.data,url);
     }

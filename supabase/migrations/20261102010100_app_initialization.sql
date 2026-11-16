@@ -1,4 +1,4 @@
--- Required platform/config rows only; no staff, credentials or customer/content fixtures.
+-- Required storage buckets and singleton settings only; no staff, credentials or customer/content fixtures.
 INSERT INTO storage.buckets(id,name,public,file_size_limit,allowed_mime_types) VALUES
  ('lounge-drafts','lounge-drafts',false,10485760,array['image/jpeg','image/png','image/webp']),
  ('lounge-public','lounge-public',true,10485760,array['image/jpeg','image/png','image/webp'])
