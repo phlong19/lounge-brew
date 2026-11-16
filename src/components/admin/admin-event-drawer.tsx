@@ -1,5 +1,6 @@
 "use client";
 import {useRouter} from "next/navigation";
+import {useToast} from "@/components/ui/toast";
 import {useCreationExit} from "@/lib/admin/use-creation-exit";
 import {CreationCloseDialog} from "@/components/admin/creation-close-dialog";
 import {useQuery} from "@tanstack/react-query";
@@ -27,7 +28,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { localDateInput, type EditableEvent } from "@/lib/admin/event-list";
 import { adminStyles as s } from "@/lib/ui/admin-styles";
 
-type EventFormHandle={mediaSession:()=>string;saveDraft:()=>Promise<void>;discard:()=>Promise<void>};
+type EventFormHandle={mediaSession:()=>string;hasChanges:()=>boolean;saveDraft:()=>Promise<void>};
 type Props = { onDraftSaved:()=>void|Promise<void>; onDelete?: (event:EditableEvent)=>void; saving?: boolean; error?: string; event: EditableEvent | null; isNew: boolean; onClose: () => void; onApply: (event: EditableEvent) => void | Promise<void>; onReturnFocus: () => void };
 function FormError({message,id}:{message?:string;id:string}) {
  return message?<Typography id={id} role="alert" variant="small" tone="danger">{message}</Typography>:null;
@@ -36,12 +37,12 @@ function EventForm({event,onApply,uploading,saving,onUploadStateChange,actions}:
  const [english,setEnglish]=useState(false);
  const [mediaSession]=useState(()=>crypto.randomUUID());
  const [coverBusy,setCoverBusy]=useState(false);
- const {control,handleSubmit,getValues,setValue,setError,clearErrors,formState:{errors}}=useForm<EditableEvent>({defaultValues:{...event,title_en:event.title_en??"",content_vi:event.content_vi??"",additionalFee:event.additionalFee??0},mode:"onSubmit"});
+ const {control,handleSubmit,getValues,setValue,setError,clearErrors,formState:{errors,isDirty}}=useForm<EditableEvent>({defaultValues:{...event,title_en:event.title_en??"",content_vi:event.content_vi??"",additionalFee:event.additionalFee??0},mode:"onSubmit"});
  const [start,coverFile,coverUrl,artist,paletteKey,override]=useWatch({control,name:["event_date","cover_file","cover_image_url","performer_name","ticket_palette_key","ticket_palette_override"]});
  useImperativeHandle(actions,()=>({
   mediaSession:()=>mediaSession,
+  hasChanges:()=>isDirty,
   saveDraft:async()=>{const values=getValues();await adminRequest("/api/admin/drafts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"event",id:event.is_draft?event.id:null,expectedUpdatedAt:event.updated_at,media_session:mediaSession,data:values})});},
-  discard:async()=>{await adminRequest("/api/admin/drafts",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({media_session:mediaSession})});}
  }));
  async function selectCover(file:File|null) {
   if(uploading||saving||coverBusy)return;
@@ -104,16 +105,23 @@ function EventFormSkeleton({isDraft}:{isDraft:boolean}) {
 export function AdminEventDrawer({ onDraftSaved,event, isNew, onClose, onApply, onReturnFocus, saving = false, error = "", onDelete }: Props) {
   const [uploading,setUploading] = useState(false);
   const [closePrompt,setClosePrompt]=useState(false),[actionBusy,setActionBusy]=useState(false),[actionError,setActionError]=useState("");
-  const actions=useRef<EventFormHandle>(null),destination=useRef<string|null>(null);const router=useRouter();
+  const actions=useRef<EventFormHandle>(null),destination=useRef<string|null>(null);const router=useRouter(),toast=useToast();
   function finish(){setClosePrompt(false);onClose();if(destination.current){router.push(destination.current);destination.current=null;}}
-  async function discard(){if(saving||uploading||actionBusy)return;setActionBusy(true);setActionError("");try{await actions.current?.discard();finish();}catch(cause){setActionError((cause as Error).message);setClosePrompt(true);}finally{setActionBusy(false);}}
-  function requestClose(href?:string){if(saving||uploading||actionBusy)return;destination.current=href??null;if(isNew){setActionError("");setClosePrompt(true);}else void discard();}
+  function discard(){
+   if(saving||uploading||actionBusy)return;
+   const session=actions.current?.mediaSession();
+   finish();
+   if(!session)return;
+   const cleanup=()=>adminRequest("/api/admin/drafts",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({media_session:session}),keepalive:true});
+   void cleanup().catch(()=>cleanup()).catch(()=>toast.error("Không thể dọn ảnh chưa sử dụng. Ảnh có thể chưa được xóa."));
+  }
+  function requestClose(href?:string){if(saving||uploading||actionBusy)return;destination.current=href??null;if(isNew&&actions.current?.hasChanges()){setActionError("");setClosePrompt(true);}else discard();}
   async function saveDraft(){if(saving||uploading||actionBusy)return;setActionBusy(true);setActionError("");try{await actions.current?.saveDraft();await onDraftSaved();finish();}catch(cause){setActionError((cause as Error).message);setClosePrompt(true);}finally{setActionBusy(false);}}
   useCreationExit(!!event&&isNew,href=>requestClose(href));
   const detail=useQuery<EditableEvent>({queryKey:[...adminKeys.events,"detail",event?.id,event?.updated_at],enabled:!!event&&!isNew,staleTime:0,queryFn:async({signal})=>{const {item}=await adminRequest("/api/admin/events/"+event!.id,{signal});return {...item,additionalFee:item.additional_fee??0};}});
   const readyEvent=isNew?event:detail.data;
 
-  return <><CreationCloseDialog open={closePrompt} busy={actionBusy||saving||uploading} error={actionError} onKeepEditing={()=>{setClosePrompt(false);destination.current=null;}} onSaveDraft={()=>void saveDraft()} onDiscard={()=>void discard()} /><Sheet open={!!event} onOpenChange={open => { if (!open) requestClose(); }}><SheetContent onCloseAutoFocus={event => { event.preventDefault(); onReturnFocus(); }} lang="vi" closeLabel="Đóng" aria-describedby={undefined} className={s.drawer} data-event-editor>
+  return <><CreationCloseDialog open={closePrompt} busy={actionBusy||saving||uploading} error={actionError} onKeepEditing={()=>{setClosePrompt(false);destination.current=null;}} onSaveDraft={()=>void saveDraft()} onDiscard={discard} /><Sheet open={!!event} onOpenChange={open => { if (!open) requestClose(); }}><SheetContent onCloseAutoFocus={event => { event.preventDefault(); onReturnFocus(); }} lang="vi" closeLabel="Đóng" aria-describedby={undefined} className={s.drawer} data-event-editor>
     <SheetHeader className="shrink-0 border-b border-[#E2E6DE] px-6 py-5 pr-16"><SheetTitle>{isNew ? "Thêm sự kiện" : "Chỉnh sửa sự kiện"}</SheetTitle></SheetHeader>
     {error ? <AlertMessage variant="destructive">{error}</AlertMessage> : null}
     {event&&!isNew&&detail.isPending?<EventFormSkeleton isDraft={!!event.is_draft} />:null}

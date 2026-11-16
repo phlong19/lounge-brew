@@ -1,8 +1,6 @@
 import {notFound} from "next/navigation";
-import {AdminDesign} from "@/components/admin/admin-design";
 import {requireStaff} from "@/lib/server/admin-api";
-export default async function StaffPage() {
- const {user,role,displayName}=await requireStaff();
- if(role!=="admin")notFound();
- return <AdminDesign events={[]} initialSection="staff" staff={{email:user.email??"",name:displayName,role}} />;
-}
+import {AdminStaff} from "@/components/admin/admin-staff";
+import {Typography} from "@/components/ui/typography";
+import {Stack} from "@/components/ui/layout";
+export default async function StaffPage(){const {role}=await requireStaff();if(role!=="admin")notFound();return <Stack gap="lg"><Typography as="h1" variant="heading" className="text-2xl md:text-2xl">Nhân viên</Typography><AdminStaff /></Stack>}
