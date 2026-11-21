@@ -19,7 +19,7 @@ Deployed 30 October 2026 to `brew` (`zcftrbvrfiypqtwhmxxj`). This document cover
 | Provenance | `source_url` | Optional HTTPS source reference |
 | Ownership / timestamps | `created_by`, `updated_by`, `created_at`, `updated_at` | Auth-user references and timestamps; audit actor is recorded separately |
 
-The original `description_vi` / `description_en` columns remain for compatibility. The new editor writes full page content instead. The homepage's nearest future visible events and booking eligibility are derived from start time and visibility, so there are no manual homepage or reservation-allow flags to persist.
+Events use full page content. The `status` field distinguishes incomplete drafts from ready records; `is_active` controls visibility. The homepage's nearest future visible events and booking eligibility are derived from start time and visibility, so there are no manual homepage or reservation-allow flags to persist.
 
 ## Video editor → `public.video_settings`
 
@@ -76,4 +76,4 @@ Validation includes pure URL/input tests, rolled-back SQL checks for editor/ordi
 
 ## Two-file installation baseline — 2 November 2026
 
-Active migrations now consist of app_baseline and app_initialization. Archived historical SQL is under supabase/history. The existing project migration history was reconciled without replaying schema creation or initialization; application row counts stayed unchanged. See supabase/README.md for fresh setup, one-time history transition and local verification.
+Active migrations now consist of app_baseline and app_initialization. Archived historical SQL is under supabase/history. See supabase/README.md for fresh setup and local verification.

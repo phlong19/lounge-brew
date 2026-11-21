@@ -14,38 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+
+      media_upload_claims: {Row:{session_id:string;asset_id:string;created_by:string;created_at:string};Insert:{session_id:string;asset_id:string};Update:{created_at?:string};Relationships:[]}
+
+      media_deletion_jobs: {
+        Row: { id:string; provider:string; bucket_id:string; object_path:string; created_at:string; claim_token:string|null; lease_until:string|null }
+        Insert: { id?:string; provider:string; bucket_id:string; object_path:string; created_at?:string }
+        Update: { provider?:string; bucket_id?:string; object_path?:string; claim_token?:string|null; lease_until?:string|null }
+        Relationships: []
+      }
+
       articles: {
         Row: {
+          status: "draft" | "ready"
           content_en: string | null
           content_vi: string
           created_at: string
           id: string
           published_at: string | null
-          slug: string
+          slug: string | null
           thumbnail_url: string | null
           title_en: string | null
           title_vi: string
           updated_at: string
         }
         Insert: {
+          status?: "draft" | "ready"
           content_en?: string | null
           content_vi: string
           created_at?: string
           id?: string
           published_at?: string | null
-          slug: string
+          slug: string | null
           thumbnail_url?: string | null
           title_en?: string | null
           title_vi: string
           updated_at?: string
         }
         Update: {
+          status?: "draft" | "ready"
           content_en?: string | null
           content_vi?: string
           created_at?: string
           id?: string
           published_at?: string | null
-          slug?: string
+          slug?: string | null
           thumbnail_url?: string | null
           title_en?: string | null
           title_vi?: string
@@ -136,6 +149,9 @@ export type Database = {
       }
       events: {
         Row: {
+          status: "draft" | "ready"
+          ticket_palette_override: string | null
+          ticket_palette_key: string | null
           additional_fee: number | null
           content_en: string | null
           content_vi: string
@@ -143,10 +159,8 @@ export type Database = {
           cover_image_url: string | null
           created_at: string
           created_by: string | null
-          description_en: string | null
-          description_vi: string | null
           end_date: string | null
-          event_date: string
+          event_date: string | null
           id: string
           is_active: boolean
           is_deleted: boolean
@@ -160,6 +174,9 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          status?: "draft" | "ready"
+          ticket_palette_override?: string | null
+          ticket_palette_key?: string | null
           additional_fee?: number | null
           content_en?: string | null
           content_vi?: string
@@ -167,10 +184,8 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
-          description_en?: string | null
-          description_vi?: string | null
           end_date?: string | null
-          event_date: string
+          event_date: string | null
           id?: string
           is_active?: boolean
           is_deleted?: boolean
@@ -184,6 +199,9 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          status?: "draft" | "ready"
+          ticket_palette_override?: string | null
+          ticket_palette_key?: string | null
           additional_fee?: number | null
           content_en?: string | null
           content_vi?: string
@@ -191,10 +209,8 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
-          description_en?: string | null
-          description_vi?: string | null
           end_date?: string | null
-          event_date?: string
+          event_date?: string | null
           id?: string
           is_active?: boolean
           is_deleted?: boolean
@@ -219,8 +235,12 @@ export type Database = {
       }
       media_assets: {
         Row: {
+          ticket_palette_key: string | null
           alt_en: string | null
           alt_vi: string
+          ticket_palette_version: number
+          ticket_palette_hash: string | null
+          provider: "supabase" | "r2"
           bucket_id: string
           created_at: string
           created_by: string | null
@@ -235,8 +255,12 @@ export type Database = {
           width: number
         }
         Insert: {
+          ticket_palette_key?: string | null
           alt_en?: string | null
           alt_vi?: string
+          ticket_palette_version?: number
+          ticket_palette_hash?: string | null
+          provider?: "supabase" | "r2"
           bucket_id: string
           created_at?: string
           created_by?: string | null
@@ -251,8 +275,12 @@ export type Database = {
           width: number
         }
         Update: {
+          ticket_palette_key?: string | null
           alt_en?: string | null
           alt_vi?: string
+          ticket_palette_version?: number
+          ticket_palette_hash?: string | null
+          provider?: "supabase" | "r2"
           bucket_id?: string
           created_at?: string
           created_by?: string | null
@@ -496,9 +524,22 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_event_summaries:{Row:{id:string;title_vi:string;title_en:string|null;performer_name:string;event_date:string;end_date:string|null;cover_image_url:string|null;cover_asset_id:string|null;is_active:boolean;additional_fee:number;is_deleted:boolean;updated_at:string;is_draft:boolean};Relationships:[]}
+      admin_article_summaries:{Row:{id:string;title_vi:string;title_en:string|null;slug:string;thumbnail_url:string|null;published_at:string|null;updated_at:string;is_draft:boolean};Relationships:[]}
+
     }
     Functions: {
+      delete_event_with_session:{Args:{p_event_id:string;p_expected_updated_at:string;p_session:string|null};Returns:string}
+      expire_abandoned_media_claims:{Args:Record<PropertyKey,never>;Returns:number}
+      claim_media_upload:{Args:{p_session:string;p_asset:string};Returns:undefined}
+      release_media_session:{Args:{p_session:string};Returns:undefined}
+
+      delete_content_draft:{Args:{p_kind:string;p_id:string;p_expected:string;p_session:string|null};Returns:undefined}
+      commit_content:{Args:{p_kind:string;p_id:string|null;p_data:Json;p_expected:string|null;p_status:"draft"|"ready";p_session:string|null};Returns:Json}
+
+      claim_media_deletion_jobs: { Args: {p_token:string}; Returns: {id:string;provider:string;bucket_id:string;object_path:string;created_at:string;claim_token:string|null;lease_until:string|null}[] }
+      delete_event_permanently: { Args: { p_event_id:string; p_expected_updated_at:string }; Returns:string }
+
       admin_staff_directory: {
         Args: { p_page?: number; p_search?: string; p_status?: string }
         Returns: Json

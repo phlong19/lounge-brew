@@ -25,6 +25,9 @@ export type MenuItemRow = {
 };
 
 export type EventRow = {
+  is_draft?: boolean;
+  ticket_palette_override?: string | null;
+  ticket_palette_key?: string | null;
   public_id?: string;
   source_id?: string | null;
   content_vi?: string;
@@ -38,8 +41,6 @@ export type EventRow = {
   title_en: string | null;
   performer_name: string;
   event_date: string;
-  description_vi: string | null;
-  description_en: string | null;
   cover_image_url: string | null;
   is_active: boolean;
   end_date?: string | null;
@@ -47,6 +48,7 @@ export type EventRow = {
 };
 
 export type ArticleRow = {
+  is_draft?: boolean;
   id: string;
   title_vi: string;
   title_en: string | null;
@@ -65,12 +67,12 @@ export type HomePageData = {
 };
 
 export type LocalizedEvent = {
+  ticketPaletteKey?: string | null;
   content?: string | null;
   id: string;
   title: string;
   performerName: string;
   eventDate: string;
-  description: string | null;
   coverImageUrl: string | null;
   fallbackFromVietnamese: boolean;
   endDate?: string | null;

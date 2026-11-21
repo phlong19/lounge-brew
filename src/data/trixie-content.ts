@@ -41,8 +41,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Quang Dũng",
     event_date: "2026-10-23T20:15:00+07:00",
     end_date: "2026-10-23T22:30:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/19870256.jpg",
     is_active: true,
     source_url:
@@ -55,8 +53,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Đàm Vĩnh Hưng",
     event_date: "2026-10-24T20:15:00+07:00",
     end_date: "2026-10-24T22:00:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/42386501.jpg",
     is_active: true,
     source_url:
@@ -69,8 +65,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Phương Linh",
     event_date: "2026-10-30T20:15:00+07:00",
     end_date: "2026-10-30T22:00:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/47320159.jpg",
     is_active: true,
     source_url:
@@ -83,8 +77,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Myra Trần",
     event_date: "2026-10-31T20:15:00+07:00",
     end_date: "2026-10-31T22:00:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/60498725.png",
     is_active: true,
     source_url:
@@ -97,8 +89,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Hoàng Hải",
     event_date: "2026-11-07T20:15:00+07:00",
     end_date: "2026-11-07T22:30:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/1853279.jpg",
     is_active: true,
     source_url:
@@ -111,8 +101,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Nguyên Hà",
     event_date: "2026-11-20T20:15:00+07:00",
     end_date: "2026-11-20T22:00:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/58320194.jpg",
     is_active: true,
     source_url:
@@ -125,8 +113,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Dương Edward",
     event_date: "2026-11-21T20:15:00+07:00",
     end_date: "2026-11-21T22:00:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/31560924.jpg",
     is_active: true,
     source_url:
@@ -139,8 +125,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Quang Đăng Trần",
     event_date: "2026-11-27T20:15:00+07:00",
     end_date: "2026-11-27T22:00:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/76352980.jpg",
     is_active: true,
     source_url:
@@ -153,8 +137,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Đỗ Hoàng Hiệp",
     event_date: "2026-11-28T20:15:00+07:00",
     end_date: "2026-11-28T22:00:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/24567190.jpg",
     is_active: true,
     source_url:
@@ -167,8 +149,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Quang Vinh",
     event_date: "2026-12-11T20:15:00+07:00",
     end_date: "2026-12-11T22:00:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/96851273.jpg",
     is_active: true,
     source_url:
@@ -181,8 +161,6 @@ export const verifiedEvents: EventRow[] = [
     performer_name: "Nguyễn Kiều Oanh",
     event_date: "2026-12-19T20:15:00+07:00",
     end_date: "2026-12-19T22:30:00+07:00",
-    description_vi: null,
-    description_en: null,
     cover_image_url: "/trixie/shows/72856139.png",
     is_active: true,
     source_url:

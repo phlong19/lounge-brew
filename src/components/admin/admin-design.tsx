@@ -1,23 +1,14 @@
 "use client";
-import {
-  AdminVideo,
-  type VideoFormState,
-} from "@/components/admin/admin-video";
 
 import { TableSkeleton } from "@/components/ui/loading-state";
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { adminKeys } from "@/lib/admin/query";
-import { AdminReservations } from "@/components/admin/admin-reservations";
-import { AdminStaff } from "@/components/admin/admin-staff";
-import { AdminSeating } from "@/components/admin/admin-seating";
-import type { StaffInfo } from "@/components/admin/staff-menu";
 import {
   adminRequest,
   loadAdminEvents,
   saveAdminEvent,
 } from "@/lib/admin/client";
-import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Inline, Stack } from "@/components/ui/layout";
@@ -29,28 +20,11 @@ import { AdminEventDrawer } from "@/components/admin/admin-event-drawer";
 import type { EditableEvent } from "@/lib/admin/event-list";
 import { AlertMessage } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/toast";
-import { adminStyles as s } from "@/lib/ui/admin-styles";
 
-export function AdminDesign({
-  events,
-  staff,
-  initialSection = "events",
-}: {
-  events: EventRow[];
-  staff?: StaffInfo;
-  initialSection?: "events" | "video" | "seating" | "staff" | "reservations";
-}) {
-  const t = useTranslations("AdminDesign");
+export function AdminEventsPage({events}:{events:EventRow[]}) {
   const client = useQueryClient();
   const toast = useToast();
   const [error, setError] = useState("");
-  const tab = initialSection;
-  const [videoState, setVideoState] = useState<VideoFormState>({
-    dirty: false,
-    busy: false,
-    valid: false,
-  });
-  const dirty = tab === "video" && videoState.dirty;
   const drawerTrigger = useRef<HTMLButtonElement | null>(null);
   const [deleting, setDeleting] = useState<EditableEvent | null>(null);
   const [deleteError, setDeleteError] = useState("");
@@ -58,7 +32,6 @@ export function AdminDesign({
   const eventQuery = useQuery({
     queryKey: adminKeys.events,
     queryFn: ({ signal }) => loadAdminEvents(signal),
-    enabled: tab === "events",
     initialData: events.length
       ? events.map((event) => ({ ...event }))
       : undefined,
@@ -82,7 +55,7 @@ export function AdminDesign({
   });
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
-      adminRequest("/api/admin/events/" + id, { method: "DELETE" }),
+      adminRequest(deleting?.is_draft?"/api/admin/drafts":"/api/admin/events/" + id, { method: "DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,...(deleting?.is_draft?{kind:"event"}:{}),expectedUpdatedAt:deleting?.updated_at,media_session:deleting?.media_session}) }),
     onSuccess: async (_result, id) => {
       client.setQueryData<EditableEvent[]>(adminKeys.events, (rows) =>
         (rows ?? []).filter((item) => item.id !== id),
@@ -90,6 +63,7 @@ export function AdminDesign({
       setEditing(null);
       setDeleting(null);
       toast("Đã xóa sự kiện.");
+      if(_result.mediaCleanupPending)toast.info("Một số ảnh đang chờ xóa và sẽ được thử lại tự động.");
       await client.invalidateQueries({ queryKey: adminKeys.events });
     },
   });
@@ -126,90 +100,15 @@ export function AdminDesign({
       performer_name: "",
       event_date: "",
       end_date: null,
-      description_vi: "",
-      description_en: "",
       cover_image_url: null,
       is_active: true,
       additionalFee: 0,
     });
   };
   return (
-    <Stack gap="lg" data-admin-page={tab}>
-      <Inline className="items-start justify-between">
-        <Stack gap="xs">
-          <Typography
-            as="h1"
-            variant="heading"
-            className="text-2xl md:text-2xl"
-          >
-            {tab === "reservations"
-              ? "Đặt bàn"
-              : tab === "staff"
-                ? "Nhân viên"
-                : tab === "seating"
-                  ? "Sơ đồ chỗ ngồi"
-                  : t(tab === "events" ? "eventsTitle" : "videoTitle")}
-          </Typography>
-        </Stack>
-        {tab === "events" ? (
-          <Button onClick={(event) => addEvent(event.currentTarget)}>
-            <Icon name="plus" />
-            Thêm sự kiện
-          </Button>
-        ) : tab === "video" ? (
-          <Button
-            className={s.primary}
-            type="submit"
-            form="video-settings"
-            disabled={!dirty || !videoState.valid || videoState.busy}
-          >
-            <Icon name="check" />
-            {videoState.busy ? "Đang lưu…" : "Lưu"}
-          </Button>
-        ) : null}
-      </Inline>
-      {dirty ? (
-        <AlertMessage variant="warning">{t("unsaved")}</AlertMessage>
-      ) : null}
-      {tab === "reservations" ? (
-        <AdminReservations />
-      ) : tab === "staff" ? (
-        <AdminStaff />
-      ) : tab === "seating" ? (
-        <AdminSeating />
-      ) : tab === "events" ? (
-        loading ? (
-          <TableSkeleton
-            columns={["Chương trình", "Ngày diễn", "Phụ thu", "Hiển thị", ""]}
-            label="Đang tải sự kiện…"
-          />
-        ) : loadError ? (
-          <Stack>
-            <AlertMessage variant="destructive">{loadError}</AlertMessage>
-            <Button
-              variant="outline"
-              className="w-fit"
-              onClick={() => void eventQuery.refetch()}
-            >
-              Thử lại
-            </Button>
-          </Stack>
-        ) : (
-          <AdminEvents
-            items={items}
-            onEdit={(event, trigger) => {
-              drawerTrigger.current = trigger;
-              setError("");
-              setEditing(event);
-            }}
-          />
-        )
-      ) : (
-        <AdminVideo
-          onState={setVideoState}
-          onSaved={() => toast("Đã lưu video.")}
-        />
-      )}
+    <Stack gap="lg" data-admin-page="events">
+      <Inline className="items-start justify-between"><Typography as="h1" variant="heading" className="text-2xl md:text-2xl">Sự kiện</Typography><Button onClick={event=>addEvent(event.currentTarget)}><Icon name="plus" />Thêm sự kiện</Button></Inline>
+      {loading?<TableSkeleton columns={["Chương trình","Ngày diễn","Phụ thu","Hiển thị",""]} label="Đang tải sự kiện…" />:loadError?<Stack><AlertMessage variant="destructive">{loadError}</AlertMessage><Button variant="outline" className="w-fit" onClick={()=>void eventQuery.refetch()}>Thử lại</Button></Stack>:<AdminEvents items={items} onEdit={(event,trigger)=>{drawerTrigger.current=trigger;setError("");setEditing(event);}} />}
       <DeleteEventDialog
         name={deleting?.title_vi ?? null}
         busy={busy}
@@ -218,6 +117,7 @@ export function AdminDesign({
         onConfirm={() => void removeEvent()}
       />
       <AdminEventDrawer
+        onDraftSaved={async()=>{await client.invalidateQueries({queryKey:adminKeys.events});toast("Đã lưu bản nháp. Xem trong bộ lọc Bản nháp.");}}
         onDelete={(event) => {
           setDeleteError("");
           setDeleting(event);

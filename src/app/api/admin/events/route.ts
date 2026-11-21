@@ -1,3 +1,4 @@
+import {contentEnvelope,commitContent} from "@/lib/server/content-lifecycle";
 import { NextResponse } from "next/server";
 import { apiFailure, assertSameOrigin, databaseFailure, readJson, resolveEventCover, requireContentStaff } from "@/lib/server/admin-api";
 import { eventPayload } from "@/lib/admin/event-validation";
@@ -9,7 +10,7 @@ export async function GET(request: Request) {
     const params = new URL(request.url).searchParams;
     const page = Math.max(1, Math.min(10000, Number(params.get("page")) || 1));
     const limit = Math.max(1, Math.min(100, Number(params.get("limit")) || 100));
-    const result = await supabase.from("events").select("id,public_id,title_vi,title_en,performer_name,event_date,end_date,cover_image_url,cover_asset_id,is_active,is_deleted,additional_fee,updated_at",{count:"exact"}).eq("is_deleted",false).order("event_date",{ascending:true}).order("id").range((Math.floor(page)-1)*Math.floor(limit),Math.floor(page)*Math.floor(limit)-1);
+    const result = await supabase.from("admin_event_summaries").select("*",{count:"exact"}).order("updated_at",{ascending:false}).order("id").range((Math.floor(page)-1)*Math.floor(limit),Math.floor(page)*Math.floor(limit)-1);
     databaseFailure(result.error);
     return NextResponse.json({items:result.data,total:result.count,page:Math.floor(page),limit:Math.floor(limit)},{headers:{"Cache-Control":"no-store"}});
   } catch(error) { return apiFailure(error); }
@@ -17,13 +18,12 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
-    const {supabase,user} = await requireContentStaff(request);
-    const payload = eventPayload(await readJson(request));
+    const {supabase} = await requireContentStaff(request);
+    const raw=await readJson(request);const payload = eventPayload(contentEnvelope(raw).data);
     await resolveEventCover(supabase,payload);
     if (!payload.cover_asset_id && !payload.cover_image_url) return NextResponse.json({error:"Vui lòng chọn ảnh chương trình."},{status:400});
-    const result = await supabase.from("events").insert({...payload,created_by:user.id,updated_by:user.id}).select().single();
-    databaseFailure(result.error);
+    const item=await commitContent(supabase,"event",null,payload,raw);
     revalidateTag("upcoming-events",{expire:0}); revalidatePath("/"); revalidatePath("/events");
-    return NextResponse.json({item:result.data},{status:201});
+    return NextResponse.json({item},{status:201});
   } catch(error) { return apiFailure(error); }
 }

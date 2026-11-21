@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 
+import {LoadingTransitionProvider} from "@/components/content/landing-loading";
 import {PublicQueryProvider} from "@/components/lounge/public-query-provider";
 import { ReservationProvider } from "@/components/lounge/reservation-provider";
 
@@ -46,7 +47,7 @@ export default async function RootLayout({
           locale={locale}
           messages={messages ?? undefined}
         >
-          <PublicQueryProvider><ReservationProvider>{children}</ReservationProvider></PublicQueryProvider>
+          <LoadingTransitionProvider initialEnglish={locale==="en"}><PublicQueryProvider><ReservationProvider>{children}</ReservationProvider></PublicQueryProvider></LoadingTransitionProvider>
         </NextIntlClientProvider>
       </body>
     </html>

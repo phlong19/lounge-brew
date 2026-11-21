@@ -30,3 +30,10 @@ test('only active editors and admins can manage events',()=>{
  for(const role of ['admin','editor'])assert.equal(canManageEvents({role,is_active:true}),true);
  for(const staff of [null,{}, {role:'booking',is_active:true},{role:'admin',is_active:false},{role:'editor',is_active:1},{role:'owner',is_active:true}])assert.equal(canManageEvents(staff),false);
 });
+
+test('ticket colours accept only known palettes, preserve auto-reset, and reject CSS injection',()=>{
+ assert.equal(eventPayload({...valid,ticket_palette_override:'teal'}).ticket_palette_override,'teal');
+ assert.equal(eventPayload({...valid,ticket_palette_override:'#12ab34'}).ticket_palette_override,'#12AB34');
+ assert.equal(eventPayload({ticket_palette_override:null},true).ticket_palette_override,null);
+ for(const value of ['__proto__','#12345','bg-red-500','url(https://evil.test)',42])assert.throws(()=>eventPayload({ticket_palette_override:value},true));
+});

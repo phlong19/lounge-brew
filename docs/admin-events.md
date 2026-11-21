@@ -75,3 +75,9 @@ Archive mode scans original listing cards across pagination, including ended sho
 The complete archive scan found nine fully verifiable missing past shows. Other entries were excluded because the original URLs were unavailable/redirecting, had conflicting dates, or lacked a verifiable date/start time. The review manifest records imported candidates and skipped-source reasons in supabase/imports/past-2026-10-31.json.
 
 Use node scripts/import-trixie-upcoming.mjs --past --limit=20 for a dry run. To apply the reviewed manifest without recrawling unavailable pages, use --past --from-manifest --apply. Actual saved rows preserve original article text and supported structure, upload original images to the public bucket, and verify hosted bytes. Ended shows remain publicly readable at their detail URLs and manageable in admin, but are excluded from booking choices and upcoming-event sections.
+
+## Event descriptions and cover assets
+
+Apply `20261103000000_remove_event_descriptions.sql` to remove unused event-only `description_vi` / `description_en`. Event articles continue to use `content_vi` / `content_en`; menu descriptions are unchanged.
+
+Keep `events.cover_image_url` for direct public rendering without an asset join. `cover_asset_id` links upload metadata; the save API derives the direct URL from that asset to keep both consistent. `events.source_url` identifies the original event page, while `media_assets.source_url` identifies the original image. Asset rows store bucket/path, original filename, MIME type, byte size, dimensions, bilingual alt text and uploader/timestamps, not a separate public URL.

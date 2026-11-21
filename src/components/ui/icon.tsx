@@ -1,4 +1,8 @@
 import {
+  Newspaper,
+  Star,
+  LoaderCircle,
+  House,
   EllipsisVertical,
   KeyRound,
   ShieldOff,
@@ -57,6 +61,10 @@ import {
 import { cn } from "@/lib/utils";
 
 const icons = {
+  article: Newspaper,
+  star: Star,
+  spinner: LoaderCircle,
+  home: House,
   more: EllipsisVertical,
   key: KeyRound,
   lock: ShieldOff,

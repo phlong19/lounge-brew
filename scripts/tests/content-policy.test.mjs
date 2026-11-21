@@ -26,8 +26,6 @@ const event = (id, date, extra = {}) => ({
   title_en: null,
   performer_name: id,
   event_date: date,
-  description_vi: null,
-  description_en: null,
   cover_image_url: null,
   is_active: true,
   ...extra,

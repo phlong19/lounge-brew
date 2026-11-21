@@ -1,6 +1,6 @@
 import type { EventRow } from "@/types/domain";
 
-export type EditableEvent = EventRow & { additionalFee?: number | null; content_vi?: string; cover_file?: File };
+export type EditableEvent = EventRow & { media_session?:string; additionalFee?: number | null; content_vi?: string; cover_file?: File };
 export type EventFilters = { search: string; scope: string; month: string; year: string };
 const dateFormatter = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
 export function venueDateParts(value: string) {
@@ -16,7 +16,7 @@ export function filterEvents(items: EditableEvent[], filters: EventFilters, now:
   return items.filter(item => {
     const date = venueDateParts(item.event_date);
     return (!query || `${item.title_vi} ${item.performer_name}`.toLocaleLowerCase("vi").includes(query))
-      && (filters.scope === "visible" ? item.is_active : filters.scope === "hidden" ? !item.is_active : filters.scope === "upcoming" ? Date.parse(item.event_date) > now : filters.scope === "past" ? Date.parse(item.event_date) <= now : true)
+      && (filters.scope === "draft" ? !!item.is_draft : filters.scope === "visible" ? !item.is_draft&&item.is_active : filters.scope === "hidden" ? !item.is_active : filters.scope === "upcoming" ? !item.is_draft&&Date.parse(item.event_date) > now : filters.scope === "past" ? !item.is_draft&&Date.parse(item.event_date) <= now : true)
       && (filters.month === "all" || date?.month === filters.month)
       && (filters.year === "all" || date?.year === filters.year);
   }).sort((a, b) => (filters.scope === "past" ? -1 : 1) * (new Date(a.event_date).getTime() - new Date(b.event_date).getTime()));

@@ -10,6 +10,7 @@ import { Icon } from "@/components/ui/icon";
 import { Container, Inline, Section, Stack, Surface } from "@/components/ui/layout";
 import { AppLink } from "@/components/ui/link";
 import { Media } from "@/components/ui/media";
+import { Reveal } from "@/components/ui/reveal";
 import { Typography } from "@/components/ui/typography";
 import { heroStyles, progressStyles } from "@/lib/ui/home-styles";
 import { cn } from "@/lib/utils";
@@ -86,21 +87,21 @@ export function HeroCarousel() {
       <Surface aria-hidden="true" className={heroStyles.scrim} />
       <Container className={heroStyles.content}>
         <Stack gap="lg" className="relative max-w-3xl translate-y-12 md:translate-y-24">
-          <Stack gap="sm">
+          <Reveal><Stack gap="sm">
             <Typography as="h1" variant="title">Café & Lounge</Typography>
-          </Stack>
-          <Typography variant="lead" className="max-w-lg text-lg md:text-xl">
+          </Stack></Reveal>
+          <Reveal delay={1}><Typography variant="lead" className="max-w-lg text-lg md:text-xl">
             {t(`${slides[active].key}Description`)}
-          </Typography>
-          <Inline gap="sm" className="pt-2">
+          </Typography></Reveal>
+          <Reveal delay={2}><Inline gap="sm" className="pt-2">
             <ReservationButton variant="secondary" size="lg">{t("book")}<Icon name="arrowUpRight" /></ReservationButton>
             <Button asChild variant="outline" size="lg"><AppLink href="/events">{t("lineup")}<Icon name="arrowRight" /></AppLink></Button>
-          </Inline>
+          </Inline></Reveal>
         </Stack>
       </Container>
       <Surface className={heroStyles.controls}>
         <Container>
-          <Inline gap="md" aria-label={t("chooseSlide")} className="max-w-xl flex-nowrap">
+          <Reveal delay={3}><Inline gap="md" aria-label={t("chooseSlide")} className="max-w-xl flex-nowrap">
             {slides.map((slide, index) => (
               <Button
                 key={slide.key}
@@ -117,7 +118,7 @@ export function HeroCarousel() {
                 </Surface>
               </Button>
             ))}
-          </Inline>
+          </Inline></Reveal>
         </Container>
       </Surface>
       <Typography as="span" role="status" aria-live="polite" className="sr-only">{announcement}</Typography>

@@ -12,9 +12,9 @@ export const reservationSelect="id,reference,event_id,name,phone,email,visit_dat
 export async function resolveReservation(supabase:SupabaseClient<Database>,values:ReservationValues,deferVisitChecks=false){
  let eventId:string|null=null;const events:{id:string;date:string;startsAt:string}[]=[];
  if(values.event){
-  const result=await supabase.from("events").select("id,event_date,end_date,is_active,is_deleted").eq("public_id",values.event).abortSignal(AbortSignal.timeout(5000)).maybeSingle();
+  const result=await supabase.from("events").select("id,event_date,end_date,is_active,is_deleted").eq("status","ready").eq("public_id",values.event).abortSignal(AbortSignal.timeout(5000)).maybeSingle();
   if(result.error)throw new AdminApiError("Không thể kiểm tra chương trình.",503);
-  if(result.data&&(deferVisitChecks||isBookableEvent(result.data as Parameters<typeof isBookableEvent>[0]))){eventId=result.data.id;events.push({id:values.event,date:venueNow(new Date(result.data.event_date)).date,startsAt:result.data.event_date});}
+  if(result.data?.event_date&&(deferVisitChecks||isBookableEvent(result.data as Parameters<typeof isBookableEvent>[0]))){eventId=result.data.id;events.push({id:values.event,date:venueNow(new Date(result.data.event_date)).date,startsAt:result.data.event_date});}
  }
  const errors=validateReservation(values,new Date(),events,{deferVisitChecks});
  if(Object.keys(errors).length)throw new ReservationInputError(errors);
