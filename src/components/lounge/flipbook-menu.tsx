@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 import { PhoneMenu } from "./phone-menu";
 import { compactMenuPages } from "@/lib/menu/menu-state";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
@@ -41,6 +41,16 @@ export function FlipbookMenu({ pages }: { pages: MenuPage[] }) {
   const current = viewer.visible[0] ?? 0,
     last = viewer.visible.at(-1) ?? 0,
     presentation = motionTarget ?? viewer.page;
+  // Start fetching before the flip engine mounts. This also warms pages the
+  // reduced-motion viewer does not mount until the reader navigates to them.
+  useEffect(() => {
+    if (viewer.phone) return;
+    for (const item of visiblePages) {
+      const image = new window.Image();
+      image.fetchPriority = "low";
+      image.src = item.image;
+    }
+  }, [viewer.phone, visiblePages]);
   if (!pages.length) return <Status>{t("imageError")}</Status>;
   if (viewer.phone) return <PhoneMenu pages={visiblePages} page={viewer.page} onSelect={viewer.goTo} />;
   return (

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
+import { EventFooter } from "@/components/layout/event-footer";
 import { EventGrid } from "@/components/lounge/event-grid";
 import { VisitSection } from "@/components/lounge/visit-section";
 import { Container, Main, Section, Stack } from "@/components/ui/layout";
@@ -40,7 +40,7 @@ export default async function EventsPage() {
         </Section>
         <VisitSection />
       </Main>
-      <SiteFooter compact />
+      <EventFooter />
     </PublicDataBoundary>
   );
 }

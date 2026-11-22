@@ -21,12 +21,10 @@ const artworkStyles = {
 export function MenuArtwork({
   page,
   eager = false,
-  original = false,
   className,
 }: {
   page: MenuPage;
   eager?: boolean;
-  original?: boolean;
   className?: string;
 }) {
   const t = useTranslations("Menu");
@@ -42,15 +40,11 @@ export function MenuArtwork({
         alt={page.label}
         width={page.width}
         height={page.height}
-        sizes={
-          original
-            ? "1800px"
-            : "(min-width: 1024px) 440px, (min-width: 640px) 560px, 92vw"
-        }
         fit="contain"
         className={artworkStyles.image}
-        loading={eager ? "eager" : "lazy"}
-        unoptimized={original}
+        loading="eager"
+        fetchPriority={eager ? "high" : "low"}
+        unoptimized
         onLoad={() => setStatus("ready")}
         onError={() => setStatus("error")}
       />

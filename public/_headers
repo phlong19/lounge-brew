@@ -1,0 +1,2 @@
+/menu/page-*.webp
+  Cache-Control: public, max-age=3600

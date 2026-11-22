@@ -9,7 +9,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import { RichText } from "@/components/content/rich-text";
 import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
+import { EventFooter } from "@/components/layout/event-footer";
 import { ReservationButton } from "@/components/lounge/reservation-provider";
 import { EventCalendar } from "@/components/ui/event-calendar";
 import { eventBody } from "@/lib/content/event-body";
@@ -111,7 +111,7 @@ export default async function ShowPage({ params }: Props) {
           </Container>
         </Section>
       </Main>
-      <SiteFooter />
+      <EventFooter />
     </PublicDataBoundary>
   );
 }
