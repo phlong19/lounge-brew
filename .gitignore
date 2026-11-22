@@ -17,3 +17,7 @@ package-lock.json
 
 .pnpm-store
 .agent
+.open-next
+.wrangler
+.dev.vars*
+!.dev.vars.example

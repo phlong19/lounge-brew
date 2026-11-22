@@ -2,6 +2,8 @@ allowBuilds:
   '@parcel/watcher': false
   '@swc/core': false
   '@tailwindcss/oxide': true
+  esbuild@0.28.2: true
+  workerd@1.20261119.1: true
   sharp: true
   unrs-resolver: true
 
