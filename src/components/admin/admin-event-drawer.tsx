@@ -7,7 +7,7 @@ import {useQuery} from "@tanstack/react-query";
 import {adminKeys} from "@/lib/admin/query";
 import {TicketColourField} from "@/components/admin/ticket-colour-field";
 import {EventTicket} from "@/components/lounge/home-ticket-shows";
-import {adminRequest,uploadAdminImage} from "@/lib/admin/client";
+import {adminRequest,releaseDraftMediaSession,uploadAdminImage} from "@/lib/admin/client";
 import {Skeleton} from "@/components/ui/skeleton";
 import {AlertMessage} from "@/components/ui/alert";
 
@@ -112,8 +112,7 @@ export function AdminEventDrawer({ onDraftSaved,event, isNew, onClose, onApply, 
    const session=actions.current?.mediaSession();
    finish();
    if(!session)return;
-   const cleanup=()=>adminRequest("/api/admin/drafts",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({media_session:session}),keepalive:true});
-   void cleanup().catch(()=>cleanup()).catch(()=>toast.error("Không thể dọn ảnh chưa sử dụng. Ảnh có thể chưa được xóa."));
+   void releaseDraftMediaSession(session).catch(() => toast.error("Không thể dọn ảnh chưa sử dụng. Ảnh có thể chưa được xóa."));
   }
   function requestClose(href?:string){if(saving||uploading||actionBusy)return;destination.current=href??null;if(isNew&&actions.current?.hasChanges()){setActionError("");setClosePrompt(true);}else discard();}
   async function saveDraft(){if(saving||uploading||actionBusy)return;setActionBusy(true);setActionError("");try{await actions.current?.saveDraft();await onDraftSaved();finish();}catch(cause){setActionError((cause as Error).message);setClosePrompt(true);}finally{setActionBusy(false);}}

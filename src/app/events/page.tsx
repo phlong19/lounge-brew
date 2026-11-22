@@ -3,9 +3,8 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { SiteHeader } from "@/components/layout/site-header";
-import { EventFooter } from "@/components/layout/event-footer";
+import { SiteFooter } from "@/components/layout/site-footer";
 import { EventGrid } from "@/components/lounge/event-grid";
-import { VisitSection } from "@/components/lounge/visit-section";
 import { Container, Main, Section, Stack } from "@/components/ui/layout";
 import { Typography } from "@/components/ui/typography";
 import type { AppLocale } from "@/i18n/config";
@@ -38,9 +37,8 @@ export default async function EventsPage() {
             </Stack>
           </Container>
         </Section>
-        <VisitSection />
       </Main>
-      <EventFooter />
+      <SiteFooter reveal />
     </PublicDataBoundary>
   );
 }

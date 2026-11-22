@@ -108,7 +108,7 @@ export function AdminEventsPage({events}:{events:EventRow[]}) {
   return (
     <Stack gap="lg" data-admin-page="events">
       <Inline className="items-start justify-between"><Typography as="h1" variant="heading" className="text-2xl md:text-2xl">Sự kiện</Typography><Button onClick={event=>addEvent(event.currentTarget)}><Icon name="plus" />Thêm sự kiện</Button></Inline>
-      {loading?<TableSkeleton columns={["Chương trình","Ngày diễn","Phụ thu","Hiển thị",""]} label="Đang tải sự kiện…" />:loadError?<Stack><AlertMessage variant="destructive">{loadError}</AlertMessage><Button variant="outline" className="w-fit" onClick={()=>void eventQuery.refetch()}>Thử lại</Button></Stack>:<AdminEvents items={items} onEdit={(event,trigger)=>{drawerTrigger.current=trigger;setError("");setEditing(event);}} />}
+      {loading?<TableSkeleton columns={["Chương trình","Ngày diễn","Phụ thu","Hiển thị",""]} label="Đang tải sự kiện…" />:loadError?<Stack><AlertMessage variant="destructive">{loadError}</AlertMessage><Button variant="outline" className="w-fit" onClick={()=>void eventQuery.refetch()}>Thử lại</Button></Stack>:<AdminEvents items={items} onRefresh={() => void eventQuery.refetch({ cancelRefetch: false })} onEdit={(event,trigger)=>{drawerTrigger.current=trigger;setError("");setEditing(event);}} />}
       <DeleteEventDialog
         name={deleting?.title_vi ?? null}
         busy={busy}

@@ -17,6 +17,16 @@ export async function adminRequest(path: string, init?: RequestInit) {
     );
   return body;
 }
+export async function releaseDraftMediaSession(session: string) {
+  const release = () => adminRequest("/api/admin/drafts", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ media_session: session }),
+    keepalive: true,
+  });
+  await release().catch(() => release());
+}
+
 export async function uploadAdminImage(
   file: File,
   purpose: "event" | "blog" | "core" = "event",

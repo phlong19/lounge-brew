@@ -33,7 +33,7 @@ export async function SiteHeader({ active }: Props) {
     { key:"albums", href:"#", label:t("albums") },
     { key:"video", href:"#", label:t("video") },
     { key:"contact", href:"#", label:t("contact") },
-    { key:"news", href:"#", label:t("news") },
+    { key:"journal", href:"/journal", label:t("news") },
   ];
   return <>
     <Surface tone="paper" data-announcement-bar>

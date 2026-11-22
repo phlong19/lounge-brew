@@ -122,6 +122,7 @@
     "artworkNote": "Nội dung trong bản thực đơn gốc được giữ nguyên. Vui lòng liên hệ Trixie để xác nhận món và giá hiện tại."
   },
   "Shows": {
+    "loadMore": "Xem thêm sự kiện",
     "title": "Lịch diễn Trixie",
     "description": "Những giọng ca thân quen. Những buổi tối chỉ dành cho âm nhạc.",
     "details": "Xem đêm nhạc",

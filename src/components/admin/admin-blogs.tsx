@@ -11,7 +11,7 @@ import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from "@/compo
 import {blogSlugFromTitle} from "@/lib/admin/blog-slug";
 import {useState,useRef} from "react";
 import {useQuery,useQueryClient} from "@tanstack/react-query";
-import {adminRequest,uploadAdminImage} from "@/lib/admin/client";
+import {adminRequest,releaseDraftMediaSession,uploadAdminImage} from "@/lib/admin/client";
 import type {ArticleRow} from "@/types/domain";
 import {Button} from "@/components/ui/button";
 import {Field,Form,Input,Label} from "@/components/ui/form";
@@ -31,11 +31,28 @@ function BlogEditor({initial,onClose,onSaved}:{initial:Blog;onClose:()=>void;onS
  const [language,setLanguage]=useState("vi"),[manualSlug,setManualSlug]=useState(!!initial.id&&!initial.is_draft||!!initial.slug&&initial.slug!==blogSlugFromTitle(initial.title_vi));
  const blocked=busy||uploading||englishUploading;
  const [mediaSession]=useState(()=>crypto.randomUUID()),[closePrompt,setClosePrompt]=useState(false);
- const destination=useRef<string|null>(null);const router=useRouter();
- function finishClose(){setClosePrompt(false);onClose();if(destination.current)router.push(destination.current);}
- async function discard(){if(blocked)return;setBusy(true);setError("");try{await adminRequest("/api/admin/drafts",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({media_session:mediaSession})});finishClose();}catch(cause){setError((cause as Error).message);setClosePrompt(true);}finally{setBusy(false);}}
- function requestClose(href?:string){if(blocked)return;destination.current=href??null;if(!initial.id){setClosePrompt(true);setError("");}else void discard();}
- useCreationExit(!initial.id,href=>requestClose(href));
+ const destination=useRef<string|null>(null);const router=useRouter(),toast=useToast();
+ const hasChanges = Boolean(file || draft.thumbnail_url || draft.published_at ||
+  [draft.title_vi, draft.title_en, draft.slug, draft.content_vi, draft.content_en].some(value => value?.trim()));
+ function finishClose(){
+  const href=destination.current;
+  destination.current=null;
+  setClosePrompt(false);
+  onClose();
+  if(href)router.push(href);
+ }
+ function discard(){
+  if(blocked)return;
+  finishClose();
+  void releaseDraftMediaSession(mediaSession).catch(() => toast.error("Không thể dọn ảnh chưa sử dụng. Ảnh có thể chưa được xóa."));
+ }
+ function requestClose(href?:string){
+  if(blocked)return;
+  destination.current=href??null;
+  if(!initial.id&&hasChanges){setError("");setClosePrompt(true);}
+  else discard();
+ }
+ useCreationExit(!initial.id,requestClose,hasChanges||blocked);
  function changeTitle(value:string){setDraft(old=>({...old,title_vi:value,slug:manualSlug?old.slug:blogSlugFromTitle(value)}));}
  const change=(key:keyof Blog,value:string|null)=>setDraft(old=>({...old,[key]:value}));
  async function save(asDraft=false){if(blocked)return;if(!asDraft){if(!draft.title_vi.trim()||!draft.slug.trim()){setLanguage("vi");setError("Vui lòng nhập tiêu đề tiếng Việt và đường dẫn.");return;}if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(draft.slug)){setError("Đường dẫn chỉ gồm chữ thường không dấu, số và dấu gạch nối.");return;}}setBusy(true);setError("");try{
@@ -45,7 +62,7 @@ function BlogEditor({initial,onClose,onSaved}:{initial:Blog;onClose:()=>void;onS
  else {const existing=!!id;await adminRequest(existing?`/api/admin/blogs/${id}`:"/api/admin/blogs",{method:existing?"PATCH":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...payload,media_session:mediaSession,...(id?{expectedUpdatedAt:updated_at}:{})})});}
  setClosePrompt(false);onSaved();if(destination.current)router.push(destination.current);
  }catch(cause){setError(cause instanceof Error?cause.message:"Không thể lưu bài viết.");}finally{setBusy(false);}}
- return <Stack gap="lg"><CreationCloseDialog open={closePrompt} busy={blocked} error={error} onKeepEditing={()=>{setClosePrompt(false);destination.current=null;}} onSaveDraft={()=>void save(true)} onDiscard={()=>void discard()} /><Inline gap="sm"><Button variant="outline" size="icon" disabled={blocked} onClick={()=>requestClose()} aria-label="Quay lại"><Icon name="arrowLeft" /></Button><Typography as="h1" variant="heading">{draft.id?"Sửa bài viết":"Thêm bài viết"}</Typography></Inline>
+ return <Stack gap="lg"><CreationCloseDialog open={closePrompt} busy={blocked} error={error} onKeepEditing={()=>{setClosePrompt(false);destination.current=null;}} onSaveDraft={()=>void save(true)} onDiscard={discard} /><Inline gap="sm"><Button variant="outline" size="icon" disabled={blocked} onClick={()=>requestClose()} aria-label="Quay lại"><Icon name="arrowLeft" /></Button><Typography as="h1" variant="heading">{draft.id?"Sửa bài viết":"Thêm bài viết"}</Typography></Inline>
  <Form noValidate onSubmit={event=>{event.preventDefault();void save();}} aria-busy={busy}><Surface className={s.editor}><Stack className={s.panel} gap="lg">
  <Field><Inline className="justify-between gap-3"><Label htmlFor={language==="vi"?"blog-title":"blog-title-en"} required={language==="vi"} optionalLabel={language==="en"?"không bắt buộc":undefined}>{language==="vi"?"Tiêu đề tiếng Việt":"Tiêu đề tiếng Anh"}</Label><Select value={language} onValueChange={setLanguage} disabled={blocked}><SelectTrigger aria-label="Ngôn ngữ bài viết" className="h-8 min-h-8 w-32 text-xs"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="vi">Tiếng Việt</SelectItem><SelectItem value="en">Tiếng Anh</SelectItem></SelectContent></Select></Inline><Input id={language==="vi"?"blog-title":"blog-title-en"} required={language==="vi"} maxLength={200} disabled={busy} value={language==="vi"?draft.title_vi:draft.title_en??""} onChange={e=>language==="vi"?changeTitle(e.target.value):change("title_en",e.target.value)} /></Field>
  <Field><Label htmlFor="blog-slug" required>Đường dẫn</Label><Input id="blog-slug" placeholder="dem-nhac-tai-trixie" required pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={200} disabled={busy} value={draft.slug} onChange={e=>{setManualSlug(!!e.target.value);change("slug",e.target.value);}} /></Field>

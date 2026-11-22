@@ -30,3 +30,30 @@ export async function PATCH(request:Request,{params}:{params:Promise<{id:string}
  if(ended.error)throw new AdminApiError("Thay đổi đã được lưu nhưng chưa kết thúc được mọi phiên đăng nhập. Vui lòng thử lại.",503);
  return NextResponse.json({ok:true,warning},{headers:{"Cache-Control":"no-store"}});
  }catch(error){return apiFailure(error);}}
+
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    assertSameOrigin(request);
+    const { supabase, user } = await requireAdmin(request);
+    const id = (await params).id.toLowerCase();
+    if (!/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(id) || id === user.id) {
+      throw new AdminApiError("Không thể xóa tài khoản này.", 403);
+    }
+
+    const target = await supabase.from("staff_members").select("role").eq("user_id", id).maybeSingle();
+    databaseFailure(target.error);
+    if (!target.data) throw new AdminApiError("Không tìm thấy nhân viên.", 404);
+    if (target.data.role === "admin") throw new AdminApiError("Không thể xóa tài khoản quản trị viên.", 403);
+
+    const service = createSupabaseAdminClient();
+    if (!service) throw new AdminApiError("Chưa cấu hình quản lý tài khoản.", 503);
+    // The Auth delete cascades to staff_members. Existing content keeps its own records.
+    const result = await service.auth.admin.deleteUser(id);
+    if (result.error) {
+      throw new AdminApiError("Không thể xóa tài khoản lúc này. Vui lòng thử lại.", 503);
+    }
+    return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
+  } catch (error) {
+    return apiFailure(error);
+  }
+}

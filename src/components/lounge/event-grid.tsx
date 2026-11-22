@@ -7,7 +7,9 @@ import {formatDate} from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import { eventCardStyles } from "@/lib/ui/home-styles";
 import {useTranslations} from "next-intl";
+import {useId, useState} from "react";
 
+import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Article, Grid, Inline, Stack, Surface } from "@/components/ui/layout";
 import { AppLink } from "@/components/ui/link";
@@ -26,6 +28,8 @@ export function EventGrid({
 }) {
   const t=useTranslations("Shows");
   const query=useQuery(publicEventsOptions());
+  const [limit, setLimit] = useState(6);
+  const gridId = useId();
   const events=localizeEvents(locale,query.data??[]);
   if(query.data===undefined)return <PublicQueryState error={query.isError} english={locale==="en"} retry={()=>void query.refetch()} />;
   if (!events.length)
@@ -35,14 +39,16 @@ export function EventGrid({
       </Typography>
     );
   return (
+    <Stack gap="xl">
     <Grid
+      id={gridId}
       className={
         compact
           ? "grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4"
           : "grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3"
       }
     >
-      {events.map((event) => (
+      {events.slice(0, limit).map((event) => (
         <Article key={event.id} className="group">
           <AppLink
             href={`/events/${event.id}`}
@@ -58,7 +64,7 @@ export function EventGrid({
                   src={event.coverImageUrl}
                   alt={t("poster", { artist: event.performerName })}
                   fill
-                  fit="contain"
+                  fit="cover"
                   sizes={
                     compact
                       ? "(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
@@ -89,7 +95,7 @@ export function EventGrid({
             <Typography as={compact ? "h3" : "h2"} variant="subheading" className={eventCardStyles.title}>
               {event.performerName}
             </Typography>
-            <Typography variant="small" tone="muted">
+            <Typography variant="body" tone="muted">
               {new Intl.DateTimeFormat(locale === "vi" ? "vi-VN" : "en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -103,5 +109,11 @@ export function EventGrid({
         </Article>
       ))}
     </Grid>
+    {limit < events.length ? (
+      <Button variant="outline" className="self-center" aria-controls={gridId} onClick={() => setLimit(value => value + 6)}>
+        {t("loadMore")}
+      </Button>
+    ) : null}
+    </Stack>
   );
 }

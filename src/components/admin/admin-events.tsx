@@ -20,7 +20,7 @@ const pageSize = 6;
 function ReadOnlyStatus({ enabled, label }: { enabled: boolean; label: string }) {
   return <Inline gap="xs" className={enabled ? "text-[#205B3B]" : "text-stone-500"} aria-label={`${label}: ${enabled ? "Có" : "Không"}`}><Icon name={enabled ? "check" : "minus"} className="size-4" /><Typography as="span" variant="small">{enabled ? "Có" : "Không"}</Typography></Inline>;
 }
-export function AdminEvents({ items, onEdit }: { items: EditableEvent[]; onEdit: (item: EditableEvent, trigger: HTMLButtonElement) => void }) {
+export function AdminEvents({ items, onEdit, onRefresh }: { items: EditableEvent[]; onRefresh: () => void; onEdit: (item: EditableEvent, trigger: HTMLButtonElement) => void }) {
   const [now,setNow] = useState(() => Date.now());
   useEffect(() => { const timer = setInterval(() => setNow(Date.now()),60000); return () => clearInterval(timer); }, []);
   const [search, setSearch] = useState("");
@@ -33,7 +33,7 @@ export function AdminEvents({ items, onEdit }: { items: EditableEvent[]; onEdit:
   const current = Math.min(page, totalPages);
   const shown = matched.slice((current - 1) * pageSize, current * pageSize);
   const years = [...new Set(items.map(item => venueDateParts(item.event_date)?.year).filter((value): value is string => !!value))].sort();
-  function reset() { setSearch(""); setScope("upcoming"); setMonth("all"); setYear("all"); setPage(1); }
+  function reset() { setSearch(""); setScope("upcoming"); setMonth("all"); setYear("all"); setPage(1); setNow(Date.now()); onRefresh(); }
   return <Surface className={s.panel} data-admin-events>
     <Stack className="p-4 md:p-5" gap="lg">
       <Grid className="items-end gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_170px_170px_150px_auto]">

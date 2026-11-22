@@ -39,7 +39,7 @@ export async function SiteFooter({ compact = false, reveal = false }: { compact?
       </Grid> : null}
       <Reveal enabled={reveal} delay={3}><Inline className={cn("justify-between gap-y-2", !compact && "mt-8")} gap="lg">
         <Typography variant="small" tone="muted">© {new Date().getFullYear()} {t("copyright")}</Typography>
-        <Inline gap="lg" className="text-sm"><AppLink href="/menu" className={footerStyles.navLink}>{nav("menu")}</AppLink><AppLink href="/events" className={footerStyles.navLink}>{nav("events")}</AppLink><AppLink href="#" className={footerStyles.navLink}>{nav("video")}</AppLink><AppLink href="#" className={footerStyles.navLink}>{nav("news")}</AppLink></Inline>
+        <Inline gap="lg" className="text-sm"><AppLink href="/menu" className={footerStyles.navLink}>{nav("menu")}</AppLink><AppLink href="/events" className={footerStyles.navLink}>{nav("events")}</AppLink><AppLink href="#" className={footerStyles.navLink}>{nav("video")}</AppLink><AppLink href="/journal" className={footerStyles.navLink}>{nav("news")}</AppLink></Inline>
       </Inline></Reveal>
     </Container>
   </SiteFooterFrame>;

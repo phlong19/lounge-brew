@@ -122,6 +122,7 @@
     "artworkNote": "The original menu artwork is preserved. Please contact Trixie to confirm current dishes and prices."
   },
   "Shows": {
+    "loadMore": "Load more events",
     "title": "Live at Trixie",
     "description": "Familiar voices. Evenings made for music.",
     "details": "Explore the show",

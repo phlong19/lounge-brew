@@ -9,7 +9,7 @@ import { surfaceStyles } from "@/lib/ui/styles";
 
 export async function VisitSection() {
   const [t, nav, locale] = await Promise.all([getTranslations("Site"), getTranslations("Navigation"), getLocale()]);
-  return <Section id="contact" aria-labelledby="visit-heading" className={surfaceStyles.brand}>
+  return <Section id="event-visit" aria-labelledby="visit-heading" className={surfaceStyles.brand}>
     <Container><Grid className="items-start gap-12 lg:grid-cols-2 lg:gap-24">
       <Stack gap="lg">
         <Typography as="h2" variant="display" id="visit-heading" className="whitespace-pre-line">{t("visitTitle")}</Typography>

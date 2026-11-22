@@ -30,10 +30,9 @@ export function LoadingTransitionProvider({children,initialEnglish=false}:{child
  return <LoadingContext.Provider value={value}><Surface inert={present||undefined}>{children}</Surface>{present?<LoadingCurtain english={english} fixed exiting={phase==="exiting"}  />:null}</LoadingContext.Provider>;
 }
 
-export function LandingLoading({english=false,preview=false}:{english?:boolean;preview?:boolean}){
+export function LandingLoading({english=false}:{english?:boolean}){
  const context=useContext(LoadingContext),begin=context?.begin,end=context?.end;
- useLayoutEffect(()=>{if(preview||!begin||!end)return;begin(english);return end;},[english,preview,begin,end]);
- if(preview)return <LoadingCurtain english={english} />;
+ useLayoutEffect(()=>{if(!begin||!end)return;begin(english);return end;},[english,begin,end]);
  return context?.present?<Main className="min-h-svh" aria-hidden="true" />:<LoadingCurtain english={english} />;
 }
 

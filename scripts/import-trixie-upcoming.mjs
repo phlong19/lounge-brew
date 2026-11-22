@@ -29,14 +29,18 @@ async function official(url) {
 }
 let db,publicDb;
 const known=new Set();
+const activeSchedules=[];
 if(apply||past||process.env.SUPABASE_SECRET_KEY){
 const secret=process.env.SUPABASE_SECRET_KEY;
 if(!secret?.startsWith("sb_secret_"))throw Error("A configured Supabase secret key is required for import checks.");
 db=createClient(base,secret,{auth:{persistSession:false,autoRefreshToken:false}});
 publicDb=createClient(base,publicKey,{auth:{persistSession:false}});
-const existing=await db.from("events").select("id,source_id,updated_at").limit(10000);
+const existing=await db.from("events").select("id,source_id,updated_at,performer_name,event_date,end_date,status,is_active,is_deleted").limit(10000);
 if(existing.error)throw Error("Cannot check existing import records.");
-for(const row of existing.data)known.add(row.source_id);
+for(const row of existing.data) {
+ known.add(row.source_id);
+ if(row.status === "ready" && row.is_active && !row.is_deleted && row.event_date) activeSchedules.push(row);
+}
 }
 const events=[],skipped=[];
 const fromManifest=process.argv.includes("--from-manifest");
@@ -80,6 +84,19 @@ for(const item of listings){
  if(!artist)throw Error("Cannot verify artist for "+item.source_id);
  const titleDate=item.title_vi.match(/\[(\d{2})\.(\d{2})\.(\d{4})\]/);
  if(titleDate && !article.event_date.startsWith(titleDate[3]+"-"+titleDate[2]+"-"+titleDate[1]))throw Error("Title/schedule mismatch: "+item.source_id);
+ if(!past) {
+  const start = Date.parse(article.event_date), end = Date.parse(article.end_date);
+  const overlap = [...activeSchedules, ...events].find(event => {
+   const existingStart = Date.parse(event.event_date);
+   const existingEnd = event.end_date ? Date.parse(event.end_date) : existingStart;
+   return start === existingStart || (start < existingEnd && end > existingStart);
+  });
+  if(overlap) {
+   skipped.push({source_id:item.source_id,reason:`Conflicts with ${overlap.performer_name} (${overlap.source_id ?? overlap.id})`});
+   console.log("Skipped overlapping show:", item.source_id, overlap.performer_name);
+   continue;
+  }
+ }
  const content=sanitizeEventContent(normalizeSourceMarkup(article.content));
  const sourceText=DomUtils.textContent(parseDocument(content)).replace(/\s+/g," ").trim();
  if(sourceText!==article.rawText)throw Error("Article text changed during sanitization: "+item.source_id);
