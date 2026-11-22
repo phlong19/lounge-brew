@@ -1,0 +1,21 @@
+diff --git a/dist/cjs/development/plugin.cjs b/dist/cjs/development/plugin.cjs
+index 9a8b8e8d3ad958d1d4f4e91021191122e23ad13c..12d6d1bf3771cc880a0e382e47681109e569de7d 100644
+--- a/dist/cjs/development/plugin.cjs
++++ b/dist/cjs/development/plugin.cjs
+@@ -6,7 +6,6 @@ var module$1 = require('module');
+ var url = require('url');
+ var watcher = require('@parcel/watcher');
+ var fs = require('fs');
+-var core = require('@swc/core');
+ 
+ var _documentCurrentScript = typeof document !== 'undefined' ? document.currentScript : null;
+ function _interopDefaultCompat (e) { return e && typeof e === 'object' && 'default' in e ? e : { default: e }; }
+@@ -1154,6 +1153,8 @@ class MessageExtractor {
+       };
+     }
+     const filePath = normalizePathToPosix(path__default.default.relative(this.projectRoot, absoluteFilePath));
++    // SWC is only needed when experimental message extraction runs.
++    const core = require('@swc/core');
+     const result = await core.transform(source, {
+       jsc: {
+         target: 'esnext',

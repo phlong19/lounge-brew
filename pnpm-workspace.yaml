@@ -8,3 +8,6 @@ allowBuilds:
 # v10 consumers use the same named API; v3 consumers retain their callable API.
 overrides:
   'minimatch@>=10.0.0 <11.0.1': 11.0.1
+
+patchedDependencies:
+  next-intl@4.14.9: patches/next-intl@4.14.9.patch
