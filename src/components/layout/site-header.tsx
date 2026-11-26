@@ -14,10 +14,11 @@ import { Typography } from "@/components/ui/typography";
 import { venue } from "@/data/trixie-content";
 import type { NavigationItem } from "@/types/navigation";
 import { headerStyles } from "@/lib/ui/home-styles";
+import { cn } from "@/lib/utils";
 
-type Props = { active?: "home" | "menu" | "events" | "journal" | "admin" };
+type Props = { compact?: boolean; active?: "home" | "menu" | "events" | "journal" | "admin" };
 
-export async function SiteHeader({ active }: Props) {
+export async function SiteHeader({ active, compact = false }: Props) {
   const [t, site] = await Promise.all([getTranslations("Navigation"), getTranslations("Site")]);
   const items: NavigationItem[] = [
     { key:"home", href:"/", label:t("home") },
@@ -46,8 +47,8 @@ export async function SiteHeader({ active }: Props) {
     <SiteHeaderFrame className={headerStyles.frame} data-source-navigation="preserved">
     <AppLink href="#main-content" className="fixed top-3 left-3 z-50 -translate-y-32 rounded-md bg-white px-5 py-3 focus:translate-y-0">{site("skip")}</AppLink>
 
-    <Container><Reveal enabled={active === "home"} className="flex h-20 items-center justify-between gap-4 xl:h-24">
-      <AppLink href="/" aria-label={`Trixie · ${t("home")}`} className="shrink-0"><Media src="/trixie/logo.png" alt="Trixie Café & Lounge" width={150} height={60} priority fit="contain" className="h-12 w-28 xl:h-14 xl:w-32" /></AppLink>
+    <Container><Reveal enabled={active === "home"} className={cn("flex items-center justify-between gap-4", compact ? "h-14 xl:h-16" : "h-20 xl:h-24")}>
+      <AppLink href="/" aria-label={`Trixie · ${t("home")}`} className="shrink-0"><Media src="/trixie/logo.png" alt="Trixie Café & Lounge" width={150} height={60} priority fit="contain" className={compact ? "h-10 w-24 xl:h-11 xl:w-28" : "h-12 w-28 xl:h-14 xl:w-32"} /></AppLink>
       <Navigation aria-label={t("home")} className="hidden gap-6 xl:flex">{items.map(item => item.children ? <NavigationGroup key={item.key} item={item} active={active === item.key} /> : <AppLink key={item.key} href={item.href} aria-current={active === item.key ? "page" : undefined} className={headerStyles.navLink}>{item.label}</AppLink>)}</Navigation>
       <Inline gap="sm" className="flex-nowrap md:gap-6"><Surface className="hidden md:block"><LocaleSwitcher /></Surface><ReservationButton data-reservation-focus-fallback className="hidden hover:bg-[#2E7017] hover:text-white sm:inline-flex">{t("book")}<Icon name="arrowUpRight" className="size-4" /></ReservationButton><MobileNavigation items={items} active={active} title={t("brand")} openLabel={t("openMenu")} closeLabel={t("closeMenu")} bookingLabel={t("book")} /></Inline>
     </Reveal></Container>
